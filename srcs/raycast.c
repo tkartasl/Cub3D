@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/05/30 09:13:30 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/05/30 13:11:37 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void	cast_rays(t_rayinfo *info)
 	while (i < 1)
 	{
 		viewdist = 0;
-		rayangle = info->angle;
+		rayangle = info->angle * PI / 180;
 		atan = -1/tan(rayangle);
 		if (rayangle > PI)
 		{
@@ -245,20 +245,20 @@ void	key_hook_move(mlx_key_data_t keydata, void* param)
 	info = param;
 	if (keydata.key == MLX_KEY_RIGHT && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
 	{
-		info->angle += 0.2;
-		if (info->angle > 2 * PI)
-			info->angle -= 2 * PI;
-		info->playerdir_x = cos(info->angle) * 10;
-		info->playerdir_y = sin(info->angle) * 10;
+		info->angle += 1.8 * 2;
+		if (info->angle > 2 * 180)
+			info->angle -= 2 * 180;
+		info->playerdir_x = cos(info->angle * PI / 180) * 10;
+		info->playerdir_y = sin(info->angle * PI / 180) * 10;
 		//cast_rays(info);
 	}
 	if (keydata.key == MLX_KEY_LEFT && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
 	{
-		info->angle -= 0.2;
+		info->angle -= 1.8 * 2;
 		if (info->angle < 0)
-			info->angle += 2 * PI;
-		info->playerdir_x = cos(info->angle) * 10;
-		info->playerdir_y = sin(info->angle) * 10;
+			info->angle += 2 * 180;
+		info->playerdir_x = cos(info->angle * PI / 180) * 10;
+		info->playerdir_y = sin(info->angle * PI / 180) * 10;
 		//cast_rays(info);
 	}
 	printf("player dir x %f , player dir y %f\n" ,info->playerdir_x, info->playerdir_y);
@@ -317,9 +317,9 @@ int32_t	main(void)
 	if (!screen)
 		error();
 	rayinfo.screen = screen;
-	rayinfo.angle = PI2;
-	rayinfo.playerdir_x = cos(rayinfo.angle) * 10;
-	rayinfo.playerdir_y = sin(rayinfo.angle) * 10;
+	rayinfo.angle = 90;
+	rayinfo.playerdir_x = cos(rayinfo.angle * PI / 180) * 10;
+	rayinfo.playerdir_y = sin(rayinfo.angle * PI / 180) * 10;
 	//memset(white->pixels, 255, 360 * 360 * sizeof(int32_t));
 	//memset(player->pixels, 127, 8 * 8 * sizeof(int32_t));	
 	//memset(white->pixels, 255, 64 * 64 * sizeof(int32_t));
