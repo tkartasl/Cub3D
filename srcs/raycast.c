@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/05/29 13:01:39 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/05/30 09:13:30 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	draw_line(int x_start, int y_start, int x_end, int y_end, mlx_image_t *scre
 	int xe;
 	int	ye;
 
+	x_start += 4;
+	y_start += 8;
 	printf("x_start: %d\n", x_start);
 	printf("y_start: %d\n", y_start);
 	printf("x_end: %d\n", x_end);
@@ -248,7 +250,7 @@ void	key_hook_move(mlx_key_data_t keydata, void* param)
 			info->angle -= 2 * PI;
 		info->playerdir_x = cos(info->angle) * 10;
 		info->playerdir_y = sin(info->angle) * 10;
-		cast_rays(info);
+		//cast_rays(info);
 	}
 	if (keydata.key == MLX_KEY_LEFT && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
 	{
@@ -257,7 +259,7 @@ void	key_hook_move(mlx_key_data_t keydata, void* param)
 			info->angle += 2 * PI;
 		info->playerdir_x = cos(info->angle) * 10;
 		info->playerdir_y = sin(info->angle) * 10;
-		cast_rays(info);
+		//cast_rays(info);
 	}
 	printf("player dir x %f , player dir y %f\n" ,info->playerdir_x, info->playerdir_y);
 	if (keydata.key == MLX_KEY_D && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))

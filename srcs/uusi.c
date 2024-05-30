@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/05/29 14:00:57 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/05/30 10:04:13 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,19 @@
 #define P_PLANE_MID_W 160
 #define P_PLANE_MID_H 100
 #define DIST_TO_P_PLANE 277
+#define	MAX_VIEW_DISTANCE 1000
+#define	FOV	60
 
 typedef struct s_rayinfo
 {
 	mlx_image_t *player;
 	mlx_image_t *screen;
 	double	angle;
+	double	ray_angle;
 	double	playerdir_x;
 	double	playerdir_y;
+	double	distance_h;
+	double	distance_v;
 }			t_rayinfo;
 
 static void error(void)
@@ -141,52 +146,84 @@ check_horizontal_hit(int p_x, int p_y, int step_x, int step_y, t_rayinfo *info)
 	double	ray_x;
 	int		map_y;
 	int		map_x;
-	
-	if (info->angle < PI)
+
+	if (info->ray_angle < PI)
 	{
 		ray_y = floor(p_y / 64) * 64 + 64;
 		step_y = 64;
 	}
-	if (info->angle > PI)
+	if (info->ray_angle > PI)
 	{
 		ray_y = floor(p_y / 64) * 64 - 1;
 		step_y = -64;
 	}
-	while (1)
+	step_x = 64 / floor(tan(info->ray_angle * PI / 180));
+	ray_x = p_x + (p_y - (int)ray_y) / tan(info->ray_angle * PI / 180);
+	while (ray_length(p_x, p_y, ray_x, ray_y) < MAX_VIEW_DISTANCE)
 	{
 		map_y = floor(ray_y / 64);
-		ray_x = p_x + (p_y - (int)ray_y) / tan(info->angle * PI / 180);
 		map_x = floor(ray_x / 64);
 		if (arr[map_y][map_x] == 1)
 		{
-			return ()
-			
+			info->distance_h = ray_length(p_x, p_y, ray_x, ray_y);
+			break ;
 		}
+		ray_x += step_x;
+		ray_y += step_y;
 	}
-
 }
 
-check_vertical_hit(int player_x, int player_y, t_rayinfo *info)
+check_vertical_hit(int p_x, int p_y, int step_x, int step_y, t_rayinfo *info)
 {
+	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
+	double	ray_y;
+	double	ray_x;
+	int		map_y;
+	int		map_x;
 
-
-	
+	if (info->ray_angle > PI2 && info->ray_angle < PI3)
+	{
+		ray_x = floor(p_x / 64) * 64 + 64;
+		step_x = 64;
+	}
+	if (info->ray_angle < PI2 || info->ray_angle > PI3)
+	{
+		ray_x = floor(p_x / 64) * 64 - 1;
+		step_x = -64;
+	}
+	ray_y = p_y + (p_x - (int)ray_x) * tan(info->angle * PI / 180);
+	step_y = 64 * floor(tan(info->ray_angle * PI / 180));
+	while (ray_length(p_x, p_y, ray_x, ray_y) < MAX_VIEW_DISTANCE)
+	{
+		map_y = floor(ray_y / 64);
+		map_x = floor(ray_x / 64);
+		if (arr[map_y][map_x] == 1)
+		{
+			info->distance_v = ray_length(p_x, p_y, ray_x, ray_y);
+			break ;
+		}
+		ray_x += step_x;
+		ray_y += step_y;
+	}
 }
 
 void	cast_rays(t_rayinfo *info)
 {
-	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
-	int	player_x;
-	int	player_y;
-	int	step_x;
-	int	step_y;
+	int 	arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
+	int		player_x;
+	int		player_y;
+	int		step_x;
+	int		step_y;
 
+	info->ray_angle = info->angle - DEGREE * FOV / 2;
 	step_x = 0;
 	step_y = 0;
 	player_x = info->player->instances[0].x;
 	player_y = info->player->instances[0].y;
+	while ()
 	check_horizontal_hit(player_x, player_y, step_x, step_y, info);
 	check_vertical_hit(player_x, player_y, step_x, step_y, info);
+
 }
 
 void	key_hook_move(mlx_key_data_t keydata, void* param)
