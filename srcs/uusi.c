@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/05/30 15:58:58 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/05/31 15:08:49 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 #include <memory.h>
 #include <math.h>
 #define PI 3.14159265359
-#define	PI2 PI / 2
-#define PI3 3 * PI / 2
 #define	DEGREE 0.1875
 #define P_PLANE_W 320
 #define P_PLANE_H 200
@@ -28,21 +26,25 @@
 #define	MAX_VIEW_DISTANCE 1000
 #define	FOV	60
 #define EAST 0
-#define NORTH 90
-#define WEST 180
-#define SOUTH 270
+#define NORTH PI / 2
+#define WEST PI
+#define SOUTH 3 * PI / 2
 #define BLOCK 64
 
 typedef struct s_rayinfo
 {
 	mlx_image_t *player;
 	mlx_image_t *screen;
-	double	angle;
-	double	ray_angle;
-	double	playerdir_x;
-	double	playerdir_y;
-	double	distance_h;
-	double	distance_v;
+	double		angle;
+	double		ray_angle;
+	double		rayh_y;
+	double		rayh_x;
+	double		rayv_y;
+	double		rayv_x;
+	double		playerdir_x;
+	double		playerdir_y;
+	double		distance_h;
+	double		distance_v;
 }			t_rayinfo;
 
 static void error(void)
@@ -59,88 +61,53 @@ int get_r(int rgba)
 
 double	ray_length(double ax, double ay, double bx, double by)
 {
-	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
+	if (bx >= ax && by >= ay)
+		return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
+	if (ax >= bx && ay >= by)
+		return (sqrt((ax - bx) * (ax - bx) + (ay - by) * (ay - by)));
+	if (bx >= ax && ay >= by)
+		return (sqrt((bx - ax) * (bx - ax) + (ay - by) * (ay - by)));
+	else
+		return (sqrt((ax - bx) * (ax - bx) + (by - ay) * (by - ay)));
 }
 
-void	draw_line(int x_start, int y_start, int x_end, int y_end, mlx_image_t *screen)
+int	compare(int a, int b)
 {
-	int	dx;
-	int	dy;
-	int	slope_x;
-	int	slope_y;
-	int	y;
-	int	x;
-	int xe;
-	int	ye;
+	int	ret;
 
-	printf("x_start: %d\n", x_start);
-	printf("y_start: %d\n", y_start);
-	printf("x_end: %d\n", x_end);
-	printf("y_end: %d\n", y_end);
-	ye = 0;
-	xe = 0;
-	y = 0;
-	x = 0;
-	x_start += 4;
-	dx = x_end - x_start;	
-	dy = y_end - y_start;
-	slope_x = (2 * dy) - dx;
-	slope_y = (2 * dx) - dy;
-	if (dy <= dx)
-	{
-		if (dx >= 0)
-		{
-			x = x_start;
-			y = y_start;
-			xe = x_end;
-		}
-		else
-		{
-			x = x_end;
-			y = y_end;
-			xe = x_start;
-		}
-		mlx_put_pixel(screen, x, y, 155);
-		while (x < xe)
-		{
-			x++;
-			if (slope_x < 0)
-				slope_x = slope_x + 2 * dy;
-			else
-			{
-				if ((dx < 0 && dy < 0) || (dx > 0 && dy > 0))
-					y++;
-				else
-					y--;
-				slope_x = slope_x + 2 * (dy - dx);
-			}
-			mlx_put_pixel(screen, x, y, 155);
-		}	
-	}
+	if (a < b)
+		ret = 1;
 	else
+		ret = -1;
+	return (ret);
+}
+
+void	draw_line(int x_end, int y_end, int x_start, int y_start, mlx_image_t *screen)
+{
+	int dx = abs(x_end - x_start);
+	int	sx = compare(x_start, x_end);
+	int dy = -abs(y_end - y_start);
+	int	sy = compare(y_start, y_end);
+	int	err = dx + dy;
+	int	e2;
+
+	e2 = 0;
+	while (1)
 	{
-		if (dy >= 0)
+		if (x_start >= 0 && y_start >= 0 && x_start <= 320 && y_start <= 320)
+			mlx_put_pixel(screen, x_start, y_start, 155);
+		if (x_start == x_end && y_start == y_end)
+			break ;
+		e2 = 2 * err;
+		if (e2 >= dy)
 		{
-			x = x_start;
-			y = y_start;
-			ye = y_end;
-		}
-		else
+			err += dy;
+			x_start += sx;
+		}	
+		if (e2 <= dx)
 		{
-			x = x_end;
-			y = y_end;
-			ye = y_start;
-		}
-		mlx_put_pixel(screen, x, y, 155);
-		while (y < ye)
-		{
-			y++;
-			if (slope_y <= 0)
-				slope_y = slope_y + 2 * dx;
-			else
-				x--;
-			slope_y = slope_y + 2 * (dx - dy);
-			mlx_put_pixel(screen, x, y, 155);
+			err += dx;
+			y_start += sy;
 		}
 	}
 }
@@ -148,8 +115,6 @@ void	draw_line(int x_start, int y_start, int x_end, int y_end, mlx_image_t *scre
 void	check_horizontal_hit(int p_x, int p_y, double step_x, double step_y, t_rayinfo *info)
 {
 	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
-	double	ray_y;
-	double	ray_x;
 	int		map_y;
 	int		map_x;
 	int		hit;
@@ -157,50 +122,51 @@ void	check_horizontal_hit(int p_x, int p_y, double step_x, double step_y, t_rayi
 	hit = 0;
 	if (info->ray_angle < WEST)
 	{
-		ray_y = floor(p_y / 64) * 64 + 64;
-		printf("ray_y %f\n", ray_y);
+		info->rayh_y = floor(p_y / 64) * 64 + 64;
+		printf("ray_y %f\n", info->rayh_y);
 		step_y = 64;
 		step_x = 64 / floor(tan(info->ray_angle * PI / 180));
 		printf("step_x %f\n", step_x);
 	}
 	if (info->ray_angle > WEST)
 	{
-		ray_y = floor(p_y / 64) * 64 - 1;
-		printf("ray_y %f\n", ray_y);
+		info->rayh_y = floor(p_y / 64) * 64 - 1;
+		printf("ray_y %f\n", info->rayh_y);
 		step_y = -64;
 		step_x = 64 / floor(tan(info->ray_angle * PI / 180));
 		printf("step_x %f\n", step_x);
 	}
-	ray_x = p_x + (p_y - (int)ray_y) / tan(info->ray_angle * PI / 180);
-	printf("ray_x %f\n", ray_x);
+	info->rayh_x = p_x + (p_y - (int)info->rayh_y) / tan(info->ray_angle * PI / 180);
+	printf("ray_x %f\n", info->rayh_x);
 	if (info->ray_angle == 0 || info->ray_angle == WEST)
 	{
 		hit = 1;
-		ray_x = p_x;
-		ray_y = p_y;
+		info->rayh_x = p_x;
+		info->rayh_y = p_y;
 	}
 	while (hit == 0)
 	{
-		map_y = (int)ray_y / 64;
-		map_x = (int)ray_x / 64;
+		map_y = (int)info->rayh_y / 64;
+		map_x = (int)info->rayh_x / 64;
 		printf("map_x %d\nmap_y %d\n", map_x, map_y);
-		if (map_x >= 0 && map_y >= 0 && map_x < 5 && map_y < 5)
+		if (map_x < 0 || map_y < 0 || map_x >= 5 || map_y >= 5)
+		{
+			info->distance_h = MAX_VIEW_DISTANCE;
 			break ;
+		}
 		if (arr[map_y][map_x] == 1)
 		{	
-			info->distance_v = ray_length(p_x, p_y, ray_x, ray_y);
+			info->distance_h = ray_length(p_x, p_y, info->rayh_x, info->rayh_y);
 			hit = 1;
 		}
-		ray_x += step_x;
-		ray_y += step_y;
+		info->rayh_x += step_x;
+		info->rayh_y += step_y;
 	}
 }
 
 void	check_vertical_hit(int p_x, int p_y, double step_x, double step_y, t_rayinfo *info)
 {
 	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
-	double	ray_y;
-	double	ray_x;
 	int		map_y;
 	int		map_x;
 	int		hit;
@@ -208,40 +174,44 @@ void	check_vertical_hit(int p_x, int p_y, double step_x, double step_y, t_rayinf
 	hit = 0;
 	if (info->ray_angle > NORTH && info->ray_angle < SOUTH)
 	{
-		ray_x = floor(p_x / 64) * 64 + 64;
-		printf("ray_x %f\n", ray_x);
+		info->rayv_x = floor(p_x / 64) * 64 + 64;
+		printf("ray_x %f\n", info->rayv_x);
 		step_x = 64;
 	}
 	if (info->ray_angle < NORTH || info->ray_angle > SOUTH)
 	{
-		ray_x = floor(p_x / 64) * 64 - 1;
-		printf("ray_x %f\n", ray_x);
+		info->rayv_x = floor(p_x / 64) * 64 - 1;
+		printf("ray_x %f\n", info->rayv_x);
 		step_x = -64;
 	}
-	ray_y = p_y + (p_x - (int)ray_x) * tan(info->ray_angle * PI / 180);
-	printf("ray_y %f\n", ray_y);
+	info->rayv_y = p_y + (p_x - (int)info->rayv_x) * tan(info->ray_angle * PI / 180);
+	printf("ray_y %f\n", info->rayv_y);
 	step_y = 64 * floor(tan(info->ray_angle * PI / 180));
 	printf("step_y %f\n", step_y);
 	if (info->ray_angle == NORTH || info->ray_angle == SOUTH)
 	{
 		hit = 1;
-		ray_x = p_x;
-		ray_y = p_y;
+		info->rayv_x = p_x;
+		info->rayv_y = p_y;
 	}
 	while (hit == 0)
 	{
-		map_y = (int)ray_y / 64;
-		map_x = (int)ray_x / 64;
+		map_y = (int)info->rayv_y / 64;
+		map_x = (int)info->rayv_x / 64;
 		printf("map_x %d\nmap_y %d\n", map_x, map_y);
-		if (map_x >= 0 && map_y >= 0 && map_x < 5 && map_y < 5)
+		printf("ray_x %f\nray_y %f\n", info->rayv_x, info->rayv_y);
+		if (map_x < 0 || map_y < 0 || map_x >= 5 || map_y >= 5)
+		{
+			info->distance_v = MAX_VIEW_DISTANCE;
 			break ;
+		}
 		if (arr[map_y][map_x] == 1)
 		{	
-			info->distance_v = ray_length(p_x, p_y, ray_x, ray_y);
+			info->distance_v = ray_length(p_x, p_y, info->rayv_x, info->rayv_y);
 			hit = 1;
 		}
-		ray_x += step_x;
-		ray_y += step_y;
+		info->rayv_x += step_x;
+		info->rayv_y += step_y;
 	}
 }
 
@@ -255,19 +225,22 @@ void	cast_rays(t_rayinfo *info)
 	int		i;
 
 	i = 0;
-	info->ray_angle = info->angle - DEGREE * (FOV / 2);
+	info->ray_angle = info->angle;// - DEGREE * (FOV / 2);
 	step_x = 0;
 	step_y = 0;
 	player_x = info->player->instances[0].x;
 	player_y = info->player->instances[0].y;
-	while (i < FOV)
+	while (i < 1)
 	{
 		check_horizontal_hit(player_x, player_y, step_x, step_y, info);
 		check_vertical_hit(player_x, player_y, step_x, step_y, info);
 		info->ray_angle += DEGREE;
+		if (info->distance_h >= info->distance_v)
+			draw_line(player_x, player_y, (int)info->rayh_x, (int)info->rayh_y, info->screen);
+		else
+			draw_line(player_x, player_y, (int)info->rayv_x, (int)info->rayv_y, info->screen);
 		i++;
 	}
-
 }
 
 void	key_hook_move(mlx_key_data_t keydata, void* param)
@@ -277,20 +250,20 @@ void	key_hook_move(mlx_key_data_t keydata, void* param)
 	info = param;
 	if (keydata.key == MLX_KEY_RIGHT && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
 	{
-		info->angle += DEGREE * 2;
-		if (info->angle > 2 * 180)
-			info->angle -= 2 * 180;
-		info->playerdir_x = cos(info->angle * PI / 180) * 10;
-		info->playerdir_y = sin(info->angle * PI / 180) * 10;
+		info->angle += 0.2;
+		if (info->angle > 2 * PI)
+			info->angle -= 2 * PI;
+		info->playerdir_x = cos(info->angle) * 10;
+		info->playerdir_y = sin(info->angle) * 10;
 		cast_rays(info);
 	}
 	if (keydata.key == MLX_KEY_LEFT && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
 	{
-		info->angle -= DEGREE * 2;
+		info->angle -= 0.2;
 		if (info->angle < 0)
-			info->angle += 2 * 180;
-		info->playerdir_x = cos(info->angle * PI / 180) * 10;
-		info->playerdir_y = sin(info->angle * PI / 180) * 10;
+			info->angle += 2 * PI;
+		info->playerdir_x = cos(info->angle) * 10;
+		info->playerdir_y = sin(info->angle) * 10;
 		cast_rays(info);
 	}
 	printf("player dir x %f , player dir y %f\n" ,info->playerdir_x, info->playerdir_y);
@@ -346,9 +319,10 @@ int32_t	main(void)
 	if (!screen)
 		error();
 	rayinfo.screen = screen;
-	rayinfo.angle = 60;
-	rayinfo.playerdir_x = cos(rayinfo.angle * PI / 180) * 10;
-	rayinfo.playerdir_y = sin(rayinfo.angle * PI / 180) * 10;
+	rayinfo.angle = 60 * PI / 180;
+	rayinfo.playerdir_x = cos(rayinfo.angle) * 10;
+	rayinfo.playerdir_y = sin(rayinfo.angle) * 10;
+	printf("playerdir_x %f\nplayerdir_y %f\n", rayinfo.playerdir_x, rayinfo.playerdir_y);
 	memset(black->pixels, 100, 64 * 64 * sizeof(int32_t));
 	memset(rayinfo.player->pixels, 127, 8 * 8 * sizeof(int32_t));
 	memset(screen->pixels, 255, 320 * 320 * sizeof(int32_t));
