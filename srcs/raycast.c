@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/03 15:05:20 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/04 15:48:19 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,36 +17,47 @@
 #include <memory.h>
 #include <math.h>
 #define PI 3.14159265359
-#define	PI2 PI / 2
-#define PI3 3 * PI / 2
 #define	FOV	60
 #define EAST 0
 #define NORTH PI / 2
 #define WEST PI
 #define SOUTH 3 * PI / 2
 #define DEGREE 0.01745329251
-typedef struct s_rayinfo
+#define MAX_VIEW_DIST 8
+
+typedef	struct s_rayinfo
 {
-	mlx_t* mlx;
-	mlx_image_t* black;
+	double	dist_h;
+	double	dist_v;
+	double	raydist;
+	double	ray_angle;
+	double	ntan;
+	double	atan;
+	double	step_x;
+	double	step_y;	
+	int		map_x;
+	int		map_y;
+	
+}			t_rayinfo;
+
+typedef struct s_data
+{
+	mlx_t		*mlx;
+	mlx_image_t	*black;
 	mlx_image_t *player;
 	mlx_image_t *screen;
-	double	angle;
-	double	rayangle;
-	double	playerdir_x;
-	double	playerdir_y;
-}			t_rayinfo;
+	double		player_angle;
+	double		playerdir_x;
+	double		playerdir_y;
+	int			height;
+	int			width;
+	t_rayinfo	*rayinfo;
+}			t_data;
 
 static void error(void)
 {
 	puts(mlx_strerror(mlx_errno));
 	exit(EXIT_FAILURE);
-}
-
-int get_r(int rgba)
-{
-    // Move 3 bytes to the right and mask out the first byte.
-    return ((rgba >> 24) & 0xFF);
 }
 
 double	ray_length(double ax, double ay, double bx, double by)
@@ -95,143 +106,162 @@ void	draw_line(int x_end, int y_end, int x_start, int y_start, mlx_image_t * scr
 	}
 }
 
-double	check_vertical_hit(double px, double py, t_rayinfo *info, double *vx, double *vy)
+void	calculate_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
+{
+	int	py;
+	int	px;
+
+	px = data->player->instances[0].x;
+	py = data->player->instances[0].y;
+	data->rayinfo->ntan = -tan(data->rayinfo->ray_angle);
+	if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
+	{
+		*ray_x = (((int)px >> 6) << 6) - 0.0001;
+		*ray_y = (px - *ray_x) * data->rayinfo->ntan + py;
+		data->rayinfo->step_x = -64;
+	}
+	if (data->rayinfo->ray_angle < NORTH || data->rayinfo->ray_angle > SOUTH)
+	{
+		*ray_x = (((int)px >> 6) << 6) + 64;
+		*ray_y = (px - *ray_x) * data->rayinfo->ntan + py;
+		data->rayinfo->step_x = 64;
+	}
+	data->rayinfo->step_y = -data->rayinfo->step_x * data->rayinfo->ntan;
+	if (data->rayinfo->ray_angle == 0 || data->rayinfo->ray_angle == WEST)
+	{
+		*ray_x = px;
+		*ray_y = py;
+		*i = MAX_VIEW_DIST;
+	}
+}
+
+void	calculate_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
+{
+	int	py;
+	int	px;
+
+	px = data->player->instances[0].x;
+	py = data->player->instances[0].y;
+	data->rayinfo->atan = -1 / tan(data->rayinfo->ray_angle);
+	if (data->rayinfo->ray_angle > WEST)
+	{
+		*ray_y = (((int)py >> 6) << 6) - 0.0001;
+		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
+		data->rayinfo->step_y = -64;
+	}
+	if (data->rayinfo->ray_angle < WEST)
+	{
+		*ray_y = (((int)py >> 6) << 6) + 64;
+		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
+		data->rayinfo->step_y = 64;
+	}
+	data->rayinfo->step_x = -data->rayinfo->step_y * data->rayinfo->atan;
+	if (data->rayinfo->ray_angle == WEST || data->rayinfo->ray_angle == 0)
+	{
+		*ray_x = px;
+		*ray_y = py;
+		*i = MAX_VIEW_DIST;
+	}
+}
+
+int	check_overflow(t_data *data)
+{
+	int	i;
+	i = 0;
+	if (data->rayinfo->map_x < 0 || data->rayinfo->map_x >= data->width)	
+		i = 1;
+	if (data->rayinfo->map_y < 0 || data->rayinfo->map_y >= data->height)
+		i = 1;
+	return (i);
+}
+
+double	check_vertical_hit(t_data *data, double *vx, double *vy)
 {
 	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
 	double	ray_y = 0;
 	double	ray_x = 0;
-	int		viewdist;
-	double	step_x = 0;
-	double	step_y = 0;
-	int		map_x = 0;
-	int		map_y = 0;
-	double	ntan = 0;
+	int		i;
 	double	dist_v = 100000;
-	int		height = 5;
-	int		width = 5;
 
-	viewdist = 0;
-	ntan = -tan(info->rayangle);
-	if (info->rayangle > PI2 && info->rayangle < PI3)
+	i = 0;
+	calculate_steps_v(data, &ray_y, &ray_x, &i);
+	while (i < MAX_VIEW_DIST)
 	{
-		ray_x = (((int)px >> 6) << 6) - 0.0001;
-		ray_y = (px - ray_x) * ntan + py;
-		step_x = -64;
-		step_y = -step_x * ntan;
-	}
-	if (info->rayangle < PI2 || info->rayangle > PI3)
-	{
-		ray_x = (((int)px >> 6) << 6) + 64;
-		ray_y = (px - ray_x) * ntan + py;
-		step_x = 64;
-		step_y = -step_x * ntan;
-	}
-	if (info->rayangle == 0 || info->rayangle == PI)
-	{
-		ray_x = px;
-		ray_y = py;
-		viewdist = 8;
-	}
-	while (viewdist < 8)
-	{
-		map_x = (int)ray_x >> 6;				
-		map_y = (int)ray_y >> 6;
-		if ((map_x >= 0 && map_x < width) && (map_y >= 0 && map_y < height) && arr[map_y][map_x] == 1)
+		data->rayinfo->map_x = (int)ray_x >> 6;				
+		data->rayinfo->map_y = (int)ray_y >> 6;
+		if (check_overflow(data) == 0 && arr[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
 		{
-			//printf("mapv_x = %d\nmapv_y = %d\n", mapv_x, mapv_y);
 			*vx = ray_x;
 			*vy = ray_y;
-			dist_v = ray_length(px, py, ray_x, ray_y);
-			viewdist = 8;
+			dist_v = ray_length(data->player->instances[0].x, data->player->instances[0].y, ray_x, ray_y);
+			i = MAX_VIEW_DIST;
 		}
 		else
 		{
-			ray_x += step_x;
-			ray_y += step_y;
-			viewdist += 1;
+			ray_x += data->rayinfo->step_x;
+			ray_y += data->rayinfo->step_y;
+			i += 1;
 			}
 		}
 		return (dist_v);
 }
 
-double	check_horizontal_hit(double px, double py, t_rayinfo *info, double *hx, double *hy)
+double	check_horizontal_hit(t_data *data, double *hx, double *hy)
 {
 	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
 	double	ray_y = 0;
 	double	ray_x = 0;
-	int		viewdist;
-	double	step_x = 0;
-	double	step_y = 0;
-	int		map_x = 0;
-	int		map_y = 0;
-	double	atan = 0;
-	double	dist_h = 100000;
-	int		height = 5;
-	int		width = 5;
+	int		i;
+	double	dist = 100000;
 
-	viewdist = 0;
-	atan = -1 / tan(info->rayangle);
-	if (info->rayangle > PI)
+	i = 0;
+	calculate_steps_h(data, &ray_y, &ray_x, &i);
+	while (i < MAX_VIEW_DIST)
 	{
-		ray_y = (((int)py >> 6) << 6) - 0.0001;
-		ray_x = (py - ray_y) * atan + px;
-		step_y = -64;
-		step_x = -step_y * atan;
-		}
-		if (info->rayangle < PI)
+		data->rayinfo->map_x = (int)ray_x >> 6;				
+		data->rayinfo->map_y = (int)ray_y >> 6;
+		if (check_overflow(data) == 0 && arr[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
 		{
-			ray_y = (((int)py >> 6) << 6) + 64;
-			ray_x = (py - ray_y) * atan + px;
-			step_y = 64;
-			step_x = -step_y * atan;
+			*hx = ray_x;
+			*hy = ray_y;
+			dist = ray_length(data->player->instances[0].x, data->player->instances[0].y, ray_x, ray_y);
+			i = MAX_VIEW_DIST;
 		}
-		if (info->rayangle == PI || info->rayangle == 0)
+		else
 		{
-			ray_x = px;
-			ray_y = py;
-			viewdist = 8;
+			ray_x += data->rayinfo->step_x;
+			ray_y += data->rayinfo->step_y;
+			i += 1;
 		}
-		while (viewdist < 8)
-		{
-			map_x = (int)ray_x >> 6;				
-			map_y = (int)ray_y >> 6;
-			if ((map_x >= 0 && map_x < width) && (map_y >= 0 && map_y < height) && arr[map_y][map_x] == 1)
-			{
-				//printf("maph_x = %d\nmaph_y = %d\n", maph_x, maph_y);
-				*hx = ray_x;
-				*hy = ray_y;
-				dist_h = ray_length((double)info->player->instances[0].x, (double)info->player->instances[0].y, ray_x, ray_y);
-				viewdist = 8;
-			}
-			else
-			{
-				ray_x += step_x;
-				ray_y += step_y;
-				viewdist += 1;
-			}
-		}
-		return (dist_h);
+	}
+	return (dist);
 }
 
-void	cast_rays(t_rayinfo *info)
+void	reset_ray_angle(t_data *data)
+{
+	if (data->rayinfo->ray_angle < 0)
+		data->rayinfo->ray_angle += 2 * PI;
+	if (data->rayinfo->ray_angle > 2 * PI)
+		data->rayinfo->ray_angle -= 2 * PI;
+}
+
+void	cast_rays(t_data *data)
 {
 	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
-	double	dist_h = 0;
-	double	dist_v = 0;
 	int		i = 0;
-	double	px = info->player->instances[0].x;
-	double 	py = info->player->instances[0].y;
 	double	hx = 0;
 	double 	vx = 0;
 	double	hy = 0;
 	double 	vy = 0;
 	int		j = 0;
+	double	line_h = 0;
+	double	line_o = 0;
 
-	mlx_image_t* screen = mlx_new_image(info->mlx, 320, 320);
+	mlx_image_t* screen = mlx_new_image(data->mlx, 320, 320);
 	if (!screen)
 		error();
 	memset(screen->pixels, 255, 320 * 320 * sizeof(int32_t));
-	if (mlx_image_to_window(info->mlx, screen, 0, 0) < 0)
+	if (mlx_image_to_window(data->mlx, screen, 0, 0) < 0)
     	error();
 	while (j < 5)
 	{
@@ -239,7 +269,7 @@ void	cast_rays(t_rayinfo *info)
 		{
 			if (arr[j][i] == 1)
 			{
-				if (mlx_image_to_window(info->mlx, info->black, i * 64, j * 64) < 0)
+				if (mlx_image_to_window(data->mlx, data->black, i * 64, j * 64) < 0)
         			error();
 			}
 			i++;
@@ -247,118 +277,135 @@ void	cast_rays(t_rayinfo *info)
 		i = 0;
 		j++;
 	}
-	if (mlx_image_to_window(info->mlx, info->player, info->player->instances[0].x, info->player->instances[0].y) < 0)
+	if (mlx_image_to_window(data->mlx, data->player, data->player->instances[0].x, data->player->instances[0].y) < 0)
 		error();
-	info->rayangle = info->angle - DEGREE * FOV / 2;
-	if (info->rayangle < 0)
-		info->rayangle += 2 * PI;
-	if (info->rayangle > 2 * PI)
-		info->rayangle -= 2 * PI;
+	data->rayinfo->ray_angle =  data->player_angle - DEGREE * FOV / 2;
+	reset_ray_angle(data);
 	while (i < FOV)
 	{
-		dist_h = check_horizontal_hit(px, py, info, &hx, &hy);
-		dist_v = check_vertical_hit(px, py, info, &vx, &vy);
-		printf("dist_h %f\ndist_v %f\n", dist_h, dist_v);
-		if (dist_v >= dist_h)
-			draw_line(px, py, hx, hy, screen);
-		else
-			draw_line(px, py, vx, vy, screen);
-		info->rayangle += DEGREE;
-		if (info->rayangle < 0)
-			info->rayangle += 2 * PI;
-		if (info->rayangle > 2 * PI)
-			info->rayangle -= 2 * PI;
+		data->rayinfo->dist_h = check_horizontal_hit(data, &hx, &hy);
+		data->rayinfo->dist_v = check_vertical_hit(data, &vx, &vy);
+		if (data->rayinfo->dist_v >= data->rayinfo->dist_h)
+		{
+			data->rayinfo->raydist = data->rayinfo->dist_h;
+			draw_line(data->player->instances[0].x, data->player->instances[0].y, hx, hy, screen);
+		}
+		if (data->rayinfo->dist_h >= data->rayinfo->dist_v)
+		{
+			data->rayinfo->raydist = data->rayinfo->dist_v;	
+			draw_line(data->player->instances[0].x, data->player->instances[0].y, vx, vy, screen);
+		}
+		draw_line(i * 8 , line_o, i * 8, line_h + line_o, screen);
+		data->rayinfo->ray_angle += DEGREE;
+		reset_ray_angle(data);
 		i++;
 	}
 }
 
-void	key_hook_move(mlx_key_data_t keydata, void* param)
+void	rotate_player(t_data *data, char direction)
 {
-	t_rayinfo	*info;
+	if (direction == 'R' )
+	{
+		data->player_angle += 0.2;
+		if (data->player_angle > 2 * PI)
+			data->player_angle -= 2 * PI;
+		data->playerdir_x = cos(data->player_angle) * 10;
+		data->playerdir_y = sin(data->player_angle) * 10;
+	}
+	if (direction == 'L')
+	{
+		data->player_angle -= 0.2;
+		if (data->player_angle < 0)
+			data->player_angle += 2 * PI;
+		data->playerdir_x = cos(data->player_angle) * 10;
+		data->playerdir_y = sin(data->player_angle) * 10;
+	}
+}
 
-	info = param;
-	if (keydata.key == MLX_KEY_RIGHT && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
+void	move_player(t_data *data, char direction)
+{
+	if (direction == 'W')
 	{
-		info->angle += 0.2;
-		if (info->angle > 2 * PI)
-			info->angle -= 2 * PI;
-		//info->rayangle = info->angle;
-		info->playerdir_x = cos(info->angle) * 10;
-		info->playerdir_y = sin(info->angle) * 10;
-	//	cast_rays(info);
+		data->player->instances[0].x += (int)data->playerdir_x;
+		data->player->instances[0].y += (int)data->playerdir_y;
 	}
-	if (keydata.key == MLX_KEY_LEFT && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
+	if (direction == 'A')
 	{
-		info->angle -= 0.2;
-		if (info->angle < 0)
-			info->angle += 2 * PI;
-		//info->rayangle = info->angle;
-		info->playerdir_x = cos(info->angle) * 10;
-		info->playerdir_y = sin(info->angle) * 10;
-	//	cast_rays(info);
+		data->player->instances[0].x += (int)data->playerdir_y;
 	}
-	//printf("player dir x %f , player dir y %f\n" ,info->playerdir_x, info->playerdir_y);
-	if (keydata.key == MLX_KEY_D && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
+	if (direction == 'S')
 	{
-		//info->player->instances[0].x -= (int)info->playerdir_x;
-		info->player->instances[0].x += (int)info->playerdir_y;
-		cast_rays(info);
+		data->player->instances[0].x -= (int)data->playerdir_x;
+		data->player->instances[0].y -= (int)data->playerdir_y;
 	}
-	//printf("player dir x %f , player dir y %f\n" ,info->playerdir_x, info->playerdir_y);
-	if (keydata.key == MLX_KEY_A && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
+	if (direction == 'D')
 	{
-		//info->player->instances[0].x += (int)info->playerdir_x;
-		info->player->instances[0].x -= (int)info->playerdir_y;
-		cast_rays(info);
+		data->player->instances[0].x -= (int)data->playerdir_y;
 	}
-	if (keydata.key == MLX_KEY_W && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
-	{
-		info->player->instances[0].x += (int)info->playerdir_x;
-		info->player->instances[0].y += (int)info->playerdir_y;
-		cast_rays(info);
-	}
-	if (keydata.key == MLX_KEY_S && (keydata.action == MLX_REPEAT || keydata.action == MLX_PRESS))
-	{
-		info->player->instances[0].x -= (int)info->playerdir_x;
-		info->player->instances[0].y -= (int)info->playerdir_y;
-		cast_rays(info);
-	}
-	//printf("%d x: \n%d y: ", info->player->instances->x, info->player->instances->y);
-	//if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
-		//mlx_close_window(param);
+}
+
+void	key_hook_movement(mlx_key_data_t keydata, void *param)
+{
+	t_data	*data;
+
+	data = param;
+	if (keydata.key == MLX_KEY_RIGHT && (keydata.action == MLX_REPEAT
+		|| keydata.action == MLX_PRESS))
+		rotate_player(data, 'R');
+	if (keydata.key == MLX_KEY_LEFT && (keydata.action == MLX_REPEAT
+		|| keydata.action == MLX_PRESS))
+		rotate_player(data, 'L');
+	if (keydata.key == MLX_KEY_W && (keydata.action == MLX_REPEAT
+		|| keydata.action == MLX_PRESS))
+		move_player(data, 'W');
+	if (keydata.key == MLX_KEY_A && (keydata.action == MLX_REPEAT
+		|| keydata.action == MLX_PRESS))
+		move_player(data, 'A');
+	if (keydata.key == MLX_KEY_S && (keydata.action == MLX_REPEAT
+		|| keydata.action == MLX_PRESS))
+		move_player(data, 'S');
+	if (keydata.key == MLX_KEY_D && (keydata.action == MLX_REPEAT
+		|| keydata.action == MLX_PRESS))
+		move_player(data, 'D');
+	cast_rays(data);
+	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
+		mlx_close_window(data->mlx);
 }
 
 int32_t	main(void)
 {
-	// Start mlx
 	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
 	int	i = 0;
 	int	j = 0;
+	t_data		data;
 	t_rayinfo	rayinfo;
-
+ 
 	mlx_t* mlx = mlx_init(320, 320, "Test", true);
 	if (!mlx)
         error();
+	memset(&data, 0, sizeof(t_data));
 	memset(&rayinfo, 0, sizeof(t_rayinfo));
-	rayinfo.mlx = mlx;
+	data.mlx = mlx;
 	mlx_image_t* black = mlx_new_image(mlx, 63, 63);
 	if (!black)
 		error();
-	rayinfo.player = mlx_new_image(mlx, 4, 4);
-	if (!rayinfo.player)
+	data.player = mlx_new_image(mlx, 4, 4);
+	if (!data.player)
 		error();
 	mlx_image_t* screen = mlx_new_image(mlx, 320, 320);
 	if (!screen)
 		error();
-	rayinfo.screen = screen;
-	rayinfo.black = black;
-	rayinfo.player = rayinfo.player;
-	rayinfo.angle = 290 * PI / 180;
-	rayinfo.rayangle = rayinfo.angle;
-	rayinfo.playerdir_x = cos(rayinfo.angle) * 10;
-	rayinfo.playerdir_y = sin(rayinfo.angle) * 10;
+	data.screen = screen;
+	data.black = black;
+	data.player_angle = 180 * PI / 180;
+	rayinfo.ray_angle = data.player_angle;
+	data.rayinfo = &rayinfo;
+	data.playerdir_x = cos(data.player_angle) * 10;
+	data.playerdir_y = sin(data.player_angle) * 10;
+	data.width = 5;
+	data.height = 5;
 	memset(black->pixels, 100, 64 * 64 * sizeof(int32_t));
-	memset(rayinfo.player->pixels, 127, 4 * 4 * sizeof(int32_t));
+	memset(data.player->pixels, 127, 4 * 4 * sizeof(int32_t));
 	memset(screen->pixels, 255, 320 * 320 * sizeof(int32_t));
 	if (mlx_image_to_window(mlx, screen, 0, 0) < 0)
         error();
@@ -376,12 +423,10 @@ int32_t	main(void)
 		i = 0;
 		j++;
 	}
-	if (mlx_image_to_window(mlx, rayinfo.player, 96, 224) < 0)
+	if (mlx_image_to_window(mlx, data.player, 96, 224) < 0)
 		error();
-	mlx_key_hook(mlx, &key_hook_move, &rayinfo);
+	mlx_key_hook(mlx, &key_hook_movement, &data);
 	mlx_loop(mlx);
-	mlx_delete_image(mlx, screen);
-	mlx_delete_image(mlx, black);
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }
