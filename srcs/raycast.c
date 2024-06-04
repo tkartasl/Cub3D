@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/04 15:48:19 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/04 15:55:48 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,7 +295,6 @@ void	cast_rays(t_data *data)
 			data->rayinfo->raydist = data->rayinfo->dist_v;	
 			draw_line(data->player->instances[0].x, data->player->instances[0].y, vx, vy, screen);
 		}
-		draw_line(i * 8 , line_o, i * 8, line_h + line_o, screen);
 		data->rayinfo->ray_angle += DEGREE;
 		reset_ray_angle(data);
 		i++;
