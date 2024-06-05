@@ -6,7 +6,7 @@
 #    By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/05 12:11:11 by tkartasl          #+#    #+#              #
-#    Updated: 2024/05/21 14:51:31 by tkartasl         ###   ########.fr        #
+#    Updated: 2024/06/05 15:26:22 by tkartasl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME = cub3D
 
 NAME_BONUS = cub3D_bonus
 
-SRCS = 
+SRCS = srcs/raycast.c \
+		#srcs/drawline.c
 
 #SRCS_BONUS =
 
@@ -38,7 +39,7 @@ MLX42_FLAGS = -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
 
 CC = cc ${FLAGS}
 
-CC_BONUS = cc -Wall -Wextra -Werror
+CC_BONUS = cc -g -Wall -Wextra -Werror
 
 all: ${NAME}
 
