@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/05 15:30:41 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/06 12:18:35 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,32 +82,38 @@ int	compare(int a, int b)
 	return (ret);
 }
 
-void	draw_line(int x_start, int y_start, int x_end, int y_end, mlx_image_t * screen)
+void	get_line_values(t_line *line, int x_a, int y_a, int x_b, int y_b)
 {
-	int dx = abs(x_end - x_start);
-	int	sx = compare(x_start, x_end);
-	int dy = -abs(y_end - y_start);
-	int	sy = compare(y_start, y_end);
-	int	err = dx + dy;
-	int	e2;
-	//int	color = get_rgba(255, 0, 0, 0);
-	e2 = 0;
+	line->delta_x = abs(x_b - x_a);
+	line->slope_x = compare(x_a, x_b);
+	line->delta_y = -abs(y_b - y_a);
+	line->slope_y = compare(y_a, y_b);		
+}
+
+void	draw_line(int x_start, int y_start, int x_end, int y_end, t_data *data, int color)
+{
+	int	error;
+	int	error2;
+
+	get_line_values(data->line, x_start, y_start, x_end, y_end);
+	error = data->line->delta_x + data->line->delta_y;
+	error2 = 0;
 	while (1)
 	{
 		if (x_start >= 0 && y_start >= 0 && x_start <= 320 && y_start <= 320)
-			mlx_put_pixel(screen, x_start, y_start, 155);
+			mlx_put_pixel(data->screen, x_start, y_start, color);
 		if (x_start == x_end && y_start == y_end)
 			break ;
-		e2 = 2 * err;
-		if (e2 >= dy)
+		error2 = 2 * error;
+		if (error2 >= data->line->delta_y)
 		{
-			err += dy;
-			x_start += sx;
+			error += data->line->delta_y;
+			x_start += data->line->slope_x;
 		}	
-		if (e2 <= dx)
+		if (error2 <= data->line->delta_x)
 		{
-			err += dx;
-			y_start += sy;
+			error += data->line->delta_x;
+			y_start += data->line->slope_y;
 		}
 	}
 }
@@ -183,11 +189,12 @@ int	check_overflow(t_data *data)
 
 double	check_vertical_hit(t_data *data, double *vx, double *vy)
 {
-	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
+	//int arr[10][10] = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+	int arr[5][6] = {{1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 1}, {1, 0, 0, 1, 0, 1}, {1, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1}};
 	double	ray_y = 0;
 	double	ray_x = 0;
 	int		i;
-	double	dist_v = 100000;
+	double	dist_v = 1000000;
 
 	i = 0;
 	calculate_steps_v(data, &ray_y, &ray_x, &i);
@@ -214,11 +221,12 @@ double	check_vertical_hit(t_data *data, double *vx, double *vy)
 
 double	check_horizontal_hit(t_data *data, double *hx, double *hy)
 {
-	int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
+	//int arr[10][10] = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+	int arr[5][6] = {{1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 1}, {1, 0, 0, 1, 0, 1}, {1, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1}};
 	double	ray_y = 0;
 	double	ray_x = 0;
 	int		i;
-	double	dist = 100000;
+	double	dist = 1000000;
 
 	i = 0;
 	calculate_steps_h(data, &ray_y, &ray_x, &i);
@@ -243,12 +251,12 @@ double	check_horizontal_hit(t_data *data, double *hx, double *hy)
 	return (dist);
 }
 
-void	reset_ray_angle(t_data *data)
+void	reset_ray_angle(double angle)
 {
-	if (data->rayinfo->ray_angle < 0)
-		data->rayinfo->ray_angle += 2 * PI;
-	if (data->rayinfo->ray_angle > 2 * PI)
-		data->rayinfo->ray_angle -= 2 * PI;
+	if (angle < 0)
+		angle += 2 * PI;
+	if (angle > 2 * PI)
+		angle -= 2 * PI;
 }
 
 void	cast_rays(t_data *data)
@@ -259,14 +267,24 @@ void	cast_rays(t_data *data)
 	double 	vx = 0;
 	double	hy = 0;
 	double 	vy = 0;
-	//int		j = 0;
+//	double	j = 0;
 	double	line_h = 0;
 	//double	line_o = 0;
 //	double	line_start;
 	double	line_end;
 	double	line_x;
+	double	correct_angle;
+	int	color = 0;
 
+	correct_angle = 0;
 	line_x = 0;
+	memset(data->screen->pixels, 255, 320 * 320 * sizeof(int32_t));
+	/*mlx_image_t* screen = mlx_new_image(data->mlx, 320, 320);
+	if (!screen)
+		error();
+	memset(screen->pixels, 255, 320 * 320 * sizeof(int32_t));
+	if (mlx_image_to_window(data->mlx, screen, 0, 0) < 0)
+		error();*/
 	/*mlx_t* mlx = mlx_init(320, 320, "Test", true);
 	if (!mlx)
         return (1);
@@ -293,35 +311,33 @@ void	cast_rays(t_data *data)
 	if (mlx_image_to_window(data->mlx, data->player, data->player->instances[0].x, data->player->instances[0].y) < 0)
 		error();*/
 	data->rayinfo->ray_angle =  data->player_angle - DEGREE * FOV / 2;
-	reset_ray_angle(data);
-	while (i < 320)
+	reset_ray_angle(correct_angle);
+	while (i < FOV)
 	{
 		data->rayinfo->dist_h = check_horizontal_hit(data, &hx, &hy);
 		data->rayinfo->dist_v = check_vertical_hit(data, &vx, &vy);
 		if (data->rayinfo->dist_v >= data->rayinfo->dist_h)
 		{
+			color = 150;
 			data->rayinfo->raydist = data->rayinfo->dist_h;
-			line_h = (25 * 320) / data->rayinfo->raydist;
-			if (line_h > 320)
-				line_h = 320;
-			//line_start = 160 + line_h / 2;
-			line_end = 160 - line_h / 2;
-			draw_line(i, line_end, i, line_h + line_end, data->screen);
-		//	draw_line(data->camera_x, data->camera_y, hx, hy, screen);
 		}
 		if (data->rayinfo->dist_h >= data->rayinfo->dist_v)
 		{
-			data->rayinfo->raydist = data->rayinfo->dist_v;	
-			line_h = (25 * 320) / data->rayinfo->raydist;
-			if (line_h > 320)
-				line_h = 320;
-			//line_start = 160 + line_h / 2;
-			line_end = 160 - line_h / 2;
-			draw_line(i, line_end, i, line_h + line_end, data->screen);
-		//	draw_line(data->camera_x, data->camera_y, vx, vy, screen);
+			color = 12;
+			data->rayinfo->raydist = data->rayinfo->dist_v;
 		}
+		correct_angle = data->player_angle - data->rayinfo->ray_angle;
+		reset_ray_angle(data->rayinfo->ray_angle);
+		data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
+		line_h = (30 * 320) / data->rayinfo->raydist;
+		if (line_h > 320)
+			line_h = 320;
+		//line_start = 160 + line_h / 2;
+		line_end = 160 - line_h / 2;
+		draw_line(i, line_end, i, line_h + line_end, data, color);
+		//	draw_line(data->camera_x, data->camera_y, hx, hy, screen);
 		data->rayinfo->ray_angle += DEGREE;
-		reset_ray_angle(data);
+		reset_ray_angle(data->rayinfo->ray_angle);
 		i++;
 	}
 }
@@ -409,12 +425,14 @@ int32_t	main(void)
 	//int	j = 0;
 	t_data		data;
 	t_rayinfo	rayinfo;
- 
+	t_line		line;
+	
 	mlx_t* mlx = mlx_init(320, 320, "Test", true);
 	if (!mlx)
         error();
 	memset(&data, 0, sizeof(t_data));
 	memset(&rayinfo, 0, sizeof(t_rayinfo));
+	memset(&line, 0, sizeof(t_line));
 	data.mlx = mlx;
 	/*mlx_image_t* black = mlx_new_image(mlx, 63, 63);
 	if (!black)
@@ -428,9 +446,10 @@ int32_t	main(void)
 	memset(screen->pixels, 255, 320 * 320 * sizeof(int32_t));
 	data.screen = screen;
 	//data.black = black;
-	data.player_angle = 180 * PI / 180;
+	data.player_angle = 270 * PI / 180;
 	rayinfo.ray_angle = data.player_angle;
 	data.rayinfo = &rayinfo;
+	data.line = &line;
 	data.playerdir_x = cos(data.player_angle) * 10;
 	data.playerdir_y = sin(data.player_angle) * 10;
 	data.width = 5;
