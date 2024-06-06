@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/05 12:39:18 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/06 09:46:11 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,14 @@ typedef	struct s_rayinfo
 	
 }			t_rayinfo;
 
+typedef struct s_line
+{
+	int	delta_x;
+	int	delta_y;
+	int	slope_x;
+	int	slope_y;
+}		t_line;
+
 typedef struct s_data
 {
 	mlx_t		*mlx;
@@ -55,6 +63,7 @@ typedef struct s_data
 	int			camera_y;
 	int			height;
 	int			width;
+	t_line		*line;
 	t_rayinfo	*rayinfo;
 }			t_data;
 
