@@ -35,7 +35,7 @@ MAKE = make
 
 FLAGS = -Wall -Wextra -Werror -Iincludes
 
-MLX42_FLAGS = -lglfw -L"/Users/$(USER)/.brew/opt/glfw/lib/"
+MLX42_FLAGS = -lglfw -L "/Users/$(USER)/.homebrew/opt/glfw/lib/"
 
 CC = cc ${FLAGS}
 
