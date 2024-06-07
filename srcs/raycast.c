@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/07 10:46:17 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/07 16:25:00 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,17 @@ static void error(void)
 	exit(EXIT_FAILURE);
 }
 
-double	ray_length(double ax, double ay, double bx, double by)
+double	ray_length(t_data *data)
 {
+	double	ax;
+	double	ay;
+	double	bx;
+	double	by;
+
+	ax = data->camera_x;
+	ay = data->camera_y;
+	bx = data->rayinfo->ray_x;
+	by = data->rayinfo->ray_y;
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }
 
@@ -57,7 +66,7 @@ void	draw_line(int x_start, int y_start, int x_end, int y_end, t_data *data, int
 	error2 = 0;
 	while (1)
 	{
-		if (x_start >= 0 && y_start >= 0 && x_start <= 320 && y_start <= 320)
+		if (x_start >= 0 && y_start >= 0 && x_start < WIDTH && y_start < HEIGHT)
 			mlx_put_pixel(data->screen, x_start, y_start, color);
 		if (x_start == x_end && y_start == y_end)
 			break ;
@@ -137,65 +146,65 @@ int	check_overflow(t_data *data)
 {
 	int	i;
 	i = 0;
-	if (data->rayinfo->map_x < 0 || data->rayinfo->map_x >= data->width)	
+	if (data->rayinfo->map_x < 0 || data->rayinfo->map_x >= data->map_width)
 		i = 1;
-	if (data->rayinfo->map_y < 0 || data->rayinfo->map_y >= data->height)
+	if (data->rayinfo->map_y < 0 || data->rayinfo->map_y >= data->map_height)
 		i = 1;
 	return (i);
 }
 
-double	check_vertical_hit(t_data *data, double *vx, double *vy)
+double	check_vertical_hit(t_data *data)
 {
-	int arr[5][6] = {{1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 1}, {1, 0, 0, 1, 0, 1}, {1, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1}};
-	double	ray_y = 0;
-	double	ray_x = 0;
 	int		i;
-	double	dist_v = 1000000;
+	double	dist_v;
+	int			map[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
 
+	dist_v = 1000000;
 	i = 0;
-	calculate_steps_v(data, &ray_y, &ray_x, &i);
+	calculate_steps_v(data, &data->rayinfo->ray_y, &data->rayinfo->ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		data->rayinfo->map_x = (int)ray_x >> 6;				
-		data->rayinfo->map_y = (int)ray_y >> 6;
-		if (check_overflow(data) == 0 && arr[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
+		data->rayinfo->map_x = (int)data->rayinfo->ray_x >> 6;		
+		data->rayinfo->map_y = (int)data->rayinfo->ray_y >> 6;
+		if (check_overflow(data) == 0
+			&& map[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
 		{
-			dist_v = ray_length(data->camera_x, data->camera_y, ray_x, ray_y);
+			dist_v = ray_length(data);
 			i = MAX_VIEW_DIST;
 		}
 		else
 		{
-			ray_x += data->rayinfo->step_x;
-			ray_y += data->rayinfo->step_y;
+			data->rayinfo->ray_x += data->rayinfo->step_x;
+			data->rayinfo->ray_y += data->rayinfo->step_y;
 			i += 1;
 			}
 		}
 		return (dist_v);
 }
 
-double	check_horizontal_hit(t_data *data, double *hx, double *hy)
+double	check_horizontal_hit(t_data *data)
 {
-	int arr[5][6] = {{1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 1}, {1, 0, 0, 1, 0, 1}, {1, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1}};
-	double	ray_y = 0;
-	double	ray_x = 0;
 	int		i;
-	double	dist = 1000000;
+	double	dist;
+	int			map[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
 
+	dist = 1000000;
 	i = 0;
-	calculate_steps_h(data, &ray_y, &ray_x, &i);
+	calculate_steps_h(data, &data->rayinfo->ray_y, &data->rayinfo->ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		data->rayinfo->map_x = (int)ray_x >> 6;				
-		data->rayinfo->map_y = (int)ray_y >> 6;
-		if (check_overflow(data) == 0 && arr[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
+		data->rayinfo->map_x = (int)data->rayinfo->ray_x >> 6;				
+		data->rayinfo->map_y = (int)data->rayinfo->ray_y >> 6;
+		if (check_overflow(data) == 0
+			&& map[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
 		{
-			dist = ray_length(data->camera_x, data->camera_y, ray_x, ray_y);
+			dist = ray_length(data);
 			i = MAX_VIEW_DIST;
 		}
 		else
 		{
-			ray_x += data->rayinfo->step_x;
-			ray_y += data->rayinfo->step_y;
+			data->rayinfo->ray_x += data->rayinfo->step_x;
+			data->rayinfo->ray_y += data->rayinfo->step_y;
 			i += 1;
 		}
 	}
@@ -210,26 +219,38 @@ void	reset_ray_angle(double *angle)
 		*angle -= 2 * PI;
 }
 
-void	cast_rays(t_data *data)
+void	draw_walls(t_data *data, int color, int x_pos)
 {
-	int		i = 0;
-	double	hx = 0;
-	double 	vx = 0;
-	double	hy = 0;
-	double 	vy = 0;
-	double	line_h = 0;
+	double	line_h;
 	double	line_end;
 	double	correct_angle;
-	int	color = 0;
 
-	correct_angle = 0;
-	memset(data->screen->pixels, 255, 320 * 320 * sizeof(int32_t));
-	data->rayinfo->ray_angle =  data->player_angle - DEGREE * FOV / 2;
+	correct_angle = data->player_angle - data->rayinfo->ray_angle;
+	reset_ray_angle(&correct_angle);
+	data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
+	line_h = (data->map_size * WIDTH) / data->rayinfo->raydist;
+	if (line_h > WIDTH)
+		line_h = WIDTH;
+	line_end =  HEIGHT / 2 - line_h / 2;
+	draw_line(x_pos, line_end, x_pos, line_h + line_end, data, color);
+	data->rayinfo->ray_angle += DEGREE / (WIDTH / FOV);
+	reset_ray_angle(&data->rayinfo->ray_angle);	
+}
+
+void	cast_rays(t_data *data)
+{
+	int		x_pos;
+	int		color;
+
+	color = 0;
+	x_pos = 0;
+	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
+	data->rayinfo->ray_angle = data->player_angle - DEGREE * FOV / 2;
 	reset_ray_angle(&data->rayinfo->ray_angle);
-	while (i < 320)
+	while (x_pos < WIDTH)
 	{
-		data->rayinfo->dist_h = check_horizontal_hit(data, &hx, &hy);
-		data->rayinfo->dist_v = check_vertical_hit(data, &vx, &vy);
+		data->rayinfo->dist_h = check_horizontal_hit(data);
+		data->rayinfo->dist_v = check_vertical_hit(data);
 		if (data->rayinfo->dist_v >= data->rayinfo->dist_h)
 		{
 			color = 150;
@@ -240,17 +261,8 @@ void	cast_rays(t_data *data)
 			color = 12;
 			data->rayinfo->raydist = data->rayinfo->dist_v;
 		}
-		correct_angle = data->player_angle - data->rayinfo->ray_angle;
-		reset_ray_angle(&correct_angle);
-		data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
-		line_h = (30 * 320) / data->rayinfo->raydist;
-		if (line_h > 320)
-			line_h = 320;
-		line_end = 160 - line_h / 2;
-		draw_line(i, line_end, i, line_h + line_end, data, color);
-		data->rayinfo->ray_angle += DEGREE / 5.3333;
-		reset_ray_angle(&data->rayinfo->ray_angle);
-		i++;
+		draw_walls(data, color, x_pos);
+		x_pos++;
 	}
 }
 
@@ -324,34 +336,40 @@ void	key_hook_movement(mlx_key_data_t keydata, void *param)
 		mlx_close_window(data->mlx);
 }
 
+void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo)
+{
+	data->player_angle = 270 * PI / 180;
+	rayinfo->ray_angle = data->player_angle;
+	data->rayinfo = rayinfo;
+	data->line = line;
+	data->playerdir_x = cos(data->player_angle) * 10;
+	data->playerdir_y = sin(data->player_angle) * 10;
+	data->map_width = 5;
+	data->map_height = 5;
+	data->map_size = 25;
+	data->camera_x = 96;
+	data->camera_y = 224;		
+}
+
 int32_t	main(void)
 {
 	t_data		data;
 	t_rayinfo	rayinfo;
 	t_line		line;
-	
-	mlx_t* mlx = mlx_init(320, 320, "Test", true);
+
+	ft_memset(&rayinfo, 0, sizeof(t_rayinfo));
+	ft_memset(&line, 0, sizeof(t_line));
+	ft_memset(&data, 0, sizeof(t_data));
+	assign_values(&data, &line, &rayinfo);
+	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (!mlx)
         error();
-	memset(&data, 0, sizeof(t_data));
-	memset(&rayinfo, 0, sizeof(t_rayinfo));
-	memset(&line, 0, sizeof(t_line));
 	data.mlx = mlx;
-	mlx_image_t* screen = mlx_new_image(mlx, 320, 320);
+	mlx_image_t* screen = mlx_new_image(mlx, WIDTH, HEIGHT);
 	if (!screen)
 		error();
-	memset(screen->pixels, 255, 320 * 320 * sizeof(int32_t));
 	data.screen = screen;
-	data.player_angle = 270 * PI / 180;
-	rayinfo.ray_angle = data.player_angle;
-	data.rayinfo = &rayinfo;
-	data.line = &line;
-	data.playerdir_x = cos(data.player_angle) * 10;
-	data.playerdir_y = sin(data.player_angle) * 10;
-	data.width = 5;
-	data.height = 5;
-	data.camera_x = 96;
-	data.camera_y = 224;
+	memset(data.screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	if (mlx_image_to_window(mlx, screen, 0, 0) < 0)
 		error();
 		cast_rays(&data);
