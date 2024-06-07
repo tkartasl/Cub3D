@@ -6,54 +6,11 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/06 12:18:35 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/07 10:46:17 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-/*#include "../MLX42/include/MLX42/MLX42.h"
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <memory.h>
-#include <math.h>
-#define PI 3.14159265359
-#define	FOV	60
-#define EAST 0
-#define NORTH PI / 2
-#define WEST PI
-#define SOUTH 3 * PI / 2
-#define DEGREE 0.01745329251
-#define MAX_VIEW_DIST 8
-
-typedef	struct s_rayinfo
-{
-	double	dist_h;
-	double	dist_v;
-	double	raydist;
-	double	ray_angle;
-	double	ntan;
-	double	atan;
-	double	step_x;
-	double	step_y;	
-	int		map_x;
-	int		map_y;
-	
-}			t_rayinfo;
-
-typedef struct s_data
-{
-	mlx_t		*mlx;
-	mlx_image_t	*black;
-	mlx_image_t *player;
-	mlx_image_t *screen;
-	double		player_angle;
-	double		playerdir_x;
-	double		playerdir_y;
-	int			height;
-	int			width;
-	t_rayinfo	*rayinfo;
-}			t_data;*/
 
 static void error(void)
 {
@@ -189,7 +146,6 @@ int	check_overflow(t_data *data)
 
 double	check_vertical_hit(t_data *data, double *vx, double *vy)
 {
-	//int arr[10][10] = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 	int arr[5][6] = {{1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 1}, {1, 0, 0, 1, 0, 1}, {1, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1}};
 	double	ray_y = 0;
 	double	ray_x = 0;
@@ -204,8 +160,6 @@ double	check_vertical_hit(t_data *data, double *vx, double *vy)
 		data->rayinfo->map_y = (int)ray_y >> 6;
 		if (check_overflow(data) == 0 && arr[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
 		{
-			*vx = ray_x;
-			*vy = ray_y;
 			dist_v = ray_length(data->camera_x, data->camera_y, ray_x, ray_y);
 			i = MAX_VIEW_DIST;
 		}
@@ -221,7 +175,6 @@ double	check_vertical_hit(t_data *data, double *vx, double *vy)
 
 double	check_horizontal_hit(t_data *data, double *hx, double *hy)
 {
-	//int arr[10][10] = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 	int arr[5][6] = {{1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 1}, {1, 0, 0, 1, 0, 1}, {1, 0, 0, 0, 0, 1}, {1, 1, 1, 1, 1, 1}};
 	double	ray_y = 0;
 	double	ray_x = 0;
@@ -236,8 +189,6 @@ double	check_horizontal_hit(t_data *data, double *hx, double *hy)
 		data->rayinfo->map_y = (int)ray_y >> 6;
 		if (check_overflow(data) == 0 && arr[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
 		{
-			*hx = ray_x;
-			*hy = ray_y;
 			dist = ray_length(data->camera_x, data->camera_y, ray_x, ray_y);
 			i = MAX_VIEW_DIST;
 		}
@@ -251,68 +202,31 @@ double	check_horizontal_hit(t_data *data, double *hx, double *hy)
 	return (dist);
 }
 
-void	reset_ray_angle(double angle)
+void	reset_ray_angle(double *angle)
 {
-	if (angle < 0)
-		angle += 2 * PI;
-	if (angle > 2 * PI)
-		angle -= 2 * PI;
+	if (*angle < 0)
+		*angle += 2 * PI;
+	if (*angle > 2 * PI)
+		*angle -= 2 * PI;
 }
 
 void	cast_rays(t_data *data)
 {
-	//int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
 	int		i = 0;
 	double	hx = 0;
 	double 	vx = 0;
 	double	hy = 0;
 	double 	vy = 0;
-//	double	j = 0;
 	double	line_h = 0;
-	//double	line_o = 0;
-//	double	line_start;
 	double	line_end;
-	double	line_x;
 	double	correct_angle;
 	int	color = 0;
 
 	correct_angle = 0;
-	line_x = 0;
 	memset(data->screen->pixels, 255, 320 * 320 * sizeof(int32_t));
-	/*mlx_image_t* screen = mlx_new_image(data->mlx, 320, 320);
-	if (!screen)
-		error();
-	memset(screen->pixels, 255, 320 * 320 * sizeof(int32_t));
-	if (mlx_image_to_window(data->mlx, screen, 0, 0) < 0)
-		error();*/
-	/*mlx_t* mlx = mlx_init(320, 320, "Test", true);
-	if (!mlx)
-        return (1);
-	mlx_image_t* screen = mlx_new_image(mlx, 320, 320);
-	if (!screen)
-		return (1);
-	memset(screen->pixels, 255, 320 * 320 * sizeof(int32_t));
-	if (mlx_image_to_window(mlx, screen, 0, 0) < 0)
-		return (1);*/
-	/*while (j < 5)
-	{
-		while (i < 5)
-		{
-			if (arr[j][i] == 1)
-			{
-				if (mlx_image_to_window(data->mlx, data->black, i * 64, j * 64) < 0)
-					error();
-			}
-			i++;
-		}
-		i = 0;
-		j++;
-	}
-	if (mlx_image_to_window(data->mlx, data->player, data->player->instances[0].x, data->player->instances[0].y) < 0)
-		error();*/
 	data->rayinfo->ray_angle =  data->player_angle - DEGREE * FOV / 2;
-	reset_ray_angle(correct_angle);
-	while (i < FOV)
+	reset_ray_angle(&data->rayinfo->ray_angle);
+	while (i < 320)
 	{
 		data->rayinfo->dist_h = check_horizontal_hit(data, &hx, &hy);
 		data->rayinfo->dist_v = check_vertical_hit(data, &vx, &vy);
@@ -327,17 +241,15 @@ void	cast_rays(t_data *data)
 			data->rayinfo->raydist = data->rayinfo->dist_v;
 		}
 		correct_angle = data->player_angle - data->rayinfo->ray_angle;
-		reset_ray_angle(data->rayinfo->ray_angle);
+		reset_ray_angle(&correct_angle);
 		data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
 		line_h = (30 * 320) / data->rayinfo->raydist;
 		if (line_h > 320)
 			line_h = 320;
-		//line_start = 160 + line_h / 2;
 		line_end = 160 - line_h / 2;
 		draw_line(i, line_end, i, line_h + line_end, data, color);
-		//	draw_line(data->camera_x, data->camera_y, hx, hy, screen);
-		data->rayinfo->ray_angle += DEGREE;
-		reset_ray_angle(data->rayinfo->ray_angle);
+		data->rayinfo->ray_angle += DEGREE / 5.3333;
+		reset_ray_angle(&data->rayinfo->ray_angle);
 		i++;
 	}
 }
@@ -366,26 +278,20 @@ void	move_player(t_data *data, char direction)
 {
 	if (direction == 'W')
 	{
-		//data->player->instances[0].x += (int)data->playerdir_x;
-		//data->player->instances[0].y += (int)data->playerdir_y;
 		data->camera_x += (int)data->playerdir_x;
 		data->camera_y += (int)data->playerdir_y;
 	}
 	if (direction == 'A')
 	{
-		//data->player->instances[0].x += (int)data->playerdir_y;
 		data->camera_x += (int)data->playerdir_y;
 	}
 	if (direction == 'S')
 	{
-	//	data->player->instances[0].x -= (int)data->playerdir_x;
-	//	data->player->instances[0].y -= (int)data->playerdir_y;
 		data->camera_x -= (int)data->playerdir_x;
 		data->camera_y -= (int)data->playerdir_y;
 	}
 	if (direction == 'D')
 	{
-	//	data->player->instances[0].x -= (int)data->playerdir_y;
 		data->camera_x -= (int)data->playerdir_y;
 	}
 }
@@ -420,9 +326,6 @@ void	key_hook_movement(mlx_key_data_t keydata, void *param)
 
 int32_t	main(void)
 {
-	//int arr[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
-	//int	i = 0;
-	//int	j = 0;
 	t_data		data;
 	t_rayinfo	rayinfo;
 	t_line		line;
@@ -434,18 +337,11 @@ int32_t	main(void)
 	memset(&rayinfo, 0, sizeof(t_rayinfo));
 	memset(&line, 0, sizeof(t_line));
 	data.mlx = mlx;
-	/*mlx_image_t* black = mlx_new_image(mlx, 63, 63);
-	if (!black)
-		error();
-	data.player = mlx_new_image(mlx, 4, 4);
-	if (!data.player)
-		error();*/
 	mlx_image_t* screen = mlx_new_image(mlx, 320, 320);
 	if (!screen)
 		error();
 	memset(screen->pixels, 255, 320 * 320 * sizeof(int32_t));
 	data.screen = screen;
-	//data.black = black;
 	data.player_angle = 270 * PI / 180;
 	rayinfo.ray_angle = data.player_angle;
 	data.rayinfo = &rayinfo;
@@ -456,26 +352,9 @@ int32_t	main(void)
 	data.height = 5;
 	data.camera_x = 96;
 	data.camera_y = 224;
-	//memset(black->pixels, 100, 64 * 64 * sizeof(int32_t));
-	//memset(data.player->pixels, 127, 4 * 4 * sizeof(int32_t));
 	if (mlx_image_to_window(mlx, screen, 0, 0) < 0)
 		error();
-	/*while (j < 5)
-	{
-		while (i < 5)
-		{
-			if (arr[j][i] == 1)
-			{
-				if (mlx_image_to_window(mlx, black, i * 64, j * 64) < 0)
-        			error();
-			}
-			i++;
-		}
-		i = 0;
-		j++;
-	}
-	if (mlx_image_to_window(mlx, data.player, 96, 224) < 0)
-		error();*/
+		cast_rays(&data);
 	mlx_key_hook(mlx, &key_hook_movement, &data);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
