@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 10:32:23 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 10:54:00 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,10 @@ typedef	struct s_rayinfo
 	double	atan;
 	double	step_x;
 	double	step_y;	
+	double	ray_x;
+	double	ray_y;
 	int		map_x;
 	int		map_y;
-	
 }			t_rayinfo;
 
 typedef struct s_line
@@ -81,19 +82,18 @@ typedef struct s_line
 typedef struct s_data
 {
 	mlx_t		*mlx;
-	mlx_image_t	*black;
-	mlx_image_t *player;
 	mlx_image_t *screen;
 	double		player_angle;
 	double		playerdir_x;
 	double		playerdir_y;
 	int			camera_x;
 	int			camera_y;
-	int			height;
-	int			width;
-	char		**map;
+	int			map_height;
+	int			map_width;
+	int			map_size;
 	t_line		*line;
 	t_rayinfo	*rayinfo;
+	char		**map;
 }			t_data;
 
 void	key_hook_movement(mlx_key_data_t keydata, void *param);

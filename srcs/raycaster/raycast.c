@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 10:05:52 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 10:54:53 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo)
 	data->camera_y = 224;		
 }
 
-int32_t	main(void)
+int32_t	raycaster(t_cub *cub)
 {
 	t_data		data;
 	t_rayinfo	rayinfo;

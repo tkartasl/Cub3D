@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   macros.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 14:39:04 by uahmed            #+#    #+#             */
-/*   Updated: 2024/05/31 14:39:06 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/06/17 10:52:48 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 
 # define	USAGE "USAGE:\n\t./cub3D <mapfile>\n"
 # define PI 3.14159265359
-# define	FOV	60
+# define FOV 60
 # define EAST 0
 # define NORTH PI / 2
 # define WEST PI
 # define SOUTH 3 * PI / 2
-# define DEGREE 0.01745329251
+# define DEGREE	0.01745329251
 # define MAX_VIEW_DIST 4
+# define HEIGHT 1024
+# define WIDTH 1280
 
 
 enum	e_type_identifiers
