@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/07 16:25:27 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 10:09:25 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,14 @@ typedef struct s_data
 	t_rayinfo	*rayinfo;
 	char		**map;
 }			t_data;
+
+void	key_hook_movement(mlx_key_data_t keydata, void *param);
+void	draw_walls(t_data *data, int color, int x_pos);
+int		check_overflow(t_data *data);
+void	reset_ray_angle(double *angle);
+double	ray_length(t_data *data);
+double	check_horizontal_hit(t_data *data);
+double	check_vertical_hit(t_data *data);
+void	cast_rays(t_data *data);
 
 #endif

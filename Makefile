@@ -6,7 +6,7 @@
 #    By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/05 12:11:11 by tkartasl          #+#    #+#              #
-#    Updated: 2024/06/05 15:26:22 by tkartasl         ###   ########.fr        #
+#    Updated: 2024/06/17 10:08:56 by tkartasl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,10 @@ NAME = cub3D
 NAME_BONUS = cub3D_bonus
 
 SRCS = srcs/raycast.c \
-		#srcs/drawline.c
+		srcs/movement.c \
+		srcs/drawing.c \
+		srcs/dda.c \
+		srcs/raycast_utils.c
 
 #SRCS_BONUS =
 
@@ -35,7 +38,7 @@ MAKE = make
 
 FLAGS = -Wall -Wextra -Werror -Iincludes
 
-MLX42_FLAGS = -lglfw -L "/Users/$(USER)/.homebrew/opt/glfw/lib/"
+MLX42_FLAGS = -Iinclude -ldl -lglfw -pthread -lm #-lglfw -L "/Users/$(USER)/.homebrew/opt/glfw/lib/"
 
 CC = cc ${FLAGS}
 
