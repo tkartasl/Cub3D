@@ -3,116 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsavolai <vsavolai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:15:20 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/04/03 13:36:37 by vsavolai         ###   ########.fr       */
+/*   Updated: 2023/12/01 09:11:38 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
 
-size_t	ft_gnl_strlen(const char *s)
+char	*ft_strndup(const char *s1, int len)
 {
-	size_t	i;
+	int		n;
+	char	*p;
 
-	i = 0;
-	if (!s)
+	n = 0;
+	p = malloc((len + 1) * sizeof(char));
+	if (p == 0)
 		return (0);
-	while (s[i] != '\0')
+	while (n < len && s1[n] != 0)
 	{
-		i++;
+		p[n] = s1[n];
+		n++;
 	}
-	return (i);
+	p[n] = 0;
+	return (p);
 }
 
-char	*ft_gnl_strchr(char *s, int c)
+char	*ft_strjoin_free(char *s1, char *s2)
 {
-	char	cc;
+	char	*s;
+	int		n;
 
-	if (!s)
+	if (!s1 || !s2)
 		return (0);
-	cc = c;
-	while (*s)
-	{
-		if (*s == cc)
-			return (s);
-		s++;
-	}
-	if (cc == '\0')
-		return (s);
-	return (0);
-}
-
-char	*ft_gnl_strcpy(char *s1, const char *s2)
-{
-	int	i;
-
-	i = 0;
-	if (s2 == NULL)
-		return (NULL);
-	while (s2[i])
-	{
-		s1[i] = s2[i];
-		i++;
-	}
-	s1[i] = '\0';
-	return (s1);
-}
-
-char	*ft_gnl_strjoin(char *s1, char *s2)
-{
-	char	*str;
-
-	if (!s2)
-		return (NULL);
-	if (!s1)
-	{
-		s1 = (char *)malloc(1 * sizeof(char));
-		if (!s1)
-		{
-			free (s2);
-			return (NULL);
-		}
-		s1[0] = '\0';
-	}
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (str == NULL)
+	n = 0;
+	s = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	if (s == 0)
 	{
 		free (s1);
-		free (s2);
-		return (NULL);
+		return (0);
 	}
-	ft_gnl_strcpy(str, s1);
-	ft_gnl_strcpy(str + ft_strlen(s1), s2);
-	free(s1);
-	return (str);
-}
-
-char	*ft_gnl_substr(char *s, unsigned int start, size_t	len)
-{
-	size_t	i;
-	char	*sub;
-
-	i = 0;
-	if (s == NULL)
-		return (NULL);
-	if (len > ft_strlen(&s[start]))
-		sub = (char *)malloc(sizeof(char) * (ft_strlen(&s[start]) + 1));
-	else
-		sub = (char *)malloc((len + 1) * sizeof(char));
-	if (!sub)
+	while (s1[n] != '\0')
 	{
-		free (s);
-		return (NULL);
+		s[n] = s1[n];
+		n++;
 	}
-	if (start >= ft_strlen(s))
-		start = ft_strlen(s);
-	while (i < len && s[start + i])
+	while (*s2 != '\0')
 	{
-		sub[i] = s[start + i];
-		i++;
+		s[n++] = *s2;
+		s2++;
 	}
-	sub[i] = '\0';
-	return (sub);
+	s[n] = 0;
+	free (s1);
+	return (s);
 }
