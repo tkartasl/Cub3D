@@ -12,7 +12,10 @@
 
 #include "../../includes/cub3D.h"
 
-void	game_usage(void);
+void	game_usage(void)
+{
+	printf("%s\n", USAGE);
+}
 
 int	main(int argc, char **argv)
 {
