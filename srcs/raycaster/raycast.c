@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 11:55:04 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 14:03:12 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	extract_map_arr(t_cub *cub, t_data *data)
 	{
 		map[y] = *(char **)vec_get(cub->map, y);
 		x = -1;
-		while (map[y][x])
+		while (map[y][++x])
 		{
 			if (map[y][x] == 'S' || map[y][x] == 'N' || map[y][x] == 'W' || map[y][x] == 'E')
 			{
@@ -80,10 +80,16 @@ void	extract_map_arr(t_cub *cub, t_data *data)
 	data->map = map;
 }
 
-
 void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 {
-	data->player_angle = 270 * PI / 180;
+	if (data->view_dir == 'N')
+		data->player_angle = NORTH;
+	else if (data->view_dir == 'W')
+		data->player_angle = WEST;
+	else if (data->view_dir == 'S')
+		data->player_angle = SOUTH;
+	else
+		data->player_angle = EAST;
 	rayinfo->ray_angle = data->player_angle;
 	data->rayinfo = rayinfo;
 	data->line = line;
@@ -92,8 +98,6 @@ void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 	data->map_width = 5;
 	data->map_height = 5;
 	data->map_size = 25;
-	data->camera_x = 96;
-	data->camera_y = 224;	
 	extract_map_arr(cub, data);
 }
 
@@ -124,3 +128,4 @@ int32_t	raycaster(t_cub *cub)
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }
+

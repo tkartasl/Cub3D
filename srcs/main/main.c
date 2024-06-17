@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:00:41 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/17 10:41:13 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 13:35:47 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,6 @@ int	main(int argc, char **argv)
 		free_vecs(&cub, NO, NO);
 		return (EXIT_SUCCESS);
 	}
-	game_usage();
+	//game_usage();
 	return (SUCCESS);
 }

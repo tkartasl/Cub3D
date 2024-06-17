@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 10:54:00 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 13:49:36 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ typedef struct	s_cub
 	t_vec	*map;
 }	t_cub;
 
-
 typedef	struct s_rayinfo
 {
 	double	dist_h;
@@ -93,6 +92,7 @@ typedef struct s_data
 	int			map_size;
 	t_line		*line;
 	t_rayinfo	*rayinfo;
+	char		view_dir;
 	char		**map;
 	char			playerdir;
 }			t_data;
