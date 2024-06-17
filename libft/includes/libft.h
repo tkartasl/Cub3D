@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+int		ft_isspace(int c);
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);
@@ -84,7 +85,6 @@ int		ft_putnbr(long int n);
 int		ft_write_fail_test(int count, int i);
 int		ft_printf(const char *s, ...);
 
-char	*get_next_line(int fd);
 
 size_t	ft_gnl_strlen(const char *s);
 char	*ft_gnl_strchr(char *s, int c);

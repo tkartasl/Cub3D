@@ -6,79 +6,167 @@
 #    By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/05 12:11:11 by tkartasl          #+#    #+#              #
-#    Updated: 2024/06/17 10:08:56 by tkartasl         ###   ########.fr        #
+#    Updated: 2024/06/17 10:34:31 by tkartasl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = cub3D
+NAME 		:=	cub3D
+ERRTXT		:=	error.txt
+OBJSDIR		:=	build
+INCSDIR		:=	includes
+SRCSDIR		:=	srcs
+DEPSDIR		:=	.deps
+LIBFTDIR	:=	libft
+LIBVECDIR 	:=	vec
+LIBFT		:=	$(LIBFTDIR)/libft.a
+LIBVEC		:=	$(LIBVECDIR)/libvec.a
 
-NAME_BONUS = cub3D_bonus
+RM			:=	rm -rf
+AR			:=	ar -rcs
+CC			:=	cc
+CFLAGS		:=	-Wall -Werror -Wextra
+DEBUGFLAGS	:=	-g -fsanitize=address
+DEPFLAGS	:=	-c -MT $$@ -MMD -MP -MF $(DEPSDIR)/$$*.d
+SCREENCLR	:=	printf "\033c"
+SLEEP		:=	sleep .1
 
-SRCS = srcs/raycast.c \
-		srcs/movement.c \
-		srcs/drawing.c \
-		srcs/dda.c \
-		srcs/raycast_utils.c
+MLXDIR		:=	MLX42
+MLXLIB		:=	$(MLXDIR)/$(OBJSDIR)/libmlx42.a
+MLXBREW		:=	-L "$(HOME)/homebrew/opt/glfw/lib/"
+MLXFLAGS	:=	-ldl -lglfw -pthread -lm
 
-#SRCS_BONUS =
+ifeq ($(shell uname), Darwin)
+	MLXFLAGS += $(MLXBREW)
+endif
 
-OBJS = ${SRCS:.c=.o}
+MODULES		:=	main \
+				init \
+				parser \
+				get_next_line \
+				validator \
+				raycaster \
+				free \
 
-OBJS_BONUS = ${SRCS_BONUS:.c=.o}
+SOURCES 	:= 	main.c \
+			init_structs.c \
+			parsing_begins.c \
+			parse_map.c \
+			parse_validate_colors.c \
+			parse_until_map.c \
+			parse_validate_textures.c \
+			type_identifiers_validation.c \
+			map_validation.c \
+			files_path_validation.c \
+			get_next_line.c \
+			get_next_line_utils.c \
+			raycast.c \
+			errors.c \
+			free_mem.c \
+			raycast.c \
+			movement.c \
+			drawing.c \
+			dda.c \
+			raycast_utils.c
 
-LIBFT = libft/
+SOURCEDIR	:=	$(addprefix $(SRCSDIR)/, $(MODULES))
+BUILDDIR	:=	$(addprefix $(OBJSDIR)/, $(MODULES))
+DEPENDDIR	:=	$(addprefix $(DEPSDIR)/, $(MODULES))
+SRCS		:=	$(foreach file, $(SOURCES), $(shell find $(SOURCEDIR) -name $(file)))
+OBJS		:=	$(patsubst $(SRCSDIR)/%.c, $(OBJSDIR)/%.o, $(SRCS))
+DEPS		:=	$(patsubst $(SRCSDIR)/%.c, $(DEPSDIR)/%.d, $(SRCS))
+INCS	 	:=	$(foreach header, $(INCSDIR), -I $(header))
+INCS	 	+=	$(foreach header, $(LIBVECDIR)/$(INCSDIR), -I $(header))
+INCS	 	+=	$(foreach header, $(LIBFTDIR)/$(INCSDIR), -I $(header))
+INCS	 	+=	$(foreach header, $(MLXDIR)/include/MLX42, -I $(header))
 
-MLXDIR = MLX42/build
+F			=	=====================================
+B			=	\033[1m
+T			=	\033[0m
+G			=	\033[32m
+V			=	\033[35m
+C			=	\033[36m
+R			=	\033[31m
+Y			=	\033[33m
 
-MLX42_A = ${MLXDIR}/libmlx42.a
+vpath %.c $(SOURCEDIR)
 
-LIBFT_A = libft/libft.a
+define cc_cmd
+$1/%.o: %.c | $(BUILDDIR) $(DEPENDDIR)
+	@if ! $(CC) -g $(INCS) $(DEPFLAGS) $$< -o $$@ 2> $(ERRTXT); then \
+		printf "$(R)$(B)\nERROR!\n$(F)$(T)\n"; \
+		printf "$(V)Unable to create object file:$(T)\n\n"; \
+		printf "$(R)$(B)$$@$(T)\n"; \
+		printf "$(Y)\n"; sed '$$d' $(ERRTXT); \
+		printf "$(R)$(B)\n$(F)\nExiting...$(T)\n"; exit 1 ; \
+	else \
+		printf "$(C)$(B)☑$(T)$(V) $$<$ \n    $(C)⮑\t$(G)$(B)$$@$(T) \t\n"; \
+	fi
+endef
 
-MAKE = make
+all: $(MLXLIB) $(LIBFT) $(LIBVEC) $(NAME)
 
-FLAGS = -Wall -Wextra -Werror -Iincludes
+$(MLXLIB):
+	@$(SCREENCLR)
+ifeq ("$(wildcard $(MLXDIR))", "")
+	@echo "$(G)$(B)$(MLXDIR)$(T)$(V) not found, commencing download.$(T)\n"
+	@git clone https://github.com/codam-coding-college/MLX42.git $(MLXDIR)
+else
+	@echo "\n$(V)Skipping download, $(G)$(B)$(MLXDIR)$(T)$(V) exists.$(T)"
+endif
+	@echo "\n$(V)Building $(G)$(B)MLX42$(T)$(V) binary...$(T)\n"
+	@cmake $(MLXDIR) -B $(MLXDIR)/build && make -C $(MLXDIR)/build -j4
 
-MLX42_FLAGS = -Iinclude -ldl -lglfw -pthread -lm #-lglfw -L "/Users/$(USER)/.homebrew/opt/glfw/lib/"
+$(LIBFT):
+	@make --quiet -C $(LIBFTDIR) all
+	@make title
 
-CC = cc ${FLAGS}
+$(LIBVEC):
+	@make --quiet -C $(LIBVECDIR) all
+	@make title
 
-CC_BONUS = cc -g -Wall -Wextra -Werror
+$(NAME): $(OBJS)
+	@$(CC) $(CFLAGS) $(INCS) $^ $(LIBVEC) $(LIBFT) $(MLXLIB) $(MLXFLAGS) -o $@
+	@make finish
 
-all: ${NAME}
-
-mlx42lib: ${MLX42_A} 
-
-${MLX42_A}: ${MLXDIR}
-	${MAKE} -C ${MLXDIR} -j4
-
-${MLXDIR}:
-	cmake MLX42 -B MLX42/build
-
-%.o: %.c
-	${CC} -o $@ -c $<
-
-${NAME}: ${OBJS} ${LIBFT_A} ${MLX42_A}
-	${CC} ${OBJS} ${LIBFT_A} ${MLX42_A} ${MLX42_FLAGS} -o ${NAME}
-
-${LIBFT_A}:
-	${MAKE} -C ${LIBFT}
-
-bonus: ${NAME_BONUS}
-
-${NAME_BONUS}: ${OBJS_BONUS} ${LIBFT_A} ${MLX42_A}
-	${CC_BONUS} ${OBJS_BONUS} ${LIBFT_A} ${MLX42_A} ${MLX42_FLAGS} -o ${NAME_BONUS}
+debug: CFLAGS += $(DEBUGFLAGS)
+debug: all
 
 clean:
-	${MAKE} clean -C ${LIBFT}
-	rm -rf ${OBJS}
-	rm -rf ${MLXDIR}
-	rm -rf ${OBJS_BONUS}
-	
+	@make --quiet -C $(LIBFTDIR) clean
+	@make --quiet -C $(LIBVECDIR) clean
+	@$(RM) $(OBJSDIR) $(DEPSDIR) $(ERRTXT)
+
 fclean: clean
-	rm -f ${NAME}
-	rm -rf ${NAME_BONUS}
-	${MAKE} fclean -C ${LIBFT}
+	@make --quiet -C $(LIBFTDIR) fclean
+	@make --quiet -C $(LIBVECDIR) fclean
+	@$(RM) $(MLXDIR)/$(OBJSDIR)
+	@$(RM) $(NAME)
 
 re: fclean all
 
-.PHONY: re, fclean, clean, all, mlx42lib bonus
+nm:
+	@$(foreach header, $(INCSDIR), norminette -R CheckDefine $(header))
+	@$(foreach source, $(SRCSDIR), norminette -R CheckForbiddenSourceHeader $(source))
+
+title:
+	@$(SCREENCLR) && printf "\n"
+	@printf "$(C)╔═╗╦ ╦╔╗ ╔═╗╔╦╗$(T)\n"
+	@printf "$(C)║  ║ ║╠╩╗║╣  ║║  by tkartasl$(T)\n"
+	@printf "$(C)╚═╝╚═╝╚═╝╚═╝═╩╝   & uahmed$(T)\n"
+	@printf "$(G)$(B)$(F)\n$(T)\n"
+
+finish:
+	@printf "\n$(G)$(B)$(F)$(T)\n"
+	@printf "$(C)╔═╗╦╔╗╔╦╔═╗╦ ╦╔═╗╔╦╗        $(V)$(B)$(NAME)$(T)\n"
+	@printf "$(C)╠╣ ║║║║║╚═╗╠═╣║╣  ║║$(T)\n"
+	@printf "$(C)╚  ╩╝╚╝╩╚═╝╩ ╩╚═╝═╩╝$(T)\n\n"
+
+$(BUILDDIR) $(DEPENDDIR):
+	@mkdir -p $@
+
+$(DEPS):
+	include $(wildcard $(DEPS))
+
+$(foreach build, $(BUILDDIR), $(eval $(call cc_cmd, $(build))))
+
+.PHONY: all debug clean fclean re title finish
