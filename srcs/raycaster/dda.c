@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:03:00 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 10:06:59 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 12:34:14 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ double	check_vertical_hit(t_data *data)
 {
 	int		i;
 	double	dist_v;
-	int			map[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
 
 	dist_v = 1000000;
 	i = 0;
@@ -84,7 +83,7 @@ double	check_vertical_hit(t_data *data)
 		data->rayinfo->map_x = (int)data->rayinfo->ray_x >> 6;		
 		data->rayinfo->map_y = (int)data->rayinfo->ray_y >> 6;
 		if (check_overflow(data) == 0
-			&& map[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
+			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
 		{
 			dist_v = ray_length(data);
 			i = MAX_VIEW_DIST;
@@ -103,7 +102,6 @@ double	check_horizontal_hit(t_data *data)
 {
 	int		i;
 	double	dist;
-	int			map[5][5] = {{1, 1, 1, 1, 1}, {1, 0, 0, 0, 1}, {1, 0, 1, 0, 1}, {1, 0, 0, 0, 1}, {1, 1, 1, 1, 1}};
 
 	dist = 1000000;
 	i = 0;
@@ -113,7 +111,7 @@ double	check_horizontal_hit(t_data *data)
 		data->rayinfo->map_x = (int)data->rayinfo->ray_x >> 6;				
 		data->rayinfo->map_y = (int)data->rayinfo->ray_y >> 6;
 		if (check_overflow(data) == 0
-			&& map[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
+			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == 1)
 		{
 			dist = ray_length(data);
 			i = MAX_VIEW_DIST;

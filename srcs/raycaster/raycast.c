@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 11:55:04 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 12:52:31 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,21 @@ void	cast_rays(t_data *data)
 	}
 }
 
-void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo)
+void    extract_map_arr(t_cub *cub, t_data *data)
+{
+    int    ind;
+    char   **map;
+
+    ind = -1;
+    map = (char **)malloc(sizeof(char *) * (cub->map->len + 1));
+    // TODO: malloc check
+    while (++ind < cub->map->len)
+        map[ind] = *(char **)vec_get(cub->map, ind);
+    map[ind] = NULL;
+    data->map = map;
+}
+
+void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 {
 	data->player_angle = 270 * PI / 180;
 	rayinfo->ray_angle = data->player_angle;
@@ -64,7 +78,8 @@ void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo)
 	data->map_height = 5;
 	data->map_size = 25;
 	data->camera_x = 96;
-	data->camera_y = 224;		
+	data->camera_y = 224;
+	extract_map_arr(cub, data);		
 }
 
 int32_t	raycaster(t_cub *cub)
@@ -76,7 +91,7 @@ int32_t	raycaster(t_cub *cub)
 	ft_memset(&rayinfo, 0, sizeof(t_rayinfo));
 	ft_memset(&line, 0, sizeof(t_line));
 	ft_memset(&data, 0, sizeof(t_data));
-	assign_values(&data, &line, &rayinfo);
+	assign_values(&data, &line, &rayinfo, cub);
 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (!mlx)
         error();
@@ -94,3 +109,4 @@ int32_t	raycaster(t_cub *cub)
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }
+

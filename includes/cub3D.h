@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 10:54:00 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 12:31:42 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ typedef struct	s_cub
 	t_vec	*ceiling;	
 	t_vec	*map;
 }	t_cub;
-
 
 typedef	struct s_rayinfo
 {
