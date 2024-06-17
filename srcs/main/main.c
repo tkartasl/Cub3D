@@ -34,4 +34,3 @@ int	main(int argc, char **argv)
 	game_usage();
 	return (SUCCESS);
 }
-
