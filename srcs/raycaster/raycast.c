@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../../includes/cub3D.h"
 
 static void error(void)
 {
@@ -62,19 +62,21 @@ void	extract_map_arr(t_cub *cub, t_data *data)
 	y = -1;
 	map = (char **)malloc(sizeof(char *) * (cub->map->len + 1));
 	// TODO: malloc check
-	while (++ind < cub->map->len)
+	while (++y < cub->map->len)
 	{
-		map[ind] = *(char **)vec_get(cub->map, ind);
-		y = -1;
-		while (map[x][y])
+		map[y] = *(char **)vec_get(cub->map, y);
+		x = -1;
+		while (map[y][x])
 		{
 			if (map[y][x] == 'S' || map[y][x] == 'N' || map[y][x] == 'W' || map[y][x] == 'E')
 			{
-				data->
+				data->camera_y = (y * 64) - 32;
+				data->camera_x = (x * 64) - 32;
+				data->playerdir = map[y][x];
 			}
 		}
 	}
-	map[ind] = NULL;
+	map[y] = NULL;
 	data->map = map;
 }
 
