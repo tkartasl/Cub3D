@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/07 16:25:00 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 09:26:05 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,33 +48,33 @@ int	compare(int a, int b)
 	return (ret);
 }
 
-void	get_line_values(t_line *line, int x_a, int y_a, int x_b, int y_b)
+void	get_line_values(t_line *line, int x, int y_a, int y_b)
 {
-	line->delta_x = abs(x_b - x_a);
-	line->slope_x = compare(x_a, x_b);
+	line->delta_x = abs(x - x);
+	line->slope_x = compare(x, x);
 	line->delta_y = -abs(y_b - y_a);
 	line->slope_y = compare(y_a, y_b);		
 }
 
-void	draw_line(int x_start, int y_start, int x_end, int y_end, t_data *data, int color)
+void	draw_line(int x_pos, int y_start, int y_end, t_data *data, int color)
 {
 	int	error;
 	int	error2;
 
-	get_line_values(data->line, x_start, y_start, x_end, y_end);
+	get_line_values(data->line, x_pos, y_start, y_end);
 	error = data->line->delta_x + data->line->delta_y;
 	error2 = 0;
 	while (1)
 	{
-		if (x_start >= 0 && y_start >= 0 && x_start < WIDTH && y_start < HEIGHT)
-			mlx_put_pixel(data->screen, x_start, y_start, color);
-		if (x_start == x_end && y_start == y_end)
+		if (x_pos >= 0 && y_start >= 0 && x_pos < WIDTH && y_start < HEIGHT)
+			mlx_put_pixel(data->screen, x_pos, y_start, color);
+		if (y_start == y_end)
 			break ;
 		error2 = 2 * error;
 		if (error2 >= data->line->delta_y)
 		{
 			error += data->line->delta_y;
-			x_start += data->line->slope_x;
+			x_pos += data->line->slope_x;
 		}	
 		if (error2 <= data->line->delta_x)
 		{
@@ -231,8 +231,8 @@ void	draw_walls(t_data *data, int color, int x_pos)
 	line_h = (data->map_size * WIDTH) / data->rayinfo->raydist;
 	if (line_h > WIDTH)
 		line_h = WIDTH;
-	line_end =  HEIGHT / 2 - line_h / 2;
-	draw_line(x_pos, line_end, x_pos, line_h + line_end, data, color);
+	line_end = HEIGHT / 2 - line_h / 2;
+	draw_line(x_pos, line_end, line_h + line_end, data, color);
 	data->rayinfo->ray_angle += DEGREE / (WIDTH / FOV);
 	reset_ray_angle(&data->rayinfo->ray_angle);	
 }
@@ -372,7 +372,7 @@ int32_t	main(void)
 	memset(data.screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	if (mlx_image_to_window(mlx, screen, 0, 0) < 0)
 		error();
-		cast_rays(&data);
+	cast_rays(&data);
 	mlx_key_hook(mlx, &key_hook_movement, &data);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
