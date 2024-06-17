@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 12:31:42 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 13:49:36 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef struct s_data
 	int			map_size;
 	t_line		*line;
 	t_rayinfo	*rayinfo;
+	char		view_dir;
 	char		**map;
 }			t_data;
 

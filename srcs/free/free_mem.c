@@ -12,7 +12,11 @@
 
 # include "../../includes/cub3D.h"
 
-void	file_error(char *path, int use_errno);
+void	file_error(char *path, int use_errno)
+{
+	ft_putstr_fd(path, 2);
+	ft_putendl_fd("file path invalid", 2);
+}
 
 static	void	free_lines(t_cub *cub, int lines)
 {

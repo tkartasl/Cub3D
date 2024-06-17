@@ -6,13 +6,16 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:00:41 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/17 13:30:04 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 13:35:47 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-//void	game_usage(void);
+void	game_usage(void)
+{
+	printf("%s\n", USAGE);
+}
 
 int	main(int argc, char **argv)
 {

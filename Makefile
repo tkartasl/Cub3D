@@ -32,7 +32,7 @@ SLEEP		:=	sleep .1
 
 MLXDIR		:=	MLX42
 MLXLIB		:=	$(MLXDIR)/$(OBJSDIR)/libmlx42.a
-MLXBREW		:=	-L "$(HOME)/homebrew/opt/glfw/lib/"
+MLXBREW		:=	-L "/opt/homebrew/opt/glfw/lib/"
 MLXFLAGS	:=	-ldl -lglfw -pthread -lm
 
 ifeq ($(shell uname), Darwin)
@@ -62,7 +62,6 @@ SOURCES 	:= 	main.c \
 			raycast.c \
 			errors.c \
 			free_mem.c \
-			raycast.c \
 			movement.c \
 			drawing.c \
 			dda.c \

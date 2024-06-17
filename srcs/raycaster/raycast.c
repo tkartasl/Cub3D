@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 12:52:31 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 14:01:29 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,23 +52,44 @@ void	cast_rays(t_data *data)
 	}
 }
 
-void    extract_map_arr(t_cub *cub, t_data *data)
+void	extract_map_arr(t_cub *cub, t_data *data)
 {
-    int    ind;
-    char   **map;
+	int	x;
+	int	y;
+	char	**map;
 
-    ind = -1;
-    map = (char **)malloc(sizeof(char *) * (cub->map->len + 1));
-    // TODO: malloc check
-    while (++ind < cub->map->len)
-        map[ind] = *(char **)vec_get(cub->map, ind);
-    map[ind] = NULL;
-    data->map = map;
+	x = -1;
+	y = -1;
+	map = (char **)malloc(sizeof(char *) * (cub->map->len + 1));
+	// TODO: malloc check
+	while (++ind < cub->map->len)
+	{
+		map[ind] = *(char **)vec_get(cub->map, ind);
+		y = -1;
+		while (map[x][y])
+		{
+			if (map[y][x] == 'S' || map[y][x] == 'N' || map[y][x] == 'W' || map[y][x] == 'E')
+			{
+				data->camera_x = x * 64 - 32;
+				data->camera_y = y * 64 - 32;
+				data->view_dir = map[y][x];
+			}
+		}
+	}
+	map[ind] = NULL;
+	data->map = map;
 }
 
 void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 {
-	data->player_angle = 270 * PI / 180;
+	if (data->view_dir == 'N')
+		data->player_angle = NORTH;
+	else if (data->view_dir == 'W')
+		data->player_angle = WEST;
+	else if (data->view_dir == 'S')
+		data->player_angle = SOUTH;
+	else
+		data->player_angle = EAST;
 	rayinfo->ray_angle = data->player_angle;
 	data->rayinfo = rayinfo;
 	data->line = line;
@@ -77,9 +98,7 @@ void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 	data->map_width = 5;
 	data->map_height = 5;
 	data->map_size = 25;
-	data->camera_x = 96;
-	data->camera_y = 224;
-	extract_map_arr(cub, data);		
+	extract_map_arr(cub, data);
 }
 
 int32_t	raycaster(t_cub *cub)
@@ -94,7 +113,7 @@ int32_t	raycaster(t_cub *cub)
 	assign_values(&data, &line, &rayinfo, cub);
 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (!mlx)
-        error();
+		error();
 	data.mlx = mlx;
 	mlx_image_t* screen = mlx_new_image(mlx, WIDTH, HEIGHT);
 	if (!screen)
