@@ -79,7 +79,7 @@ int32_t	raycaster(t_cub *cub)
 	assign_values(&data, &line, &rayinfo);
 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (!mlx)
-        error();
+		error();
 	data.mlx = mlx;
 	mlx_image_t* screen = mlx_new_image(mlx, WIDTH, HEIGHT);
 	if (!screen)
