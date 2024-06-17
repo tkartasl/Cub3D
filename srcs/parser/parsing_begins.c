@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_begins.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:01:20 by uahmed            #+#    #+#             */
-/*   Updated: 2024/05/30 14:01:22 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/06/17 10:41:30 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "../../includes/cub3D.h"
 
 void	parse_until_map(t_cub *cub, int fd);
 void	parse_map(t_cub *cub, int fd);

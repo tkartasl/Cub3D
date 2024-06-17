@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   type_identifiers_validation.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:28:26 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/07 17:28:27 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/06/17 10:42:23 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "../../includes/cub3D.h"
 
 void	check_invalid_color(t_cub *cub, char *line, t_indices *inds, char **rgb)
 {

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse_validate_textures.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:07:35 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/07 17:07:36 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/06/17 10:41:27 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "../../includes/cub3D.h"
 
 void	parse_push_textures(t_cub *cub, t_indices *inds)
 {

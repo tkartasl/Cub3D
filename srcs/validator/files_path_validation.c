@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   files_path_validation.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:26:17 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/07 17:26:18 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/06/17 10:42:16 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "../../includes/cub3D.h"
 
 static	int	open_file(t_cub *cub, char *map_path)
 {

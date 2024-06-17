@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse_until_map.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:08:29 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/07 15:08:31 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/06/17 10:41:19 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/cub3d.h"
+# include "../../includes/cub3D.h"
 
 void	init_inds(t_indices *inds);
 void	init_tex_count(t_count *count);
