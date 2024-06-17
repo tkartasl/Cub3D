@@ -6,9 +6,10 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 09:43:07 by tkartasl          #+#    #+#             */
-/*   Updated: 2023/12/01 09:08:07 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/17 08:54:56 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 static void	ft_get_remain(char *buffer)
@@ -69,7 +70,7 @@ static char	*ft_cpy_line(int fd, char *buffer, char *str, size_t bcount)
 	{
 		ft_bzero(buffer, BUFFER_SIZE + 1);
 		bcount = read(fd, buffer, BUFFER_SIZE);
-		if (bcount < 0)
+		if ((int)bcount < 0)
 		{
 			free (str);
 			return (0);
