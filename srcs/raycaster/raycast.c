@@ -82,11 +82,12 @@ void	extract_map_arr(t_cub *cub, t_data *data)
 
 void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 {
-	if (data->view_dir == 'N')
+	extract_map_arr(cub, data);
+	if (data->playerdir == 'N')
 		data->player_angle = NORTH;
-	else if (data->view_dir == 'W')
+	else if (data->playerdir == 'W')
 		data->player_angle = WEST;
-	else if (data->view_dir == 'S')
+	else if (data->playerdir == 'S')
 		data->player_angle = SOUTH;
 	else
 		data->player_angle = EAST;
@@ -95,10 +96,9 @@ void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 	data->line = line;
 	data->playerdir_x = cos(data->player_angle) * 10;
 	data->playerdir_y = sin(data->player_angle) * 10;
-	data->map_width = 5;
-	data->map_height = 5;
+	data->map_width = 15;
+	data->map_height = cub->map->len;
 	data->map_size = 25;
-	extract_map_arr(cub, data);
 }
 
 int32_t	raycaster(t_cub *cub)
@@ -119,7 +119,7 @@ int32_t	raycaster(t_cub *cub)
 	if (!screen)
 		error();
 	data.screen = screen;
-	memset(data.screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
+	ft_memset(data.screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	if (mlx_image_to_window(mlx, screen, 0, 0) < 0)
 		error();
 	cast_rays(&data);
