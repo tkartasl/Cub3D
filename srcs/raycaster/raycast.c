@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/18 13:03:21 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:29:52 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,58 +18,31 @@ static void error(void)
 	exit(EXIT_FAILURE);
 }
 
-int get_rgba(int r, int g, int b, int a)
-{
-    return (r << 24 | g << 16 | b << 8 | a);
-}
-
 void	cast_rays(t_data *data)
 {
 	int		x_pos;
 	int		color;
-	int 	y;
 
 	color = 0;
 	x_pos = 0;
-	y = 0;
 	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	data->rayinfo->ray_angle = data->player_angle - DEGREE * FOV / 2;
 	reset_ray_angle(&data->rayinfo->ray_angle);
-	while (y < HEIGHT/2)
-	{
-		x_pos = 0;
-		while (x_pos < WIDTH)
-		{
-			mlx_put_pixel(data->screen, x_pos, y, get_rgba(*(int *)vec_get(data->cub->ceiling, 0), *(int *)vec_get(data->cub->ceiling, 1), *(int *)vec_get(data->cub->ceiling, 2), 210));
-			//mlx_put_pixel(data->screen, x_pos, y, get_rgba(0, 210, 0, 210));
-			++x_pos;
-		}
-		++y;
-	}
-	while (y < HEIGHT)
-	{
-		x_pos = 0;
-		while (x_pos < WIDTH)
-		{
-			mlx_put_pixel(data->screen, x_pos, y, get_rgba(*(int *)vec_get(data->cub->floor, 0), *(int *)vec_get(data->cub->floor, 1), *(int *)vec_get(data->cub->floor, 2), 210));
-			//mlx_put_pixel(data->screen, x_pos, y, get_rgba(0, 0, 210, 210));
-			++x_pos;
-		}
-		++y;
-	}
-	x_pos = 0;
+	draw_colors(data);
 	while (x_pos < WIDTH)
 	{
 		data->rayinfo->dist_h = check_horizontal_hit(data);
 		data->rayinfo->dist_v = check_vertical_hit(data);
 		if (data->rayinfo->dist_v >= data->rayinfo->dist_h)
 		{
-			color = 150;
+			color = 220;
+			data->wall = 0;
 			data->rayinfo->raydist = data->rayinfo->dist_h;
 		}
 		if (data->rayinfo->dist_h >= data->rayinfo->dist_v)
 		{
-			color = 12;
+			color = 100;
+			data->wall = 1;
 			data->rayinfo->raydist = data->rayinfo->dist_v;
 		}
 		draw_walls(data, color, x_pos);
@@ -142,13 +115,11 @@ int32_t	raycaster(t_cub *cub)
 	if (!mlx)
 		error();
 	data.mlx = mlx;
-	mlx_image_t* screen = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (!screen)
+	data.screen = mlx_new_image(mlx, WIDTH, HEIGHT);
+	if (!data.screen)
 		error();
-	data.screen = screen;
 	memset(data.screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
-	//memset(data.screen->pixels[0], get_rgba(255, 0, 0, 255), WIDTH * HEIGHT * sizeof(int32_t *));
-	if (mlx_image_to_window(mlx, screen, 0, 0) < 0)
+	if (mlx_image_to_window(mlx, data.screen, 0, 0) < 0)
 		error();
 	cast_rays(&data);
 	mlx_key_hook(mlx, &key_hook_movement, &data);
@@ -156,4 +127,3 @@ int32_t	raycaster(t_cub *cub)
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }
-

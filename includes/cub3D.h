@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/18 12:49:39 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 16:14:10 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,14 @@ typedef struct s_line
 	int	slope_y;
 }		t_line;
 
+typedef struct s_textures
+{
+	xpm_t *no;
+	xpm_t *so;
+	xpm_t *ea;
+	xpm_t *we;
+}		t_textures;
+
 typedef struct s_data
 {
 	mlx_t		*mlx;
@@ -90,6 +98,7 @@ typedef struct s_data
 	int			map_height;
 	int			map_width;
 	int			map_size;
+	int			wall;
 	t_line		*line;
 	t_rayinfo	*rayinfo;
 	char		**map;
@@ -118,4 +127,6 @@ void	parse_file(t_cub *cub, char *map_path);
 int32_t	raycaster(t_cub *cub);
 void	free_exit(t_cub *cub, char **type_id, int print_err);
 void	free_vecs(t_cub *cub, int exit_fail, int print_err);
+int		get_rgba(int r, int g, int b, int a);
+void	draw_colors(t_data *data)
 #endif
