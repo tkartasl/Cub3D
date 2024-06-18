@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:03:00 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 13:35:31 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 12:49:00 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ double	check_vertical_hit(t_data *data)
 		}
 		return (dist_v);
 }
-
+// write(1, "here\n", 5);
 double	check_horizontal_hit(t_data *data)
 {
 	int		i;
