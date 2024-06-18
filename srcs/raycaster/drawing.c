@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../../includes/cub3D.h"
 
 int	compare(int a, int b)
 {
@@ -71,8 +71,8 @@ void	draw_walls(t_data *data, int color, int x_pos)
 	line_h = (data->map_size * WIDTH) / data->rayinfo->raydist;
 	if (line_h > WIDTH)
 		line_h = WIDTH;
-	line_end = HEIGHT / 2 - line_h / 2;
+	line_end = (double)HEIGHT / 2 - line_h / 2;
 	draw_line(x_pos, line_end, line_h + line_end, data, color);
-	data->rayinfo->ray_angle += DEGREE / (WIDTH / FOV);
+	data->rayinfo->ray_angle += DEGREE / ((double)WIDTH / FOV);
 	reset_ray_angle(&data->rayinfo->ray_angle);	
 }

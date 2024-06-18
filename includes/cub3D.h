@@ -102,8 +102,8 @@ typedef struct s_data
 	t_line		*line;
 	t_rayinfo	*rayinfo;
 	char		**map;
+	char		playerdir;
 	t_cub		*cub;
-	char			playerdir;
 }			t_data;
 
 void	key_hook_movement(mlx_key_data_t keydata, void *param);

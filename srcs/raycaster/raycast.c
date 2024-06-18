@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/18 17:29:52 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:38:31 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 	data->playerdir_y = sin(data->player_angle) * 10;
 	data->map_width = 25;
 	data->map_size = 50;
-	
 }
 
 int32_t	raycaster(t_cub *cub)

@@ -9,7 +9,7 @@
 /*   Updated: 2024/04/12 15:00:15 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "vec.h"
+#include "../../vec/include/vec.h"
 
 void	vec_free(t_vec *vec)
 {
