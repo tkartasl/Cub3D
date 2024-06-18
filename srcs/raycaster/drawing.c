@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:59:04 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 09:59:50 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 12:53:54 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	draw_line(int x_pos, int y_start, int y_end, t_data *data, int color)
 	while (1)
 	{
 		if (x_pos >= 0 && y_start >= 0 && x_pos < WIDTH && y_start < HEIGHT)
-			mlx_put_pixel(data->screen, x_pos, y_start, color);
+			mlx_put_pixel(data->screen, x_pos, y_start, get_rgba(255, 0, 0, color));
 		if (y_start == y_end)
 			break ;
 		error2 = 2 * error;

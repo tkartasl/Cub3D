@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 14:03:12 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 13:03:21 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,37 @@ void	cast_rays(t_data *data)
 {
 	int		x_pos;
 	int		color;
+	int 	y;
 
 	color = 0;
 	x_pos = 0;
+	y = 0;
 	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	data->rayinfo->ray_angle = data->player_angle - DEGREE * FOV / 2;
 	reset_ray_angle(&data->rayinfo->ray_angle);
+	while (y < HEIGHT/2)
+	{
+		x_pos = 0;
+		while (x_pos < WIDTH)
+		{
+			mlx_put_pixel(data->screen, x_pos, y, get_rgba(*(int *)vec_get(data->cub->ceiling, 0), *(int *)vec_get(data->cub->ceiling, 1), *(int *)vec_get(data->cub->ceiling, 2), 210));
+			//mlx_put_pixel(data->screen, x_pos, y, get_rgba(0, 210, 0, 210));
+			++x_pos;
+		}
+		++y;
+	}
+	while (y < HEIGHT)
+	{
+		x_pos = 0;
+		while (x_pos < WIDTH)
+		{
+			mlx_put_pixel(data->screen, x_pos, y, get_rgba(*(int *)vec_get(data->cub->floor, 0), *(int *)vec_get(data->cub->floor, 1), *(int *)vec_get(data->cub->floor, 2), 210));
+			//mlx_put_pixel(data->screen, x_pos, y, get_rgba(0, 0, 210, 210));
+			++x_pos;
+		}
+		++y;
+	}
+	x_pos = 0;
 	while (x_pos < WIDTH)
 	{
 		data->rayinfo->dist_h = check_horizontal_hit(data);
@@ -70,19 +95,21 @@ void	extract_map_arr(t_cub *cub, t_data *data)
 		{
 			if (map[y][x] == 'S' || map[y][x] == 'N' || map[y][x] == 'W' || map[y][x] == 'E')
 			{
-				data->camera_y = (y * 64) - 32;
-				data->camera_x = (x * 64) - 32;
+				data->camera_y = (y * 64) + 32;
+				data->camera_x = (x * 64) + 32;
 				data->playerdir = map[y][x];
 			}
 		}
 	}
 	map[y] = NULL;
+	data->map_height = y;
 	data->map = map;
 }
 
 void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 {
 	extract_map_arr(cub, data);
+	data->cub = cub;
 	if (data->playerdir == 'N')
 		data->player_angle = NORTH;
 	else if (data->playerdir == 'W')
@@ -96,9 +123,8 @@ void	assign_values(t_data *data, t_line *line, t_rayinfo *rayinfo, t_cub *cub)
 	data->line = line;
 	data->playerdir_x = cos(data->player_angle) * 10;
 	data->playerdir_y = sin(data->player_angle) * 10;
-	data->map_width = 15;
-	data->map_height = cub->map->len;
-	data->map_size = 25;
+	data->map_width = 25;
+	data->map_size = 50;
 }
 
 int32_t	raycaster(t_cub *cub)

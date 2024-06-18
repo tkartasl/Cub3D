@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 13:49:36 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 12:49:39 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ typedef struct s_data
 	t_rayinfo	*rayinfo;
 	char		**map;
 	char		playerdir;
+	t_cub		*cub;
 }			t_data;
 
 void	key_hook_movement(mlx_key_data_t keydata, void *param);
