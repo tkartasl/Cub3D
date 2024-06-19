@@ -17,34 +17,20 @@ int get_rgba(int r, int g, int b, int a)
     return (r << 24 | g << 16 | b << 8 | a);
 }
 
-int	draw_ceiling(t_data *data)
+void	draw_ceiling(t_data *data, int x, int y)
 {
-	int	x;
 	int	red;
 	int	green;
 	int	blue;
-	int	y;
 
-	y = 0;
 	red = *(int *)vec_get(data->parser->ceiling, 0);
 	green = *(int *)vec_get(data->parser->ceiling, 1);
 	blue = *(int *)vec_get(data->parser->ceiling, 2);
-	while (y < HEIGHT/2)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			mlx_put_pixel(data->screen, x, y, get_rgba(red, green, blue, 210));
-			++x;
-		}
-		++y;
-	}
-	return (y);
+	mlx_put_pixel(data->screen, x, y, get_rgba(red, green, blue, 210));
 }
 
-void	draw_floor(t_data *data, int y)
+void	draw_floor(t_data *data, int x, int y)
 {
-	int	x;
 	int	red;
 	int	green;
 	int	blue;
@@ -52,23 +38,5 @@ void	draw_floor(t_data *data, int y)
 	red = *(int *)vec_get(data->parser->floor, 0);
 	green = *(int *)vec_get(data->parser->floor, 1);
 	blue = *(int *)vec_get(data->parser->floor, 2);
-	
-	while (y < HEIGHT)
-	{
-		x = 0;
-		while (x < WIDTH)
-		{
-			mlx_put_pixel(data->screen, x, y, get_rgba(red, green, blue, 210));
-			++x;
-		}
-		++y;
-	}
-}
-
-void	draw_colors(t_data *data)
-{
-	int	y;
-
-	y = draw_ceiling(data);
-	draw_floor(data, y);
+	mlx_put_pixel(data->screen, x, y, get_rgba(red, green, blue, 210));
 }

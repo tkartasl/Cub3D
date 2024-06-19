@@ -26,7 +26,6 @@ void	cast_rays(t_data *data)
 	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	data->rayinfo->ray_angle = data->player_angle - DEGREE * FOV / 2;
 	reset_ray_angle(&data->rayinfo->ray_angle);
-	draw_colors(data);
 	while (x_pos < WIDTH)
 	{
 		data->rayinfo->dist_h = check_horizontal_hit(data);

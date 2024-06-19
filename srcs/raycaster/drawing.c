@@ -13,6 +13,9 @@
 #include "../../includes/cub3D.h"
 #include <stdint.h>
 
+void	draw_ceiling(t_data *data, int x, int y);
+void	draw_floor(t_data *data, int x, int y);
+
 int	compare(int a, int b)
 {
 	int	ret;
@@ -39,27 +42,18 @@ int	get_texture_pixel(t_textures *texture, int x_pos, int y_start)
 	mlx_texture_t	*wall;
 
 	color = 0;
-	//if (y_start > 9 && x_pos == 0)
-	//	write(1, "haha\n", 5);
 	wall = texture->wall[texture->idx];
-	//ft_putnbr(texture->idx);
 	if (x_pos > 64)
 		x_pos = x_pos % 64;
 	if (y_start > 64)
 		y_start = y_start % 64;
-	offset = ((y_start * wall->width) + x_pos) * (uint32_t)wall->bytes_per_pixel;
-	//write(1, "haha\n", 5);
+	//offset = ((x_pos * wall->width) + y_start) * (uint32_t)wall->bytes_per_pixel;
+	offset = x_pos * sizeof(uint32_t) + y_start * wall->width * sizeof(uint32_t);
 	color = (wall->pixels[offset] << 24) | (wall->pixels[offset + 1] << 16) | (wall->pixels[offset + 2] << 8) | wall->pixels[offset + 1];
-	/*color = wall->pixels[offset + 1] <<;
-	color = color << 8;
-	color += wall->pixels[offset + 2];
-	color = color << 8;
-	color += wall->pixels[offset + 3];*/
-	
 	return (color);
 }
 
-void	draw_line(int x_pos, int y_start, int y_end, t_data *data)
+int	draw_line(int x_pos, int y_start, int y_end, t_data *data)
 {
 	int	error;
 
@@ -83,6 +77,7 @@ void	draw_line(int x_pos, int y_start, int y_end, t_data *data)
 			y_start += data->line->slope_y;
 		}
 	}
+	return (y_end);
 }
 
 void	get_texture_index(t_data *data)
@@ -108,18 +103,26 @@ void	draw_walls(t_data *data, int x_pos)
 	double	height;
 	double	start;
 	double	correct_angle;
+	int	y;
 
 	correct_angle = data->player_angle - data->rayinfo->ray_angle;
 	reset_ray_angle(&correct_angle);
 	data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
-//	line_h = (WIDTH) / data->rayinfo->raydist;
 	height = (data->map_size * 100) / data->rayinfo->raydist;
-	if (height >= WIDTH)
-		height = WIDTH;
-		//draw_end_wall(data, height, x_pos);
-	start = (double)HEIGHT / 2 - height / 2;
+	if (height > HEIGHT)
+		height = HEIGHT;
+	start = ((double)HEIGHT / 2) - (height / 2);
+	y = -1;
 	get_texture_index(data);
-	draw_line(x_pos, start, height + start, data);
+	while (++y < HEIGHT)
+	{
+		if (y < start && (height + start) < HEIGHT)
+			draw_ceiling(data, x_pos, y);
+		else if (y > start && y <= (start + height))
+			y = draw_line(x_pos, start, height + start, data);
+		else if (y > (height + start))
+			draw_floor(data, x_pos, y);
+	}
 	data->rayinfo->ray_angle += DEGREE / ((double)WIDTH / FOV);
 	reset_ray_angle(&data->rayinfo->ray_angle);	
 }
