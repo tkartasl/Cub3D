@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/18 12:49:39 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 15:44:27 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef	struct	s_count
 	int	c;
 }	t_count;
 
-typedef struct	s_cub
+typedef struct	s_parser
 {
 	int	dir_info;
 	char	**line;
@@ -52,7 +52,7 @@ typedef struct	s_cub
 	t_vec	*floor;	
 	t_vec	*ceiling;	
 	t_vec	*map;
-}	t_cub;
+}	t_parser;
 
 typedef	struct s_rayinfo
 {
@@ -82,6 +82,7 @@ typedef struct s_data
 {
 	mlx_t		*mlx;
 	mlx_image_t *screen;
+	mlx_image_t *minimap;
 	double		player_angle;
 	double		playerdir_x;
 	double		playerdir_y;
@@ -94,7 +95,7 @@ typedef struct s_data
 	t_rayinfo	*rayinfo;
 	char		**map;
 	char		playerdir;
-	t_cub		*cub;
+	t_parser	*parser;
 }			t_data;
 
 void	key_hook_movement(mlx_key_data_t keydata, void *param);
@@ -105,17 +106,22 @@ double	ray_length(t_data *data);
 double	check_horizontal_hit(t_data *data);
 double	check_vertical_hit(t_data *data);
 void	cast_rays(t_data *data);
-void	init_cub(t_cub *cub);
+void	init_parser(t_parser *parser);
+void	init_data_mlx(t_data *data, t_parser *parser);
 int		valid_map(char **argv);
 void	skip_spaces(char *s, int *ind);
 void	next_strings_end(char *line, int *end, int check_comma);
-void	eof_malloc_check(t_cub *cub, int malloc_flag, int map, int fd);
-void	validate_horizontal(t_cub *cub, char *line);
-void	validate_middle(t_cub *cub, char *line);
-int		open_validate_file(t_cub *cub, char *map_path, char *ext, int texture_path);
-void	validate_type_identifier(t_cub *cub, char **type_id);
-void	parse_file(t_cub *cub, char *map_path);
-int32_t	raycaster(t_cub *cub);
-void	free_exit(t_cub *cub, char **type_id, int print_err);
-void	free_vecs(t_cub *cub, int exit_fail, int print_err);
+void	eof_malloc_check(t_parser *parser, int malloc_flag, int map, int fd);
+void	validate_horizontal(t_parser *parser, char *line);
+void	validate_middle(t_parser *parser, char *line);
+int		open_validate_file(t_parser *parser, char *map_path, char *ext, int texture_path);
+void	validate_type_identifier(t_parser *parser, char **type_id);
+void	parse_file(t_parser *parser, char *map_path);
+int32_t	raycaster(t_data *data);
+void	freeparser_exit(t_parser *parser);
+void	free_exit(t_parser *parser, char **type_id, int print_err);
+void	free_vecs(t_parser *parser, int exit_fail, int print_err);
+void	freedata_exit(t_data *data, int exit_status);
+int get_rgba(int r, int g, int b, int a);
+
 #endif

@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_structs.c                                     :+:      :+:    :+:   */
+/*   init_parsing_structs.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:01:10 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/17 10:41:43 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:36:37 by username         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
-
-void	freecub_exit(t_cub *cub);
 
 void	init_inds(t_indices *inds)
 {
@@ -31,59 +29,59 @@ void	init_tex_count(t_count *count)
 	count->c = 0;
 }
 
-static	void	init_vecs(t_cub *cub)
+static	void	init_vecs(t_parser *parser)
 {
-	vec_new(cub->textures_paths, 0, sizeof(char **));
-	vec_new(cub->textures_info, 0, sizeof(int));
-	vec_new(cub->ceiling, 0, sizeof(int)); // TODO: change int to what it is
-	vec_new(cub->floor, 0, sizeof(int)); // TODO: change int to what it is
-	vec_new(cub->map, 0, sizeof(char **));
+	vec_new(parser->textures_paths, 0, sizeof(char **));
+	vec_new(parser->textures_info, 0, sizeof(int));
+	vec_new(parser->ceiling, 0, sizeof(int)); // TODO: change int to what it is
+	vec_new(parser->floor, 0, sizeof(int)); // TODO: change int to what it is
+	vec_new(parser->map, 0, sizeof(char **));
 }
 
-static	void	alloc_init_vecs(t_cub *cub)
+static	void	alloc_init_vecs(t_parser *parser)
 {
 	t_vec	*ceiling;
 	t_vec	*floor;
 
 	ceiling	= (t_vec *)malloc(sizeof(t_vec));
 	if (ceiling == NULL)
-		freecub_exit(cub);
-	cub->ceiling = ceiling;
+		freeparser_exit(parser);
+	parser->ceiling = ceiling;
 	floor	= (t_vec *)malloc(sizeof(t_vec));
 	if (floor == NULL)
-		freecub_exit(cub);
-	cub->floor = floor;
-	init_vecs(cub);
+		freeparser_exit(parser);
+	parser->floor = floor;
+	init_vecs(parser);
 }
 
-void	null_cub(t_cub *cub)
+void	null_parser(t_parser *parser)
 {
-	cub->dir_info = 0;
-	cub->line = NULL;
-	cub->textures_info = NULL;
-	cub->map = NULL;
-	cub->floor = NULL;
-	cub->ceiling = NULL;
+	parser->dir_info = 0;
+	parser->line = NULL;
+	parser->textures_info = NULL;
+	parser->map = NULL;
+	parser->floor = NULL;
+	parser->ceiling = NULL;
 }
 
-void	init_cub(t_cub *cub)
+void	init_parser(t_parser *parser)
 {
 	t_vec	*textures_paths;
 	t_vec	*textures_info;
 	t_vec	*map;
 
-	null_cub(cub);
+	null_parser(parser);
 	textures_paths = (t_vec *)malloc(sizeof(t_vec));
 	if (textures_paths == NULL)
 		exit(EXIT_FAILURE);
-	cub->textures_paths = textures_paths;
+	parser->textures_paths = textures_paths;
 	textures_info = (t_vec *)malloc(sizeof(t_vec));
 	if (textures_info == NULL)
-		freecub_exit(cub);
-	cub->textures_info = textures_info;
+		freeparser_exit(parser);
+	parser->textures_info = textures_info;
 	map = (t_vec *)malloc(sizeof(t_vec));
 	if (map  == NULL)
-		freecub_exit(cub);
-	cub->map = map;
-	alloc_init_vecs(cub);
+		freeparser_exit(parser);
+	parser->map = map;
+	alloc_init_vecs(parser);
 }

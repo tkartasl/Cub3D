@@ -48,7 +48,9 @@ MODULES		:=	main \
 				free \
 
 SOURCES 	:= 	main.c \
-			init_structs.c \
+			init_parser.c \
+			init_data.c \
+			init_mlx.c \
 			parsing_begins.c \
 			parse_map.c \
 			parse_validate_colors.c \

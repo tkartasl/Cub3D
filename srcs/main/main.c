@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:00:41 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/17 13:35:47 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 15:44:14 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,17 @@ void	game_usage(void)
 
 int	main(int argc, char **argv)
 {
-	t_cub	cub;
+	t_parser	parser;
+	t_data		data;
 
 	if (argc == 2)
 	{
-		init_cub(&cub);
-		parse_file(&cub, argv[1]);
-		cub.file = NULL;
-		cub.file = argv[1];
-		raycaster(&cub);
-		free_vecs(&cub, NO, NO);
-		return (EXIT_SUCCESS);
+		init_parser(&parser);
+		parse_file(&parser, argv[1]);
+		init_data_mlx(&data, &parser);
+		raycaster(&data);
+		freedata_exit(&data, EXIT_SUCCESS);
 	}
-	//game_usage();
+	game_usage();
 	return (SUCCESS);
 }

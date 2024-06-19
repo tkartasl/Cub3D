@@ -12,7 +12,7 @@
 
 #include "../../includes/cub3D.h"
 
-static	int	open_file(t_cub *cub, char *map_path)
+static	int	open_file(t_parser *parser, char *map_path)
 {
 	int	fd;
 
@@ -21,15 +21,15 @@ static	int	open_file(t_cub *cub, char *map_path)
 	if (fd != -1)
 	{
 		close(fd);
-		free_vecs(cub, YES, YES);
+		free_vecs(parser, YES, YES);
 	}
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
-		free_vecs(cub, YES, YES);
+		free_vecs(parser, YES, YES);
 	return (fd);
 }
 
-int	open_validate_file(t_cub *cub, char *map_path, char *ext, int texture_path)
+int	open_validate_file(t_parser *parser, char *map_path, char *ext, int texture_path)
 {
 	size_t	path_len;
 	size_t	bfr_ext;
@@ -38,8 +38,8 @@ int	open_validate_file(t_cub *cub, char *map_path, char *ext, int texture_path)
 	path_len = ft_strlen(map_path);
 	bfr_ext = path_len - 4;
 	if (ft_strncmp(ext, &map_path[bfr_ext], path_len - bfr_ext))
-		free_vecs(cub, YES, YES);
-	fd = open_file(cub, map_path);
+		free_vecs(parser, YES, YES);
+	fd = open_file(parser, map_path);
 	if (texture_path == YES)
 	{
 		close(fd);

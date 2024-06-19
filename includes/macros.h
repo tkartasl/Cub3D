@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 14:39:04 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/18 10:26:15 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:24:56 by username         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # define MAX_VIEW_DIST 100
 # define HEIGHT 1024
 # define WIDTH 1280
+# define MINI_HEIGHT 10
+# define MINI_WIDTH 10
 
 
 enum	e_type_identifiers

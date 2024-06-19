@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../../includes/cub3D.h"
 
 void	calculate_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
 {

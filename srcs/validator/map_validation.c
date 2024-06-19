@@ -12,40 +12,40 @@
 
 #include "../../includes/cub3D.h"
 
-static	char	check_wall_unit(t_cub *cub, int *ind, int first)
+static	char	check_wall_unit(t_parser *parser, int *ind, int first)
 {
 	char	c;
 
 	if (first == YES)
-		skip_spaces(*cub->line, ind);
-	c = (*cub->line)[*ind];
+		skip_spaces(*parser->line, ind);
+	c = (*parser->line)[*ind];
 	if (c != '1')
-		free_vecs(cub, YES, YES);
+		free_vecs(parser, YES, YES);
 	return (c);
 }
 
-static	void	check_update_direction_info(t_cub *cub, char c)
+static	void	check_update_direction_info(t_parser *parser, char c)
 {
-	if (cub->dir_info > 0)
-		free_vecs(cub, YES, YES);
-	cub->dir_info++;
+	if (parser->dir_info > 0)
+		free_vecs(parser, YES, YES);
+	parser->dir_info++;
 }
 
-static	char	ones_surround_spaces(t_cub *cub, char c, char prev_c, int *ind)
+static	char	ones_surround_spaces(t_parser *parser, char c, char prev_c, int *ind)
 {
 	if (ft_isspace(c) && prev_c != '1')
-		free_vecs(cub, YES, YES);
+		free_vecs(parser, YES, YES);
 	if (ft_isspace(c) && prev_c == '1')
 	{
-		skip_spaces(*cub->line, ind);
-		c = (*cub->line)[*ind];
+		skip_spaces(*parser->line, ind);
+		c = (*parser->line)[*ind];
 		if (c && c != '1')
-			free_vecs(cub, YES, YES);
+			free_vecs(parser, YES, YES);
 	}
 	return (c);
 }
 
-void	validate_middle(t_cub *cub, char *line)
+void	validate_middle(t_parser *parser, char *line)
 {
 	int	ind;
 	char	c;
@@ -54,26 +54,26 @@ void	validate_middle(t_cub *cub, char *line)
 
 	ind = 0;
 	len = ft_strlen(line);
-	prev_c = check_wall_unit(cub, &ind, YES);
+	prev_c = check_wall_unit(parser, &ind, YES);
 	c = line[++ind];
 	while ((line)[ind+1])
 	{
-		c = ones_surround_spaces(cub, c, prev_c, &ind);
+		c = ones_surround_spaces(parser, c, prev_c, &ind);
 		if (c == '\0')
 			return ;
 		if (c == 'W' || c == 'N' || c == 'S' || c == 'E')
-			check_update_direction_info(cub, c);
+			check_update_direction_info(parser, c);
 		else if (c != '1' && c != '0')
-			free_vecs(cub, YES, YES);
+			free_vecs(parser, YES, YES);
 		prev_c = c;
 		c = (line)[++ind];
 		if (c == '\0')
 			return ;
 	}
-	check_wall_unit(cub, &ind, NA);
+	check_wall_unit(parser, &ind, NA);
 }
 
-void	validate_horizontal(t_cub *cub, char *line)
+void	validate_horizontal(t_parser *parser, char *line)
 {
 	int	ind;
 	int	len;
@@ -84,7 +84,7 @@ void	validate_horizontal(t_cub *cub, char *line)
 	len = ft_strlen(line);
 	skip_spaces(line, &ind);
 	if (ind < len && line[ind] != '1')
-		free_vecs(cub, YES, YES);
+		free_vecs(parser, YES, YES);
 	while (++ind < (len - 1))
 	{
 		count++;
@@ -92,8 +92,8 @@ void	validate_horizontal(t_cub *cub, char *line)
 		if (count != 1 && line[ind] == '\0')
 			return ;
 		if (line[ind] != '1' && !ft_isspace(line[ind]))
-			free_vecs(cub, YES, YES);
+			free_vecs(parser, YES, YES);
 	}
 	if (ind < len && line[ind] != '1')
-		free_vecs(cub, YES, YES);
+		free_vecs(parser, YES, YES);
 }
