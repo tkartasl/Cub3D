@@ -21,9 +21,7 @@ static void error(void)
 void	cast_rays(t_data *data)
 {
 	int		x_pos;
-	int		color;
 
-	color = 0;
 	x_pos = 0;
 	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	data->rayinfo->ray_angle = data->player_angle - DEGREE * FOV / 2;
@@ -35,17 +33,15 @@ void	cast_rays(t_data *data)
 		data->rayinfo->dist_v = check_vertical_hit(data);
 		if (data->rayinfo->dist_v >= data->rayinfo->dist_h)
 		{
-			color = 220;
 			data->texture->axis = 'x';
 			data->rayinfo->raydist = data->rayinfo->dist_h;
 		}
 		if (data->rayinfo->dist_h >= data->rayinfo->dist_v)
 		{
-			color = 100;
 			data->texture->axis = 'y';
 			data->rayinfo->raydist = data->rayinfo->dist_v;
 		}
-		draw_walls(data, color, x_pos);
+		draw_walls(data, x_pos);
 		x_pos++;
 	}
 }

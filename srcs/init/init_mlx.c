@@ -31,5 +31,5 @@ void	init_mlx(t_data *data)
 	data->minimap = minimap;
 	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	ft_memset(data->screen->pixels, 255, MINI_WIDTH * MINI_HEIGHT * sizeof(int32_t));
-	load_textures(data);
+//	load_textures(data);
 }

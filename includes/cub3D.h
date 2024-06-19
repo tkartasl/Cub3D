@@ -108,7 +108,7 @@ typedef struct s_data
 }			t_data;
 
 void	key_hook_movement(mlx_key_data_t keydata, void *param);
-void	draw_walls(t_data *data, int color, int x_pos);
+void	draw_walls(t_data *data, int x_pos);
 int		check_overflow(t_data *data);
 void	reset_ray_angle(double *angle);
 double	ray_length(t_data *data);
@@ -126,7 +126,7 @@ void	validate_middle(t_parser *parser, char *line);
 int		open_validate_file(t_parser *parser, char *map_path, char *ext, int texture_path);
 void	validate_type_identifier(t_parser *parser, char **type_id);
 void	parse_file(t_parser *parser, char *map_path);
-int32_t	raycaster(t_data *data);
+void	raycaster(t_data *data);
 void	freeparser_exit(t_parser *parser);
 void	free_exit(t_parser *parser, char **type_id, int print_err);
 void	free_vecs(t_parser *parser, int exit_fail, int print_err);

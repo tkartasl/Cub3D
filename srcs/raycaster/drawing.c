@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
+#include <stdint.h>
 
 int	compare(int a, int b)
 {
@@ -31,18 +32,39 @@ void	get_line_values(t_line *line, int x, int y_a, int y_b)
 	line->slope_y = compare(y_a, y_b);		
 }
 
-void	draw_line(int x_pos, int y_start, int y_end, t_data *data, int color)
+int	get_texture_pixel(t_textures *texture, int x_pos, int y_start)
+{
+	uint32_t	color;
+	int		offset;
+	mlx_texture_t	*wall;
+
+	color = 0;
+	wall = texture->wall[texture->idx];
+	if (x_pos > 64)
+		x_pos = x_pos % 64;
+	if (y_start > 64)
+		y_start = y_start % 64;
+	offset = ((y_start * wall->width) + x_pos) * wall->bytes_per_pixel;
+	color += wall->pixels[offset];
+	color = color << 8;
+	color += wall->pixels[offset + 1];
+	color = color << 8;
+	color += wall->pixels[offset + 2];
+	color = color << 8;
+	color += wall->pixels[offset + 3];
+	return (color);
+}
+
+void	draw_line(int x_pos, int y_start, int y_end, t_data *data)
 {
 	int	error;
-	int	i;
 
-	i = data->texture->idx;
 	get_line_values(data->line, x_pos, y_start, y_end);
 	error = data->line->delta_x + data->line->delta_y;
 	while (1)
 	{
 		if (x_pos >= 0 && y_start >= 0 && x_pos < WIDTH && y_start < HEIGHT)
-			mlx_put_pixel(data->screen, x_pos, y_start, get_rgba(255, 0, 0, color));
+			mlx_put_pixel(data->screen, x_pos, y_start, get_texture_pixel(data->texture, x_pos, y_start));
 		if (y_start == y_end)
 			break ;
 		data->line->error2 = 2 * error;
@@ -76,7 +98,7 @@ void	draw_end_wall(t_data *data, double wall_height, int x_pos)
 
 }
 
-void	draw_walls(t_data *data, int color, int x_pos)
+void	draw_walls(t_data *data, int x_pos)
 {
 	double	height;
 	double	start;
@@ -88,10 +110,11 @@ void	draw_walls(t_data *data, int color, int x_pos)
 //	line_h = (WIDTH) / data->rayinfo->raydist;
 	height = (data->map_size * 100) / data->rayinfo->raydist;
 	if (height >= WIDTH)
-		draw_end_wall(data, height, x_pos);
+		height = WIDTH;
+		//draw_end_wall(data, height, x_pos);
 	start = (double)HEIGHT / 2 - height / 2;
 	get_texture_index(data);
-	draw_line(x_pos, start, height + start, data, color);
+	draw_line(x_pos, start, height + start, data);
 	data->rayinfo->ray_angle += DEGREE / ((double)WIDTH / FOV);
 	reset_ray_angle(&data->rayinfo->ray_angle);	
 }

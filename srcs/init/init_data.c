@@ -12,6 +12,8 @@
 
 #include "../../includes/cub3D.h"
 
+void	init_mlx(t_data *data);
+
 void	extract_map_arr(t_parser *parser, t_data *data)
 {
 	int	x;
