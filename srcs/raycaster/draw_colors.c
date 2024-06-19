@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 16:13:20 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/18 16:14:29 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/19 11:14:18 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ int	draw_ceiling(t_data *data)
 	int	y;
 
 	y = 0;
-	red = *(int *)vec_get(data->cub->ceiling, 0);
-	green = *(int *)vec_get(data->cub->ceiling, 1);
-	blue = *(int *)vec_get(data->cub->ceiling, 2);
+	red = *(int *)vec_get(data->parser->ceiling, 0);
+	green = *(int *)vec_get(data->parser->ceiling, 1);
+	blue = *(int *)vec_get(data->parser->ceiling, 2);
 	while (y < HEIGHT/2)
 	{
 		x = 0;
@@ -49,9 +49,9 @@ void	draw_floor(t_data *data, int y)
 	int	green;
 	int	blue;
 
-	red = *(int *)vec_get(data->cub->floor, 0);
-	green = *(int *)vec_get(data->cub->floor, 1);
-	blue = *(int *)vec_get(data->cub->floor, 2);
+	red = *(int *)vec_get(data->parser->floor, 0);
+	green = *(int *)vec_get(data->parser->floor, 1);
+	blue = *(int *)vec_get(data->parser->floor, 2);
 	
 	while (y < HEIGHT)
 	{

@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   init_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: username <your@email.com>                  +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/06/18 15:44:43 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/06/19 13:45:51 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
-
-void	init_mlx(t_data *data);
 
 void	extract_map_arr(t_parser *parser, t_data *data)
 {
@@ -68,10 +66,26 @@ t_line	*init_line(t_parser *parser, t_rayinfo **rayinfo)
 	return (line);
 }
 
+t_textures	*init_texture(t_parser *parser, t_rayinfo **rayinfo, t_line **line)
+{
+	t_textures	*texture;
+
+	texture = (t_textures *)malloc(sizeof(t_textures));
+	if (texture == NULL)
+	{
+		free(*rayinfo);
+		free(*line);
+		free_vecs(parser, YES, NA);
+	}
+	ft_memset(texture, 0, sizeof(t_textures));
+	return (texture);
+}
+
 void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	data->rayinfo = init_rayinfo(parser);
 	data->line = init_line(parser, &data->rayinfo);
+	data->texture = init_texture(data->parser, &data->rayinfo, &data->line);
 	extract_map_arr(parser, data);
 	data->parser = parser;
 	if (data->playerdir == 'N')

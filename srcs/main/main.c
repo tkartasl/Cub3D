@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:00:41 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/18 15:44:14 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/06/19 13:23:33 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv)
 		parse_file(&parser, argv[1]);
 		init_data_mlx(&data, &parser);
 		raycaster(&data);
-		freedata_exit(&data, EXIT_SUCCESS);
+		freedata_exit(&data, EXIT_SUCCESS, YES);
 	}
 	game_usage();
 	return (SUCCESS);
