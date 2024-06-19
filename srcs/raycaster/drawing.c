@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:59:04 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/19 13:49:04 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/19 16:49:04 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,28 @@ void	get_line_values(t_line *line, int x, int y_a, int y_b)
 
 int	get_texture_pixel(t_textures *texture, int x_pos, int y_start)
 {
-	uint32_t	color;
-	int		offset;
+	uint32_t		color;
+	int				offset;
 	mlx_texture_t	*wall;
 
 	color = 0;
+	//if (y_start > 9 && x_pos == 0)
+	//	write(1, "haha\n", 5);
 	wall = texture->wall[texture->idx];
+	//ft_putnbr(texture->idx);
 	if (x_pos > 64)
 		x_pos = x_pos % 64;
 	if (y_start > 64)
 		y_start = y_start % 64;
-	offset = ((y_start * wall->width) + x_pos) * wall->bytes_per_pixel;
-	color += wall->pixels[offset];
-	color = color << 8;
-	color += wall->pixels[offset + 1];
+	offset = ((y_start * wall->width) + x_pos) * (uint32_t)wall->bytes_per_pixel;
+	//write(1, "haha\n", 5);
+	color = (wall->pixels[offset] << 24) | (wall->pixels[offset + 1] << 16) | (wall->pixels[offset + 2] << 8) | wall->pixels[offset + 1];
+	/*color = wall->pixels[offset + 1] <<;
 	color = color << 8;
 	color += wall->pixels[offset + 2];
 	color = color << 8;
-	color += wall->pixels[offset + 3];
+	color += wall->pixels[offset + 3];*/
+	
 	return (color);
 }
 
@@ -83,19 +87,20 @@ void	draw_line(int x_pos, int y_start, int y_end, t_data *data)
 
 void	get_texture_index(t_data *data)
 {
-	if (data->texture->axis == 'x' && data->playerdir_y < 0)
-		data->texture->idx = NO;
-	else if (data->texture->axis == 'x' && data->playerdir_y > 0)
-		data->texture->idx = SO;
-	else if (data->texture->axis == 'y' && data->playerdir_x > 0)
-		data->texture->idx = EA;
-	else if (data->texture->axis == 'y' && data->playerdir_x < 0)
-		data->texture->idx = WE;
-}
-
-void	draw_end_wall(t_data *data, double wall_height, int x_pos)
-{
-
+	if (data->texture->axis == 'x')
+	{
+		if (data->rayinfo->ray_angle < WEST)
+			data->texture->idx = NO;
+		else
+			data->texture->idx = SO;
+	}
+	else
+	{
+		if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
+			data->texture->idx = WE;
+		else
+			data->texture->idx = EA;
+	}
 }
 
 void	draw_walls(t_data *data, int x_pos)

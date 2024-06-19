@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/19 13:46:30 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/19 16:02:00 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	get_textures(t_data *data)
 			load_textures(data, ind, SO);
 		else if (*(int *)vec_get(tex_info, ind) == EA)
 			load_textures(data, ind, EA);
-		else if (*(int *)vec_get(tex_info, ind) == EA)
+		else if (*(int *)vec_get(tex_info, ind) == WE)
 			load_textures(data, ind, WE);
 	}
 }
