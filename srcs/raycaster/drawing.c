@@ -68,9 +68,10 @@ void	draw_walls(t_data *data, int color, int x_pos)
 	correct_angle = data->player_angle - data->rayinfo->ray_angle;
 	reset_ray_angle(&correct_angle);
 	data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
-	line_h = (data->map_size * WIDTH) / data->rayinfo->raydist;
-	if (line_h > WIDTH)
-		line_h = WIDTH;
+//	line_h = (WIDTH) / data->rayinfo->raydist;
+	line_h = (data->map_size * 100) / data->rayinfo->raydist;
+	if (line_h >= WIDTH)
+		draw_end_wall(data, line_h, x_pos);
 	line_end = (double)HEIGHT / 2 - line_h / 2;
 	draw_line(x_pos, line_end, line_h + line_end, data, color);
 	data->rayinfo->ray_angle += DEGREE / ((double)WIDTH / FOV);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../../includes/cub3D.h"
 
 int get_rgba(int r, int g, int b, int a)
 {
@@ -26,9 +26,9 @@ int	draw_ceiling(t_data *data)
 	int	y;
 
 	y = 0;
-	red = *(int *)vec_get(data->cub->ceiling, 0);
-	green = *(int *)vec_get(data->cub->ceiling, 1);
-	blue = *(int *)vec_get(data->cub->ceiling, 2);
+	red = *(int *)vec_get(data->parser->ceiling, 0);
+	green = *(int *)vec_get(data->parser->ceiling, 1);
+	blue = *(int *)vec_get(data->parser->ceiling, 2);
 	while (y < HEIGHT/2)
 	{
 		x = 0;
@@ -49,9 +49,9 @@ void	draw_floor(t_data *data, int y)
 	int	green;
 	int	blue;
 
-	red = *(int *)vec_get(data->cub->floor, 0);
-	green = *(int *)vec_get(data->cub->floor, 1);
-	blue = *(int *)vec_get(data->cub->floor, 2);
+	red = *(int *)vec_get(data->parser->floor, 0);
+	green = *(int *)vec_get(data->parser->floor, 1);
+	blue = *(int *)vec_get(data->parser->floor, 2);
 	
 	while (y < HEIGHT)
 	{

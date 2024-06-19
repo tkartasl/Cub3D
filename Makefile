@@ -66,6 +66,7 @@ SOURCES 	:= 	main.c \
 			free_mem.c \
 			movement.c \
 			drawing.c \
+			draw_colors.c \
 			dda.c \
 			raycast_utils.c
 
