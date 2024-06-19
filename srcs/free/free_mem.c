@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:05:43 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/18 14:38:06 by username         ###   ########.fr       */
+/*   Updated: 2024/06/19 13:20:17 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,12 @@ void	freeparser_exit(t_parser *parser)
 	exit(EXIT_FAILURE);
 }
 
-void	freedata_exit(t_data *data, int exit_status)
+void	freedata_exit(t_data *data, int exit_status, int terminate_mlx)
 {
 	free(data->rayinfo);
 	free(data->line);
+	if (terminate_mlx == YES)
+		mlx_terminate(data->mlx);
 	if (exit_status == EXIT_FAILURE)
 		free_vecs(data->parser, YES, NA);
 	free_vecs(data->parser, NA, NA);
