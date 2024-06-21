@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/19 13:51:57 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/21 12:12:37 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ typedef struct s_data
 	t_textures	*texture;
 }			t_data;
 
-void	key_hook_movement(mlx_key_data_t keydata, void *param);
+void	key_hook(mlx_key_data_t keydata, void *param);
 void	draw_walls(t_data *data, int x_pos);
 int		check_overflow(t_data *data);
 void	reset_ray_angle(double *angle);
@@ -131,7 +131,6 @@ void	freeparser_exit(t_parser *parser);
 void	free_exit(t_parser *parser, char **type_id, int print_err);
 void	free_vecs(t_parser *parser, int exit_fail, int print_err);
 void	freedata_exit(t_data *data, int exit_status, int terminate_mlx);
-int get_rgba(int r, int g, int b, int a);
-void	draw_colors(t_data *data);
-
+int 	get_rgba(int r, int g, int b, int a);
+void	movement(void *param);
 #endif

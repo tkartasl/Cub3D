@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:55:10 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/18 13:03:44 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/21 12:07:37 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	rotate_player(t_data *data, char direction)
 {
 	if (direction == 'R' )
 	{
-		data->player_angle += 0.2;
+		data->player_angle += 0.1;
 		if (data->player_angle > 2 * PI)
 			data->player_angle -= 2 * PI;
 		data->playerdir_x = cos(data->player_angle) * 10;
@@ -24,7 +24,7 @@ void	rotate_player(t_data *data, char direction)
 	}
 	if (direction == 'L')
 	{
-		data->player_angle -= 0.2;
+		data->player_angle -= 0.1;
 		if (data->player_angle < 0)
 			data->player_angle += 2 * PI;
 		data->playerdir_x = cos(data->player_angle) * 10;
@@ -42,6 +42,7 @@ void	move_player(t_data *data, char direction)
 	if (direction == 'A')
 	{
 		data->camera_x += (int)data->playerdir_y;
+		data->camera_y -= (int)data->playerdir_x;
 	}
 	if (direction == 'S')
 	{
@@ -51,33 +52,35 @@ void	move_player(t_data *data, char direction)
 	if (direction == 'D')
 	{
 		data->camera_x -= (int)data->playerdir_y;
+		data->camera_y += (int)data->playerdir_x;
 	}
 }
 
-void	key_hook_movement(mlx_key_data_t keydata, void *param)
+void	movement(void *param)
 {
 	t_data	*data;
 
 	data = param;
-	if (keydata.key == MLX_KEY_RIGHT && (keydata.action == MLX_REPEAT
-		|| keydata.action == MLX_PRESS))
-		rotate_player(data, 'R');
-	if (keydata.key == MLX_KEY_LEFT && (keydata.action == MLX_REPEAT
-		|| keydata.action == MLX_PRESS))
-		rotate_player(data, 'L');
-	if (keydata.key == MLX_KEY_W && (keydata.action == MLX_REPEAT
-		|| keydata.action == MLX_PRESS))
+	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
 		move_player(data, 'W');
-	if (keydata.key == MLX_KEY_A && (keydata.action == MLX_REPEAT
-		|| keydata.action == MLX_PRESS))
+	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
 		move_player(data, 'A');
-	if (keydata.key == MLX_KEY_S && (keydata.action == MLX_REPEAT
-		|| keydata.action == MLX_PRESS))
+	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
 		move_player(data, 'S');
-	if (keydata.key == MLX_KEY_D && (keydata.action == MLX_REPEAT
-		|| keydata.action == MLX_PRESS))
+	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
 		move_player(data, 'D');
+	if (mlx_is_key_down(data->mlx, MLX_KEY_LEFT))
+		rotate_player(data, 'L');
+	if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT))
+		rotate_player(data, 'R');
 	cast_rays(data);
+}
+
+void	key_hook(mlx_key_data_t keydata, void *param)
+{
+	t_data	*data;
+
+	data = param;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
 		mlx_close_window(data->mlx);
 }
