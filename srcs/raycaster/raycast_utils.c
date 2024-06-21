@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:04:55 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/17 10:05:46 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/21 12:07:47 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,15 @@
 int	check_overflow(t_data *data)
 {
 	int	i;
+	int	x;
+	int	y;
+	
 	i = 0;
-	if (data->rayinfo->map_x < 0 || data->rayinfo->map_x >= data->map_width)
+	x = data->rayinfo->map_x;
+	y = data->rayinfo->map_y;
+	if (y < 0 || y >= data->map_height)
 		i = 1;
-	if (data->rayinfo->map_y < 0 || data->rayinfo->map_y >= data->map_height)
+	if (x < 0 || i == 1 || x >= ft_strlen(data->map[y]))
 		i = 1;
 	return (i);
 }
