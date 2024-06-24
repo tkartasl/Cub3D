@@ -32,8 +32,8 @@ void	extract_map_arr(t_parser *parser, t_data *data)
 		{
 			if (map[y][x] == 'S' || map[y][x] == 'N' || map[y][x] == 'W' || map[y][x] == 'E')
 			{
-				data->camera_y = (y * 64) + 32;
-				data->camera_x = (x * 64) + 32;
+				data->camera_y = y + 0.5;
+				data->camera_x = x + 0.5;
 				data->playerdir = map[y][x];
 			}
 		}

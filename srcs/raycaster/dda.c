@@ -22,15 +22,15 @@ void	calculate_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
 	data->rayinfo->ntan = -tan(data->rayinfo->ray_angle);
 	if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
 	{
-		*ray_x = (((int)px >> 6) << 6) - 0.0001;
+		*ray_x = (int)px - 0.0001;
 		*ray_y = (px - *ray_x) * data->rayinfo->ntan + py;
-		data->rayinfo->step_x = -64;
+		data->rayinfo->step_x = -1;
 	}
 	else if (data->rayinfo->ray_angle < NORTH || data->rayinfo->ray_angle > SOUTH)
 	{
-		*ray_x = (((int)px >> 6) << 6) + 64;
+		*ray_x = (int)px + 1;
 		*ray_y = (px - *ray_x) * data->rayinfo->ntan + py;
-		data->rayinfo->step_x = 64;
+		data->rayinfo->step_x = 1;
 	}
 	else if (data->rayinfo->ray_angle == 0 || data->rayinfo->ray_angle == WEST)
 	{
@@ -39,35 +39,6 @@ void	calculate_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
 		*i = MAX_VIEW_DIST;
 	}
 	data->rayinfo->step_y = -data->rayinfo->step_x * data->rayinfo->ntan;
-}
-
-void	calculate_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
-{
-	int	py;
-	int	px;
-
-	px = data->camera_x;
-	py = data->camera_y;
-	data->rayinfo->atan = -1 / tan(data->rayinfo->ray_angle);
-	if (data->rayinfo->ray_angle > WEST)
-	{
-		*ray_y = (((int)py >> 6) << 6) - 0.0001;
-		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
-		data->rayinfo->step_y = -64;
-	}
-	else if (data->rayinfo->ray_angle < WEST)
-	{
-		*ray_y = (((int)py >> 6) << 6) + 64;
-		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
-		data->rayinfo->step_y = 64;
-	}
-	else if (data->rayinfo->ray_angle == WEST || data->rayinfo->ray_angle == 0)
-	{
-		*ray_x = px;
-		*ray_y = py;
-		*i = MAX_VIEW_DIST;
-	}
-	data->rayinfo->step_x = -data->rayinfo->step_y * data->rayinfo->atan;
 }
 
 double	check_vertical_hit(t_data *data)
@@ -80,8 +51,8 @@ double	check_vertical_hit(t_data *data)
 	calculate_steps_v(data, &data->rayinfo->ray_y, &data->rayinfo->ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		data->rayinfo->map_x = (int)data->rayinfo->ray_x >> 6;		
-		data->rayinfo->map_y = (int)data->rayinfo->ray_y >> 6;
+		data->rayinfo->map_x = (int)data->rayinfo->ray_x;		
+		data->rayinfo->map_y = (int)data->rayinfo->ray_y;
 		if (check_overflow(data) == 0
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
@@ -98,6 +69,35 @@ double	check_vertical_hit(t_data *data)
 		return (dist_v);
 }
 
+void	calculate_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
+{
+	int	py;
+	int	px;
+
+	px = data->camera_x;
+	py = data->camera_y;
+	data->rayinfo->atan = -1 / tan(data->rayinfo->ray_angle);
+	if (data->rayinfo->ray_angle > WEST)
+	{
+		*ray_y = (int)py - 0.0001;
+		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
+		data->rayinfo->step_y = -1;
+	}
+	else if (data->rayinfo->ray_angle < WEST)
+	{
+		*ray_y = (int)py + 1;
+		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
+		data->rayinfo->step_y = 1;
+	}
+	else if (data->rayinfo->ray_angle == WEST || data->rayinfo->ray_angle == 0)
+	{
+		*ray_x = px;
+		*ray_y = py;
+		*i = MAX_VIEW_DIST;
+	}
+	data->rayinfo->step_x = -data->rayinfo->step_y * data->rayinfo->atan;
+}
+
 double	check_horizontal_hit(t_data *data)
 {
 	int		i;
@@ -108,8 +108,8 @@ double	check_horizontal_hit(t_data *data)
 	calculate_steps_h(data, &data->rayinfo->ray_y, &data->rayinfo->ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		data->rayinfo->map_x = (int)data->rayinfo->ray_x >> 6;	
-		data->rayinfo->map_y = (int)data->rayinfo->ray_y >> 6;
+		data->rayinfo->map_x = (int)data->rayinfo->ray_x;	
+		data->rayinfo->map_y = (int)data->rayinfo->ray_y;
 		if (check_overflow(data) == 0
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
