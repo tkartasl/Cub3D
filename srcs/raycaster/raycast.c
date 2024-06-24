@@ -47,7 +47,6 @@ void	cast_rays(t_data *data)
 		draw_walls(data, x_pos);
 		x_pos++;
 	}
-	printf("fps: %f\n", (fps() - frame1) * 1000);
 }
 
 void	load_textures(t_data *data, int index, int text_info)

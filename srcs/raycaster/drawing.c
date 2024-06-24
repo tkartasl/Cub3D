@@ -90,14 +90,10 @@ int	get_texture_index(t_data *data, int wall_height, int x_pos)
 	}
 	else
 	{
-<<<<<<< HEAD
 		if (data->rayinfo->ray_angle > NORTH
 			&& data->rayinfo->ray_angle < SOUTH)
 			data->texture->idx = WE;
-		else
-=======
 		if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
->>>>>>> 593029c9d7af3a431ef3636f4499f3536189df2e
 			data->texture->idx = EA;
 		else
 			data->texture->idx = WE;
