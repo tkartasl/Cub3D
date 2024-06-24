@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/19 16:02:00 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/21 12:00:00 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,21 @@ static void error(void)
 	exit(EXIT_FAILURE);
 }
 
+double	fps(void)
+{
+	return (mlx_get_time());
+}
+
 void	cast_rays(t_data *data)
 {
 	int		x_pos;
-
+	double	frame1;
+	
 	x_pos = 0;
-	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
+	//ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	data->rayinfo->ray_angle = data->player_angle - DEGREE * FOV / 2;
 	reset_ray_angle(&data->rayinfo->ray_angle);
+	frame1 = fps();
 	while (x_pos < WIDTH)
 	{
 		data->rayinfo->dist_h = check_horizontal_hit(data);
@@ -43,6 +50,7 @@ void	cast_rays(t_data *data)
 		draw_walls(data, x_pos);
 		x_pos++;
 	}
+	printf("fps: %f\n", (fps() - frame1) * 1000);
 }
 
 void	load_textures(t_data *data, int index, int text_info)
@@ -83,6 +91,7 @@ void	raycaster(t_data *data)
 		error();
 	get_textures(data);
 	cast_rays(data);
-	mlx_key_hook(data->mlx, &key_hook_movement, data);
+	mlx_key_hook(data->mlx, &key_hook, data);
+	mlx_loop_hook(data->mlx, &movement, data);
 	mlx_loop(data->mlx);
 }
