@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:03:00 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/24 16:57:55 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/24 17:31:50 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ void	calculate_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
 	data->rayinfo->ntan = -tan(data->rayinfo->ray_angle);
 	if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
 	{
-		*ray_x = (((int)px >> 6) << 6) - 0.0001;
+		*ray_x = (int)px - 0.0001;
 		*ray_y = (px - *ray_x) * data->rayinfo->ntan + py;
 		data->rayinfo->step_x = -64;
 	}
 	else if (data->rayinfo->ray_angle < NORTH || data->rayinfo->ray_angle > SOUTH)
 	{
-		*ray_x = (((int)px >> 6) << 6) + 64;
+		*ray_x = (int)px + 64;
 		*ray_y = (px - *ray_x) * data->rayinfo->ntan + py;
 		data->rayinfo->step_x = 64;
 	}
@@ -39,35 +39,6 @@ void	calculate_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
 		*i = MAX_VIEW_DIST;
 	}
 	data->rayinfo->step_y = -data->rayinfo->step_x * data->rayinfo->ntan;
-}
-
-void	calculate_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
-{
-	int	py;
-	int	px;
-
-	px = data->camera_x;
-	py = data->camera_y;
-	data->rayinfo->atan = -1 / tan(data->rayinfo->ray_angle);
-	if (data->rayinfo->ray_angle > WEST)
-	{
-		*ray_y = (((int)py >> 6) << 6) - 0.0001;
-		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
-		data->rayinfo->step_y = -64;
-	}
-	else if (data->rayinfo->ray_angle < WEST)
-	{
-		*ray_y = (((int)py >> 6) << 6) + 64;
-		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
-		data->rayinfo->step_y = 64;
-	}
-	else if (data->rayinfo->ray_angle == WEST || data->rayinfo->ray_angle == 0)
-	{
-		*ray_x = px;
-		*ray_y = py;
-		*i = MAX_VIEW_DIST;
-	}
-	data->rayinfo->step_x = -data->rayinfo->step_y * data->rayinfo->atan;
 }
 
 double	check_vertical_hit(t_data *data)
@@ -96,6 +67,35 @@ double	check_vertical_hit(t_data *data)
 			}
 		}
 		return (dist_v);
+}
+
+void	calculate_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
+{
+	int	py;
+	int	px;
+
+	px = data->camera_x;
+	py = data->camera_y;
+	data->rayinfo->atan = -1 / tan(data->rayinfo->ray_angle);
+	if (data->rayinfo->ray_angle > WEST)
+	{
+		*ray_y = (int)py - 0.0001;
+		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
+		data->rayinfo->step_y = -64;
+	}
+	else if (data->rayinfo->ray_angle < WEST)
+	{
+		*ray_y = (int)py + 64;
+		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
+		data->rayinfo->step_y = 64;
+	}
+	else if (data->rayinfo->ray_angle == WEST || data->rayinfo->ray_angle == 0)
+	{
+		*ray_x = px;
+		*ray_y = py;
+		*i = MAX_VIEW_DIST;
+	}
+	data->rayinfo->step_x = -data->rayinfo->step_y * data->rayinfo->atan;
 }
 
 double	check_horizontal_hit(t_data *data)
