@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/21 12:00:00 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/24 09:49:27 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,10 @@ double	fps(void)
 void	cast_rays(t_data *data)
 {
 	int		x_pos;
-	double	frame1;
 	
 	x_pos = 0;
-	//ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	data->rayinfo->ray_angle = data->player_angle - DEGREE * FOV / 2;
 	reset_ray_angle(&data->rayinfo->ray_angle);
-	frame1 = fps();
 	while (x_pos < WIDTH)
 	{
 		data->rayinfo->dist_h = check_horizontal_hit(data);
@@ -50,7 +47,6 @@ void	cast_rays(t_data *data)
 		draw_walls(data, x_pos);
 		x_pos++;
 	}
-	printf("fps: %f\n", (fps() - frame1) * 1000);
 }
 
 void	load_textures(t_data *data, int index, int text_info)

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:59:04 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/19 16:49:04 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/21 12:07:20 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ void	get_texture_index(t_data *data)
 	}
 	else
 	{
-		if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
+		if (data->rayinfo->ray_angle > NORTH
+			&& data->rayinfo->ray_angle < SOUTH)
 			data->texture->idx = WE;
 		else
 			data->texture->idx = EA;
@@ -108,7 +109,7 @@ void	draw_walls(t_data *data, int x_pos)
 	correct_angle = data->player_angle - data->rayinfo->ray_angle;
 	reset_ray_angle(&correct_angle);
 	data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
-	height = (data->map_size * 100) / data->rayinfo->raydist;
+	height = (64 / data->rayinfo->raydist) * 1108;//WIDTH / data->rayinfo->raydist;
 	if (height > HEIGHT)
 		height = HEIGHT;
 	start = ((double)HEIGHT / 2) - (height / 2);

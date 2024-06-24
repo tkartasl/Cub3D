@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:55:10 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/21 12:07:37 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/24 13:21:55 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,27 +32,53 @@ void	rotate_player(t_data *data, char direction)
 	}
 }
 
-void	move_player(t_data *data, char direction)
+void	move_player_strafe(t_data *data, char key)
 {
-	if (direction == 'W')
+	int	new_x;
+	int	new_y;
+
+	new_x = 0;
+	new_y = 0;
+	if (key == 'A')
 	{
-		data->camera_x += (int)data->playerdir_x;
-		data->camera_y += (int)data->playerdir_y;
+		wall_collision_strafe(data, 'A', &new_x, &new_y);
+		if (data->map[data->camera_y / 64][new_x] != '1')
+			data->camera_x += (int)data->playerdir_y;
+		if (data->map[new_y][data->camera_x / 64] != '1')
+			data->camera_y -= (int)data->playerdir_x;
 	}
-	if (direction == 'A')
+	if (key == 'D')
 	{
-		data->camera_x += (int)data->playerdir_y;
-		data->camera_y -= (int)data->playerdir_x;
+		wall_collision_strafe(data, 'D', &new_x, &new_y);
+		if (data->map[data->camera_y / 64][new_x] != '1')
+			data->camera_x -= (int)data->playerdir_y;
+		if (data->map[new_y][data->camera_x / 64] != '1')
+			data->camera_y += (int)data->playerdir_x;
 	}
-	if (direction == 'S')
+}
+
+void	move_player_straight(t_data *data, char key)
+{
+	int	new_x;
+	int	new_y;
+
+	new_x = 0;
+	new_y = 0;
+	if (key == 'W')
 	{
-		data->camera_x -= (int)data->playerdir_x;
-		data->camera_y -= (int)data->playerdir_y;
+		wall_collision(data, 'W', &new_x, &new_y);
+		if (data->map[data->camera_y / 64][new_x] != '1')
+			data->camera_x += (int)data->playerdir_x;
+		if (data->map[new_y][data->camera_x / 64] != '1')
+			data->camera_y += (int)data->playerdir_y;
 	}
-	if (direction == 'D')
+	if (key == 'S')
 	{
-		data->camera_x -= (int)data->playerdir_y;
-		data->camera_y += (int)data->playerdir_x;
+		wall_collision(data, 'S', &new_x, &new_y);
+		if (data->map[data->camera_y / 64][new_x] != '1')
+			data->camera_x -= (int)data->playerdir_x;
+		if (data->map[new_y][data->camera_x / 64] != '1')
+			data->camera_y -= (int)data->playerdir_y;
 	}
 }
 
@@ -62,13 +88,13 @@ void	movement(void *param)
 
 	data = param;
 	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
-		move_player(data, 'W');
+		move_player_straight(data, 'W');
 	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
-		move_player(data, 'A');
+		move_player_strafe(data, 'A');
 	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
-		move_player(data, 'S');
+		move_player_straight(data, 'S');
 	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
-		move_player(data, 'D');
+		move_player_strafe(data, 'D');
 	if (mlx_is_key_down(data->mlx, MLX_KEY_LEFT))
 		rotate_player(data, 'L');
 	if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT))

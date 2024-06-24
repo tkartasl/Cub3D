@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/06/19 13:45:51 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/21 12:07:05 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->rayinfo->ray_angle = data->player_angle;
 	data->playerdir_x = cos(data->player_angle) * 10;
 	data->playerdir_y = sin(data->player_angle) * 10;
-	data->map_width = 25;
+	data->map_width = 26;
 	data->map_size = data->map_width * data->map_height;
 	init_mlx(data);
 }
