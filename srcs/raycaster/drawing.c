@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:59:04 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/24 13:25:18 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/19 16:49:04 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,6 @@ int	get_texture_index(t_data *data, int wall_height, int x_pos)
 	}
 	else
 	{
-		if (data->rayinfo->ray_angle > NORTH
-			&& data->rayinfo->ray_angle < SOUTH)
-			data->texture->idx = WE;
 		if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
 			data->texture->idx = EA;
 		else
