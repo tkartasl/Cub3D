@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/24 09:49:27 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/24 13:25:29 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	cast_rays(t_data *data)
 		draw_walls(data, x_pos);
 		x_pos++;
 	}
+	printf("fps: %f\n", (fps() - frame1) * 1000);
 }
 
 void	load_textures(t_data *data, int index, int text_info)

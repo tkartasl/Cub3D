@@ -1,10 +1,17 @@
+<<<<<<< HEAD
 NO textures/png/north_texture.png
 SO textures/png/south_texture.png
 WE textures/png/west_texture.png
 EA textures/png/east_texture.png
+=======
+NO textures/test/north.png
+SO textures/test/south.png
+WE textures/test/west.png
+EA textures/test/east.png
+>>>>>>> 593029c9d7af3a431ef3636f4499f3536189df2e
 
-F 20,20,20
-C 200,200,200
+F 99,160,80
+C 53,120,255
 
 111111111111111111111
 1000000000000000000E1
