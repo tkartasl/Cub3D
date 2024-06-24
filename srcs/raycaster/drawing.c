@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:59:04 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/19 16:49:04 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/24 17:27:33 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,29 +64,30 @@ void	draw_line(int x, int y, int height, t_data *data, int texture_x, int start_
 		height = HEIGHT;
 	r = (double)y / (double)height;
 	texture_y = ((wall->height - 1 - (2 * start_y))  * r) + start_y;
-	mlx_put_pixel(data->screen, x, y, get_texture_pixel(data->texture, x, texture_y));
+	mlx_put_pixel(data->screen, x, y, get_texture_pixel(data->texture, texture_x, start_y));
 }
 
 int	get_texture_index(t_data *data, int wall_height, int x_pos)
 {
 	int	texture_x;
-	double	r;
-	double	vec_val;
-	double		screen_position;
+	//double	r;
+	//double	vec_val;
+	//double		screen_position;
 	int	x;
 	int	y;
 
-	screen_position = 2 * (double) x_pos / (double) WIDTH - 1;
-	x = data->camera_x + data->playerdir_x * screen_position;
-	y = data->camera_y + data->playerdir_y * screen_position;
+	//screen_position = 2 * (double) x_pos / (double) WIDTH - 1;
+	//x = data->camera_x + data->playerdir_x * screen_position;
+//	y = data->camera_y + data->playerdir_y * screen_position;
 	if (data->texture->axis == 'x')
 	{
 		if (data->rayinfo->ray_angle < WEST)
 			data->texture->idx = NO;
 		else
 			data->texture->idx = SO;
-		vec_val = data->camera_x + data->rayinfo->raydist * x;
-		r = vec_val - floor(vec_val);
+		texture_x = (int)(data->rayinfo->h_ray_x / 2) % 64;
+		//vec_val = data->camera_x + data->rayinfo->raydist * data->rayinfo->h_ray_x;
+		//r = vec_val - floor(vec_val);
 	}
 	else
 	{
@@ -94,10 +95,11 @@ int	get_texture_index(t_data *data, int wall_height, int x_pos)
 			data->texture->idx = EA;
 		else
 			data->texture->idx = WE;
-		vec_val = data->camera_y + data->rayinfo->raydist * y;
-		r = vec_val - floor(vec_val);
+		//vec_val = data->camera_y + data->rayinfo->raydist * data->rayinfo->v_ray_x;
+		//r = vec_val - floor(vec_val);
+		texture_x = (int)(data->rayinfo->v_ray_x / 2) % 64;
 	}
-	texture_x = round(r * (double)data->texture->wall[data->texture->idx]->width); 
+	//texture_x = round(r * (double)data->texture->wall[data->texture->idx]->width); 
 	return (texture_x);
 }
 
@@ -109,24 +111,32 @@ void	draw_walls(t_data *data, int x_pos)
 	int	y;
 	int	texture_x;
 	int	texture_y;
+	int ty_step;
+	int ty_off = 0;
 
-	texture_y = 0;
 	correct_angle = data->player_angle - data->rayinfo->ray_angle;
 	reset_ray_angle(&correct_angle);
 	data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
-	height = (data->map_size * HEIGHT) / data->rayinfo->raydist;
+	height = (64 / data->rayinfo->raydist) * 1100;
+	ty_step = 64 / height;
 	if (height >= HEIGHT)
-		texture_y = ((double)(height - HEIGHT) / 2.0)
-				/ ((double)height * (double)data->texture->wall[data->texture->idx]->height);
+		ty_off = height - HEIGHT / 2;
+		//texture_y = ((double)(height - HEIGHT) / 2.0)
+		//		/ ((double)height * (double)data->texture->wall[data->texture->idx]->height);
+	texture_y = ty_off * ty_step;
 	start = (int)((double)HEIGHT / 2) - (height / 2);
 	y = -1;
 	texture_x = get_texture_index(data, height, x_pos);
+	write(1, "hei\n", 4);
 	while (++y < HEIGHT)
 	{
 		if (y < start && (height + start) < HEIGHT)
 			draw_ceiling(data, x_pos, y);
 		else if (y > start && y <= (start + height))
+		{
 			draw_line(x_pos, y, start + height, data, texture_x, texture_y);
+			texture_y += ty_step; 	
+		}
 		else if (y > (height + start))
 			draw_floor(data, x_pos, y);
 	}

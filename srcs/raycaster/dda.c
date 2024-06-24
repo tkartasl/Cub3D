@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:03:00 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/21 12:07:10 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/24 16:57:55 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ double	check_vertical_hit(t_data *data)
 
 	dist_v = 1000000;
 	i = 0;
-	calculate_steps_v(data, &data->rayinfo->ray_y, &data->rayinfo->ray_x, &i);
+	calculate_steps_v(data, &data->rayinfo->v_ray_y, &data->rayinfo->v_ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		data->rayinfo->map_x = (int)data->rayinfo->ray_x >> 6;		
-		data->rayinfo->map_y = (int)data->rayinfo->ray_y >> 6;
+		data->rayinfo->map_x = (int)data->rayinfo->v_ray_x >> 6;		
+		data->rayinfo->map_y = (int)data->rayinfo->v_ray_y >> 6;
 		if (check_overflow(data) == 0
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
@@ -90,8 +90,8 @@ double	check_vertical_hit(t_data *data)
 		}
 		else
 		{
-			data->rayinfo->ray_x += data->rayinfo->step_x;
-			data->rayinfo->ray_y += data->rayinfo->step_y;
+			data->rayinfo->v_ray_x += data->rayinfo->step_x;
+			data->rayinfo->v_ray_y += data->rayinfo->step_y;
 			i += 1;
 			}
 		}
@@ -105,11 +105,11 @@ double	check_horizontal_hit(t_data *data)
 
 	dist = 1000000;
 	i = 0;
-	calculate_steps_h(data, &data->rayinfo->ray_y, &data->rayinfo->ray_x, &i);
+	calculate_steps_h(data, &data->rayinfo->h_ray_y, &data->rayinfo->h_ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		data->rayinfo->map_x = (int)data->rayinfo->ray_x >> 6;	
-		data->rayinfo->map_y = (int)data->rayinfo->ray_y >> 6;
+		data->rayinfo->map_x = (int)data->rayinfo->h_ray_x >> 6;	
+		data->rayinfo->map_y = (int)data->rayinfo->h_ray_y >> 6;
 		if (check_overflow(data) == 0
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
@@ -118,8 +118,8 @@ double	check_horizontal_hit(t_data *data)
 		}
 		else
 		{
-			data->rayinfo->ray_x += data->rayinfo->step_x;
-			data->rayinfo->ray_y += data->rayinfo->step_y;
+			data->rayinfo->h_ray_x += data->rayinfo->step_x;
+			data->rayinfo->h_ray_y += data->rayinfo->step_y;
 			i += 1;
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/24 13:27:35 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/24 16:56:51 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,10 @@ typedef	struct s_rayinfo
 	double	atan;
 	double	step_x;
 	double	step_y;	
-	double	ray_x;
-	double	ray_y;
+	double	h_ray_x;
+	double	h_ray_y;
+	double	v_ray_x;
+	double	v_ray_y;
 	int		map_x;
 	int		map_y;
 }			t_rayinfo;
