@@ -101,7 +101,7 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->rayinfo->ray_angle = data->player_angle;
 	data->playerdir_x = cos(data->player_angle) * 10;
 	data->playerdir_y = sin(data->player_angle) * 10;
-	data->map_width = 25;
+	data->map_width = 21;
 	data->map_size = data->map_width * data->map_height;
 	init_mlx(data);
 }

@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
-#include <stdint.h>
+#include <math.h>
 
 void	draw_ceiling(t_data *data, int x, int y);
 void	draw_floor(t_data *data, int x, int y);
@@ -41,61 +41,59 @@ int	get_texture_pixel(t_textures *texture, int x_pos, int y_start)
 	int				offset;
 	mlx_texture_t	*wall;
 
-	color = 0;
 	wall = texture->wall[texture->idx];
-	if (x_pos > 64)
-		x_pos = x_pos % 64;
-	if (y_start > 64)
-		y_start = y_start % 64;
-	//offset = ((x_pos * wall->width) + y_start) * (uint32_t)wall->bytes_per_pixel;
-	offset = x_pos * sizeof(uint32_t) + y_start * wall->width * sizeof(uint32_t);
-	color = (wall->pixels[offset] << 24) | (wall->pixels[offset + 1] << 16) | (wall->pixels[offset + 2] << 8) | wall->pixels[offset + 1];
+	// if (x_pos > 64)
+	// 	x_pos = x_pos % 64;
+	// if (y_start > 64)
+	// 	y_start = y_start % 64;
+	offset = ((y_start * wall->width) + x_pos) * wall->bytes_per_pixel;
+	//printf("offset: %d, width: %d, height: %d\n", offset, wall->width, wall->height);
+//	offset = x_pos * sizeof(uint32_t) + y_start * wall->width * sizeof(uint32_t);
+	color = (wall->pixels[offset] << 24) | (wall->pixels[offset + 1] << 16) | (wall->pixels[offset + 2] << 8) | wall->pixels[offset + 3];
 	return (color);
 }
 
-int	draw_line(int x_pos, int y_start, int y_end, t_data *data)
+void	draw_line(int x, int y, int height, t_data *data, int texture_x, int start_y)
 {
 	int	error;
+	double	r;
+	mlx_texture_t	*wall;
+	int		texture_y;
 
-	get_line_values(data->line, x_pos, y_start, y_end);
-	error = data->line->delta_x + data->line->delta_y;
-	while (1)
-	{
-		if (x_pos >= 0 && y_start >= 0 && x_pos < WIDTH && y_start < HEIGHT)
-			mlx_put_pixel(data->screen, x_pos, y_start, get_texture_pixel(data->texture, x_pos, y_start));
-		if (y_start == y_end)
-			break ;
-		data->line->error2 = 2 * error;
-		if (data->line->error2 >= data->line->delta_y)
-		{
-			error += data->line->delta_y;
-			x_pos += data->line->slope_x;
-		}	
-		if (data->line->error2 <= data->line->delta_x)
-		{
-			error += data->line->delta_x;
-			y_start += data->line->slope_y;
-		}
-	}
-	return (y_end);
+	wall = data->texture->wall[data->texture->idx];
+	if (height > HEIGHT)
+		height = HEIGHT;
+	r = (double)y / (double)height;
+	texture_y = ((wall->height - 1 - (2 * start_y))  * r) + start_y;
+	mlx_put_pixel(data->screen, x, y, get_texture_pixel(data->texture, texture_x, texture_y));
 }
 
-void	get_texture_index(t_data *data)
+int	get_texture_index(t_data *data, int wall_height, int x_pos)
 {
+	int	texture_x;
+	double	r;
+	double	vec_val;
+
 	if (data->texture->axis == 'x')
 	{
 		if (data->rayinfo->ray_angle < WEST)
 			data->texture->idx = NO;
 		else
 			data->texture->idx = SO;
+		vec_val = (data->camera_x + data->rayinfo->raydist * data->playerdir_x) / 64;
+		r = vec_val - floor(vec_val);
 	}
 	else
 	{
 		if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
-			data->texture->idx = WE;
-		else
 			data->texture->idx = EA;
+		else
+			data->texture->idx = WE;
+		vec_val = (data->camera_y + data->rayinfo->raydist * data->playerdir_y) / 64;
+		r = vec_val - floor(vec_val);
 	}
+	texture_x = round(r * (double)data->texture->wall[data->texture->idx]->width); 
+	return (texture_x);
 }
 
 void	draw_walls(t_data *data, int x_pos)
@@ -104,22 +102,26 @@ void	draw_walls(t_data *data, int x_pos)
 	double	start;
 	double	correct_angle;
 	int	y;
+	int	texture_x;
+	int	texture_y;
 
+	texture_y = 0;
 	correct_angle = data->player_angle - data->rayinfo->ray_angle;
 	reset_ray_angle(&correct_angle);
 	data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
-	height = (data->map_size * 100) / data->rayinfo->raydist;
-	if (height > HEIGHT)
-		height = HEIGHT;
-	start = ((double)HEIGHT / 2) - (height / 2);
+	height = (data->map_size * HEIGHT) / data->rayinfo->raydist;
+	if (height >= HEIGHT)
+		texture_y = ((double)(height - HEIGHT) / 2.0)
+				/ ((double)height * (double)data->texture->wall[data->texture->idx]->height);
+	start = (int)((double)HEIGHT / 2) - (height / 2);
 	y = -1;
-	get_texture_index(data);
+	texture_x = get_texture_index(data, height, x_pos);
 	while (++y < HEIGHT)
 	{
 		if (y < start && (height + start) < HEIGHT)
 			draw_ceiling(data, x_pos, y);
 		else if (y > start && y <= (start + height))
-			y = draw_line(x_pos, start, height + start, data);
+			draw_line(x_pos, y, start + height, data, texture_x, texture_y);
 		else if (y > (height + start))
 			draw_floor(data, x_pos, y);
 	}

@@ -33,7 +33,7 @@ void	parse_push_textures(t_parser *parser, t_indices *inds)
 	path = ft_substr(*parser->line, inds->st, inds->end - inds->st);
 	if (path == NULL) // NOTE: malloc_fail
 		free_vecs(parser, YES, NO);
-	open_validate_file(parser, path, ".png", YES);
+	open_validate_file(parser, path, ".xpm", YES);
 	if (vec_push(parser->textures_paths, &path) == 0)
 	{
 		free(path);
