@@ -120,14 +120,13 @@ void	draw_walls(t_data *data, int x_pos)
 	height = (64 / data->rayinfo->raydist) * 1100;
 	ty_step = 64 / height;
 	if (height >= HEIGHT)
-		ty_off = height - HEIGHT / 2;
+		ty_off = height - HEIGHT / 2.0;
 		//texture_y = ((double)(height - HEIGHT) / 2.0)
 		//		/ ((double)height * (double)data->texture->wall[data->texture->idx]->height);
 	texture_y = ty_off * ty_step;
 	start = (int)((double)HEIGHT / 2) - (height / 2);
 	y = -1;
 	texture_x = get_texture_index(data, height, x_pos);
-	write(1, "hei\n", 4);
 	while (++y < HEIGHT)
 	{
 		if (y < start && (height + start) < HEIGHT)

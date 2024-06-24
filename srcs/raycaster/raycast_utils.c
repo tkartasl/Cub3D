@@ -36,7 +36,7 @@ void	reset_ray_angle(double *angle)
 		*angle -= 2 * PI;
 }
 
-double	ray_length(t_data *data)
+double	ray_length(t_data *data, int horizontal)
 {
 	double	ax;
 	double	ay;
@@ -45,7 +45,15 @@ double	ray_length(t_data *data)
 
 	ax = data->camera_x;
 	ay = data->camera_y;
-	bx = data->rayinfo->ray_x;
-	by = data->rayinfo->ray_y;
+	if (horizontal)
+	{
+		bx = data->rayinfo->h_ray_x;
+		by = data->rayinfo->h_ray_y;
+	}
+	else
+	{
+		bx = data->rayinfo->v_ray_x;
+		by = data->rayinfo->v_ray_y;
+	}
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }

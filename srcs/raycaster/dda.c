@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../../includes/cub3D.h"
 
 void	calculate_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
 {
@@ -85,7 +85,7 @@ double	check_vertical_hit(t_data *data)
 		if (check_overflow(data) == 0
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
-			dist_v = ray_length(data);
+			dist_v = ray_length(data, 0);
 			i = MAX_VIEW_DIST;
 		}
 		else
@@ -113,7 +113,7 @@ double	check_horizontal_hit(t_data *data)
 		if (check_overflow(data) == 0
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
-			dist = ray_length(data);
+			dist = ray_length(data, 1);
 			i = MAX_VIEW_DIST;
 		}
 		else

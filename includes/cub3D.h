@@ -113,7 +113,7 @@ void	key_hook(mlx_key_data_t keydata, void *param);
 void	draw_walls(t_data *data, int x_pos);
 int		check_overflow(t_data *data);
 void	reset_ray_angle(double *angle);
-double	ray_length(t_data *data);
+double	ray_length(t_data *data, int horizontal);
 double	check_horizontal_hit(t_data *data);
 double	check_vertical_hit(t_data *data);
 void	cast_rays(t_data *data);
