@@ -6,7 +6,7 @@
 #    By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/05 12:11:11 by tkartasl          #+#    #+#              #
-#    Updated: 2024/06/17 10:34:31 by tkartasl         ###   ########.fr        #
+#    Updated: 2024/06/24 13:28:19 by tkartasl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,7 +68,8 @@ SOURCES 	:= 	main.c \
 			drawing.c \
 			draw_colors.c \
 			dda.c \
-			raycast_utils.c
+			raycast_utils.c \
+			wall_collision.c
 
 SOURCEDIR	:=	$(addprefix $(SRCSDIR)/, $(MODULES))
 BUILDDIR	:=	$(addprefix $(OBJSDIR)/, $(MODULES))

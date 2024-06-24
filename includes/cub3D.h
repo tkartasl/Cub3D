@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/21 12:12:37 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/24 13:27:35 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,4 +133,6 @@ void	free_vecs(t_parser *parser, int exit_fail, int print_err);
 void	freedata_exit(t_data *data, int exit_status, int terminate_mlx);
 int 	get_rgba(int r, int g, int b, int a);
 void	movement(void *param);
+void	wall_collision(t_data *data, char key, int *new_x, int *new_y);
+void	wall_collision_strafe(t_data *data, char key, int *new_x, int *new_y);
 #endif
