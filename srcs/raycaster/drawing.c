@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:59:04 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/24 17:27:33 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/25 12:32:10 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,23 @@ void	get_line_values(t_line *line, int x, int y_a, int y_b)
 	line->slope_y = compare(y_a, y_b);		
 }
 
-int	get_texture_pixel(t_textures *texture, int x_pos, int y_start)
+int	get_texture_pixel(t_textures *texture, int x_pos, int y_start, int height)
 {
 	uint32_t		color;
 	int				offset;
 	mlx_texture_t	*wall;
+	double			xt = 0;
+	double			yt = 0;
+
+	xt = height / 64 * x_pos;
+	yt = height / 64 * y_start;
 
 	wall = texture->wall[texture->idx];
-	if (x_pos > 64)
-		x_pos = x_pos % 64;
-	if (y_start > 64)
-		y_start = y_start % 64;
-	offset = ((y_start * wall->width) + x_pos) * wall->bytes_per_pixel;
+	//if (x_pos > 64)
+	//	x_pos = x_pos % 64;
+	//if (y_start > 64)
+	//	y_start = y_start % 64;
+	offset = ((yt * height) + xt) * wall->bytes_per_pixel;
 	//printf("offset: %d, width: %d, height: %d\n", offset, wall->width, wall->height);
 //	offset = x_pos * sizeof(uint32_t) + y_start * wall->width * sizeof(uint32_t);
 	color = (wall->pixels[offset] << 24) | (wall->pixels[offset + 1] << 16) | (wall->pixels[offset + 2] << 8) | wall->pixels[offset + 3];
@@ -64,7 +69,7 @@ void	draw_line(int x, int y, int height, t_data *data, int texture_x, int start_
 		height = HEIGHT;
 	r = (double)y / (double)height;
 	texture_y = ((wall->height - 1 - (2 * start_y))  * r) + start_y;
-	mlx_put_pixel(data->screen, x, y, get_texture_pixel(data->texture, texture_x, start_y));
+	mlx_put_pixel(data->screen, x, y, get_texture_pixel(data->texture, texture_x, start_y, height));
 }
 
 int	get_texture_index(t_data *data, int wall_height, int x_pos)

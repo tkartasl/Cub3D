@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/06/24 13:44:54 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/25 12:48:11 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	extract_map_arr(t_parser *parser, t_data *data)
 		{
 			if (map[y][x] == 'S' || map[y][x] == 'N' || map[y][x] == 'W' || map[y][x] == 'E')
 			{
-				data->camera_y = y + 0.5;
-				data->camera_x = x + 0.5;
+				data->camera_y = y * 64 + 32;
+				data->camera_x = x * 64 + 32;
 				data->playerdir = map[y][x];
 			}
 		}
@@ -99,8 +99,8 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	else
 		data->player_angle = EAST;
 	data->rayinfo->ray_angle = data->player_angle;
-	data->playerdir_x = cos(data->player_angle) * 10;
-	data->playerdir_y = sin(data->player_angle) * 10;
+	data->playerdir_x = cos(data->player_angle) * 7.5;
+	data->playerdir_y = sin(data->player_angle) * 7.5;
 	//data->map_width = 25;
 	data->map_size = data->map_width * data->map_height;
 	init_mlx(data);
