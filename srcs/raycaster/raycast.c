@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/25 15:41:15 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/26 09:33:43 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	raycaster(t_data *data)
 	get_textures(data);
 	cast_rays(data);
 	mlx_key_hook(data->mlx, &key_hook, data);
-	mlx_cursor_hook(data->mlx, &mouse_func, data);
+	mlx_cursor_hook(data->mlx, &mouse_hook, data);
 	mlx_loop_hook(data->mlx, &movement, data);
 	mlx_loop(data->mlx);
 }

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:55:10 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/25 15:47:00 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/26 09:34:46 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,28 +100,4 @@ void	movement(void *param)
 	if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT))
 		rotate_player(data, 'R');
 	cast_rays(data);
-}
-
-void	key_hook(mlx_key_data_t keydata, void *param)
-{
-	t_data	*data;
-
-	data = param;
-	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
-		mlx_close_window(data->mlx);
-}
-
-void	mouse_func(double xpos, double ypos, void *param)
-{
-	t_data	*data;
-	int		x_pos;
-	static int	old_xpos;
-
-	x_pos = (int)xpos;
-	data = param;
-	if (xpos < old_xpos)
-		rotate_player(data, 'L');
-	else if (xpos > old_xpos)
-		rotate_player(data, 'R');
-	old_xpos = xpos;
 }
