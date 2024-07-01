@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/26 09:33:43 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/01 14:59:02 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,50 @@ double	fps(void)
 	return (mlx_get_time());
 }
 
+static void	calc_texels(t_data *data, int x_pos)
+{
+	double	correct_angle;
+	int		t_size;
+
+	t_size = data->texture->wall[0]->height;
+	correct_angle = data->player_angle - data->rayinfo->ray_angle;
+	reset_ray_angle(&correct_angle);
+	data->texture->ty_off = 0;
+	data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
+	data->texture->height = (64 / data->rayinfo->raydist) * 1100;
+	data->texture->ty_step = data->texture->wall[0]->height
+		/ (double)data->texture->height;
+	get_texture_index(data, x_pos, t_size);
+	if (data->texture->height > HEIGHT)
+	{
+		data->texture->ty_off = (data->texture->height - HEIGHT) / 2;
+		data->texture->height = HEIGHT;
+	}
+	data->texture->y = data->texture->ty_off * data->texture->ty_step;
+}
+
+static void	set_ray_values(t_data *data, int side)
+{
+	if (side == 0)
+	{
+		data->texture->axis = 'x';
+		data->rayinfo->raydist = data->rayinfo->dist_h;
+		data->rayinfo->ray_x = data->rayinfo->h_ray_x;
+		data->rayinfo->ray_y = data->rayinfo->h_ray_y;
+	}
+	else
+	{
+		data->texture->axis = 'y';
+		data->rayinfo->raydist = data->rayinfo->dist_v;
+		data->rayinfo->ray_x = data->rayinfo->v_ray_x;
+		data->rayinfo->ray_y = data->rayinfo->v_ray_y;
+	}
+}
+
 void	cast_rays(t_data *data)
 {
-	int		x_pos;
-	
+	int	x_pos;
+
 	x_pos = 0;
 	data->rayinfo->ray_angle = data->player_angle - DEGREE * FOV / 2;
 	reset_ray_angle(&data->rayinfo->ray_angle);
@@ -35,15 +75,10 @@ void	cast_rays(t_data *data)
 		data->rayinfo->dist_h = check_horizontal_hit(data);
 		data->rayinfo->dist_v = check_vertical_hit(data);
 		if (data->rayinfo->dist_v >= data->rayinfo->dist_h)
-		{
-			data->texture->axis = 'x';
-			data->rayinfo->raydist = data->rayinfo->dist_h;
-		}
-		if (data->rayinfo->dist_h >= data->rayinfo->dist_v)
-		{
-			data->texture->axis = 'y';
-			data->rayinfo->raydist = data->rayinfo->dist_v;
-		}
+			set_ray_values(data, 0);
+		else if (data->rayinfo->dist_h >= data->rayinfo->dist_v)
+			set_ray_values(data, 1);
+		calc_texels(data, x_pos);
 		draw_walls(data, x_pos);
 		x_pos++;
 	}

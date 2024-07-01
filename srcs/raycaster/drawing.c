@@ -6,142 +6,73 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:59:04 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/25 12:32:10 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:01:03 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-void	draw_ceiling(t_data *data, int x, int y);
-void	draw_floor(t_data *data, int x, int y);
-
-int	compare(int a, int b)
+void	draw_line(int x, int y, t_data *data)
 {
-	int	ret;
-
-	if (a < b)
-		ret = 1;
-	else
-		ret = -1;
-	return (ret);
-}
-
-void	get_line_values(t_line *line, int x, int y_a, int y_b)
-{
-	line->delta_x = abs(x - x);
-	line->slope_x = compare(x, x);
-	line->delta_y = -abs(y_b - y_a);
-	line->slope_y = compare(y_a, y_b);		
-}
-
-int	get_texture_pixel(t_textures *texture, int x_pos, int y_start, int height)
-{
-	uint32_t		color;
+	mlx_texture_t	*wall;
+	uint32_t 		pixel;
 	int				offset;
-	mlx_texture_t	*wall;
-	double			xt = 0;
-	double			yt = 0;
+	int				t_size;
 
-	xt = height / 64 * x_pos;
-	yt = height / 64 * y_start;
-
-	wall = texture->wall[texture->idx];
-	//if (x_pos > 64)
-	//	x_pos = x_pos % 64;
-	//if (y_start > 64)
-	//	y_start = y_start % 64;
-	offset = ((yt * height) + xt) * wall->bytes_per_pixel;
-	//printf("offset: %d, width: %d, height: %d\n", offset, wall->width, wall->height);
-//	offset = x_pos * sizeof(uint32_t) + y_start * wall->width * sizeof(uint32_t);
-	color = (wall->pixels[offset] << 24) | (wall->pixels[offset + 1] << 16) | (wall->pixels[offset + 2] << 8) | wall->pixels[offset + 3];
-	return (color);
-}
-
-void	draw_line(int x, int y, int height, t_data *data, int texture_x, int start_y)
-{
-	int	error;
-	double	r;
-	mlx_texture_t	*wall;
-	int		texture_y;
-
+	t_size = data->texture->wall[data->texture->idx]->height;
+	pixel = 0;
+	offset = 0;
 	wall = data->texture->wall[data->texture->idx];
-	if (height > HEIGHT)
-		height = HEIGHT;
-	r = (double)y / (double)height;
-	texture_y = ((wall->height - 1 - (2 * start_y))  * r) + start_y;
-	mlx_put_pixel(data->screen, x, y, get_texture_pixel(data->texture, texture_x, start_y, height));
+	offset = (((int)data->texture->y * t_size + (int)data->texture->x))
+		 * sizeof(uint32_t);
+	if (offset < (t_size * t_size * 4))
+		pixel = (wall->pixels[offset] << 24) | (wall->pixels[offset + 1] << 16)
+			| (wall->pixels[offset + 2] << 8) | wall->pixels[offset + 3];
+	mlx_put_pixel(data->screen, x, y, pixel);
+	data->texture->y += data->texture->ty_step;
 }
 
-int	get_texture_index(t_data *data, int wall_height, int x_pos)
+void	get_texture_index(t_data *data, int x_pos, int t_size)
 {
-	int	texture_x;
-	//double	r;
-	//double	vec_val;
-	//double		screen_position;
-	int	x;
-	int	y;
-
-	//screen_position = 2 * (double) x_pos / (double) WIDTH - 1;
-	//x = data->camera_x + data->playerdir_x * screen_position;
-//	y = data->camera_y + data->playerdir_y * screen_position;
 	if (data->texture->axis == 'x')
 	{
+		data->texture->x = ((int)data->rayinfo->ray_x % t_size);
 		if (data->rayinfo->ray_angle < WEST)
+		{
 			data->texture->idx = NO;
+			data->texture->x = t_size - data->texture->x;
+		}
 		else
 			data->texture->idx = SO;
-		texture_x = (int)(data->rayinfo->h_ray_x / 2) % 64;
-		//vec_val = data->camera_x + data->rayinfo->raydist * data->rayinfo->h_ray_x;
-		//r = vec_val - floor(vec_val);
 	}
 	else
 	{
-		if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
+		data->texture->x = ((int)data->rayinfo->ray_y % t_size);
+		if (data->rayinfo->ray_angle > NORTH
+			&& data->rayinfo->ray_angle < SOUTH)
+		{
+			data->texture->x = t_size - data->texture->x;
 			data->texture->idx = EA;
+		}
 		else
 			data->texture->idx = WE;
-		//vec_val = data->camera_y + data->rayinfo->raydist * data->rayinfo->v_ray_x;
-		//r = vec_val - floor(vec_val);
-		texture_x = (int)(data->rayinfo->v_ray_x / 2) % 64;
 	}
-	//texture_x = round(r * (double)data->texture->wall[data->texture->idx]->width); 
-	return (texture_x);
 }
 
 void	draw_walls(t_data *data, int x_pos)
 {
-	double	height;
 	double	start;
-	double	correct_angle;
 	int	y;
-	int	texture_x;
-	int	texture_y;
-	int ty_step;
-	int ty_off = 0;
 
-	correct_angle = data->player_angle - data->rayinfo->ray_angle;
-	reset_ray_angle(&correct_angle);
-	data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
-	height = (64 / data->rayinfo->raydist) * 1100;
-	ty_step = 64 / height;
-	if (height >= HEIGHT)
-		ty_off = height - HEIGHT / 2.0;
-		//texture_y = ((double)(height - HEIGHT) / 2.0)
-		//		/ ((double)height * (double)data->texture->wall[data->texture->idx]->height);
-	texture_y = ty_off * ty_step;
-	start = (int)((double)HEIGHT / 2) - (height / 2);
+	start = (HEIGHT / 2) - (data->texture->height / 2);
 	y = -1;
-	texture_x = get_texture_index(data, height, x_pos);
 	while (++y < HEIGHT)
 	{
-		if (y < start && (height + start) < HEIGHT)
+		if (y <= start && (data->texture->height + start) < HEIGHT)
 			draw_ceiling(data, x_pos, y);
-		else if (y > start && y <= (start + height))
-		{
-			draw_line(x_pos, y, start + height, data, texture_x, texture_y);
-			texture_y += ty_step; 	
-		}
-		else if (y > (height + start))
+		else if (y > start && y <= (start + data->texture->height))
+			draw_line(x_pos, y, data);
+		else if (y > (data->texture->height + start))
 			draw_floor(data, x_pos, y);
 	}
 	data->rayinfo->ray_angle += DEGREE / ((double)WIDTH / FOV);

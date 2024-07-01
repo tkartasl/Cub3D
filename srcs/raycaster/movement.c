@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:55:10 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/26 09:34:46 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/01 14:49:41 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	rotate_player(t_data *data, char direction)
 	if (direction == 'R')
 	{
 		data->player_angle += 0.09;
-		if (data->player_angle > 2 * PI)
+		if (data->player_angle >= 2 * PI)
 			data->player_angle -= 2 * PI;
 		data->playerdir_x = cos(data->player_angle) * 7.5;
 		data->playerdir_y = sin(data->player_angle) * 7.5;
@@ -32,7 +32,7 @@ void	rotate_player(t_data *data, char direction)
 	}
 }
 
-void	move_player_strafe(t_data *data, char key)
+static void	move_player_strafe(t_data *data, char key)
 {
 	int	new_x;
 	int	new_y;
@@ -57,7 +57,7 @@ void	move_player_strafe(t_data *data, char key)
 	}
 }
 
-void	move_player_straight(t_data *data, char key)
+static void	move_player_straight(t_data *data, char key)
 {
 	int	new_x;
 	int	new_y;

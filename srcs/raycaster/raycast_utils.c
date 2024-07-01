@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:04:55 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/21 12:07:47 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/06/28 14:05:18 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,23 @@
 
 int	check_overflow(t_data *data)
 {
-	int	i;
 	int	x;
 	int	y;
-	
-	i = 0;
+
 	x = data->rayinfo->map_x;
 	y = data->rayinfo->map_y;
 	if (y < 0 || y >= data->map_height)
-		i = 1;
-	if (x < 0 || i == 1 || x >= ft_strlen(data->map[y]))
-		i = 1;
-	return (i);
+		return (1);
+	if (x < 0 || x >= ft_strlen(data->map[y]))
+		return (1);
+	return (0);
 }
 
 void	reset_ray_angle(double *angle)
 {
 	if (*angle < 0)
 		*angle += 2 * PI;
-	if (*angle > 2 * PI)
+	if (*angle >= 2 * PI)
 		*angle -= 2 * PI;
 }
 

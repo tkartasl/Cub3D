@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 14:39:04 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/21 12:10:37 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/01 14:42:22 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define WEST PI
 # define SOUTH 3 * PI / 2
 # define DEGREE	0.01745329251
-# define MAX_VIEW_DIST 100
+# define MAX_VIEW_DIST 1000
 # define HEIGHT 1024
 # define WIDTH 1280
 # define MINI_HEIGHT 10

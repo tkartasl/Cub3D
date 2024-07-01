@@ -6,68 +6,63 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:03:00 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/24 17:36:45 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:14:54 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-void	calculate_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
+static void	calc_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
 {
-	int	py;
-	int	px;
+	double	ntan;
 
-	px = data->camera_x;
-	py = data->camera_y;
-	data->rayinfo->ntan = -tan(data->rayinfo->ray_angle);
+	ntan = -tan(data->rayinfo->ray_angle);
 	if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
 	{
-		*ray_x = (((int)px >> 6) << 6) - 0.0001;
-		*ray_y = (px - *ray_x) * data->rayinfo->ntan + py;
+		*ray_x = (((int)data->camera_x >> 6) << 6) - 0.0001;
+		*ray_y = (data->camera_x - *ray_x) * ntan + data->camera_y;
 		data->rayinfo->step_x = -64;
 	}
-	else if (data->rayinfo->ray_angle < NORTH || data->rayinfo->ray_angle > SOUTH)
+	else if (data->rayinfo->ray_angle < NORTH
+		|| data->rayinfo->ray_angle > SOUTH)
 	{
-		*ray_x = (((int)px >> 6) << 6) + 64;
-		*ray_y = (px - *ray_x) * data->rayinfo->ntan + py;
+		*ray_x = (((int)data->camera_x >> 6) << 6) + 64;
+		*ray_y = (data->camera_x - *ray_x) * ntan + data->camera_y;
 		data->rayinfo->step_x = 64;
 	}
 	else if (data->rayinfo->ray_angle == 0 || data->rayinfo->ray_angle == WEST)
 	{
-		*ray_x = px;
-		*ray_y = py;
+		*ray_x = data->camera_x;
+		*ray_y = data->camera_y;
 		*i = MAX_VIEW_DIST;
 	}
-	data->rayinfo->step_y = -data->rayinfo->step_x * data->rayinfo->ntan;
+	data->rayinfo->step_y = -data->rayinfo->step_x * ntan;
 }
 
-void	calculate_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
+static void	calc_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
 {
-	int	py;
-	int	px;
+	double	atan;
 
-	px = data->camera_x;
-	py = data->camera_y;
-	data->rayinfo->atan = -1 / tan(data->rayinfo->ray_angle);
+	atan = -1 / tan(data->rayinfo->ray_angle);
 	if (data->rayinfo->ray_angle > WEST)
 	{
-		*ray_y = (((int)py >> 6) << 6) - 0.0001;
-		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
+		*ray_y = (((int)data->camera_y >> 6) << 6) - 0.0001;
+		*ray_x = (data->camera_y - *ray_y) * atan + data->camera_x;
 		data->rayinfo->step_y = -64;
 	}
 	else if (data->rayinfo->ray_angle < WEST)
 	{
-		*ray_y = (((int)py >> 6) << 6) + 64;
-		*ray_x = (py - *ray_y) * data->rayinfo->atan + px;
+		*ray_y = (((int)data->camera_y >> 6) << 6) + 64;
+		*ray_x = (data->camera_y - *ray_y) * atan + data->camera_x;
 		data->rayinfo->step_y = 64;
 	}
 	else if (data->rayinfo->ray_angle == WEST || data->rayinfo->ray_angle == 0)
 	{
-		*ray_x = px;
-		*ray_y = py;
+		*ray_x = data->camera_x;
+		*ray_y = data->camera_y;
 		*i = MAX_VIEW_DIST;
 	}
-	data->rayinfo->step_x = -data->rayinfo->step_y * data->rayinfo->atan;
+	data->rayinfo->step_x = -data->rayinfo->step_y * atan;
 }
 
 double	check_vertical_hit(t_data *data)
@@ -77,7 +72,7 @@ double	check_vertical_hit(t_data *data)
 
 	dist_v = 1000000;
 	i = 0;
-	calculate_steps_v(data, &data->rayinfo->v_ray_y, &data->rayinfo->v_ray_x, &i);
+	calc_steps_v(data, &data->rayinfo->v_ray_y, &data->rayinfo->v_ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
 		data->rayinfo->map_x = (int)data->rayinfo->v_ray_x >> 6;
@@ -86,7 +81,7 @@ double	check_vertical_hit(t_data *data)
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
 			dist_v = ray_length(data, 0);
-			i = MAX_VIEW_DIST;
+			break ;
 		}
 		else
 		{
@@ -94,8 +89,8 @@ double	check_vertical_hit(t_data *data)
 			data->rayinfo->v_ray_y += data->rayinfo->step_y;
 			i += 1;
 			}
-		}
-		return (dist_v);
+	}
+	return (dist_v);
 }
 
 double	check_horizontal_hit(t_data *data)
@@ -105,7 +100,7 @@ double	check_horizontal_hit(t_data *data)
 
 	dist = 1000000;
 	i = 0;
-	calculate_steps_h(data, &data->rayinfo->h_ray_y, &data->rayinfo->h_ray_x, &i);
+	calc_steps_h(data, &data->rayinfo->h_ray_y, &data->rayinfo->h_ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
 		data->rayinfo->map_x = (int)data->rayinfo->h_ray_x >> 6;
@@ -114,7 +109,7 @@ double	check_horizontal_hit(t_data *data)
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
 			dist = ray_length(data, 1);
-			i = MAX_VIEW_DIST;
+			break ;
 		}
 		else
 		{

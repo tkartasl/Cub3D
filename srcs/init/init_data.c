@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/06/25 12:48:11 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:27:29 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,7 @@ t_rayinfo	*init_rayinfo(t_parser *parser)
 	return (rayinfo);
 }
 
-t_line	*init_line(t_parser *parser, t_rayinfo **rayinfo)
-{
-	t_line		*line;
-
-	line = (t_line *)malloc(sizeof(t_line));
-	if (line == NULL)
-	{
-		free(*rayinfo);
-		free_vecs(parser, YES, NA);
-	}
-	ft_memset(line, 0, sizeof(t_line));
-	return (line);
-}
-
-t_textures	*init_texture(t_parser *parser, t_rayinfo **rayinfo, t_line **line)
+t_textures	*init_texture(t_parser *parser, t_rayinfo **rayinfo)
 {
 	t_textures	*texture;
 
@@ -76,7 +62,6 @@ t_textures	*init_texture(t_parser *parser, t_rayinfo **rayinfo, t_line **line)
 	if (texture == NULL)
 	{
 		free(*rayinfo);
-		free(*line);
 		free_vecs(parser, YES, NA);
 	}
 	ft_memset(texture, 0, sizeof(t_textures));
@@ -86,8 +71,8 @@ t_textures	*init_texture(t_parser *parser, t_rayinfo **rayinfo, t_line **line)
 void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	data->rayinfo = init_rayinfo(parser);
-	data->line = init_line(parser, &data->rayinfo);
-	data->texture = init_texture(data->parser, &data->rayinfo, &data->line);
+	//data->line = init_line(parser, &data->rayinfo);
+	data->texture = init_texture(data->parser, &data->rayinfo);
 	extract_map_arr(parser, data);
 	data->parser = parser;
 	if (data->playerdir == 'N')
@@ -101,7 +86,5 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->rayinfo->ray_angle = data->player_angle;
 	data->playerdir_x = cos(data->player_angle) * 7.5;
 	data->playerdir_y = sin(data->player_angle) * 7.5;
-	//data->map_width = 25;
-	data->map_size = data->map_width * data->map_height;
 	init_mlx(data);
 }

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/26 09:32:59 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:17:41 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,32 +60,28 @@ typedef	struct s_rayinfo
 	double	dist_v;
 	double	raydist;
 	double	ray_angle;
-	double	ntan;
-	double	atan;
 	double	step_x;
 	double	step_y;	
 	double	h_ray_x;
 	double	h_ray_y;
 	double	v_ray_x;
 	double	v_ray_y;
+	double	ray_x;
+	double	ray_y;
 	int		map_x;
 	int		map_y;
 }			t_rayinfo;
-
-typedef struct s_line
-{
-	int	delta_x;
-	int	delta_y;
-	int	slope_x;
-	int	slope_y;
-	int	error2;
-}		t_line;
 
 typedef struct s_textures
 {
 	mlx_texture_t	*wall[4];
 	char			axis;
 	int				idx;
+	double			x;
+	double			y;
+	double			ty_off;
+	double			ty_step;
+	int				height;
 }		t_textures;
 
 typedef struct s_data
@@ -101,7 +97,6 @@ typedef struct s_data
 	int			map_height;
 	int			map_width;
 	int			map_size;
-	t_line		*line;
 	t_rayinfo	*rayinfo;
 	char		**map;
 	char		playerdir;
@@ -111,6 +106,8 @@ typedef struct s_data
 
 void	key_hook(mlx_key_data_t keydata, void *param);
 void	draw_walls(t_data *data, int x_pos);
+void	draw_ceiling(t_data *data, int x, int y);
+void	draw_floor(t_data *data, int x, int y);
 int		check_overflow(t_data *data);
 void	reset_ray_angle(double *angle);
 double	ray_length(t_data *data, int horizontal);
@@ -139,4 +136,6 @@ void	wall_collision(t_data *data, char key, int *new_x, int *new_y);
 void	wall_collision_strafe(t_data *data, char key, int *new_x, int *new_y);
 void	mouse_hook(double xpos, double ypos, void *param);
 void	rotate_player(t_data *data, char direction);
+void	get_texture_index(t_data *data, int x_pos, int t_size);
+
 #endif
