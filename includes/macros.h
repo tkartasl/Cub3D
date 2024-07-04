@@ -24,9 +24,17 @@
 # define MAX_VIEW_DIST 1000
 # define HEIGHT 1024
 # define WIDTH 1280
-# define MINI_HEIGHT 10
-# define MINI_WIDTH 10
+# define MINI_HEIGHT 320
+# define MINI_WIDTH 320
+# define UNITSIZE 64
+# define MUNITSIZE 10
+# define MSCALE 2
 
+enum	e_minimap_type
+{
+	WALL,
+	EMPTY,
+};
 
 enum	e_type_identifiers
 {

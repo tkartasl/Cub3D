@@ -42,17 +42,17 @@ static void	move_player_strafe(t_data *data, char key)
 	if (key == 'A')
 	{
 		wall_collision_strafe(data, 'A', &new_x, &new_y);
-		if (data->map[data->camera_y / 64][new_x] != '1')
+		if (data->map[data->camera_y / UNITSIZE][new_x] != '1')
 			data->camera_x += (int)data->playerdir_y;
-		if (data->map[new_y][data->camera_x / 64] != '1')
+		if (data->map[new_y][data->camera_x / UNITSIZE] != '1')
 			data->camera_y -= (int)data->playerdir_x;
 	}
 	if (key == 'D')
 	{
 		wall_collision_strafe(data, 'D', &new_x, &new_y);
-		if (data->map[data->camera_y / 64][new_x] != '1')
+		if (data->map[data->camera_y / UNITSIZE][new_x] != '1')
 			data->camera_x -= (int)data->playerdir_y;
-		if (data->map[new_y][data->camera_x / 64] != '1')
+		if (data->map[new_y][data->camera_x / UNITSIZE] != '1')
 			data->camera_y += (int)data->playerdir_x;
 	}
 }
@@ -67,17 +67,17 @@ static void	move_player_straight(t_data *data, char key)
 	if (key == 'W')
 	{
 		wall_collision(data, 'W', &new_x, &new_y);
-		if (data->map[data->camera_y / 64][new_x] != '1')
+		if (data->map[data->camera_y / UNITSIZE][new_x] != '1')
 			data->camera_x += (int)data->playerdir_x;
-		if (data->map[new_y][data->camera_x / 64] != '1')
+		if (data->map[new_y][data->camera_x / UNITSIZE] != '1')
 			data->camera_y += (int)data->playerdir_y;
 	}
 	if (key == 'S')
 	{
 		wall_collision(data, 'S', &new_x, &new_y);
-		if (data->map[data->camera_y / 64][new_x] != '1')
+		if (data->map[data->camera_y / UNITSIZE][new_x] != '1')
 			data->camera_x -= (int)data->playerdir_x;
-		if (data->map[new_y][data->camera_x / 64] != '1')
+		if (data->map[new_y][data->camera_x / UNITSIZE] != '1')
 			data->camera_y -= (int)data->playerdir_y;
 	}
 }
@@ -100,4 +100,5 @@ void	movement(void *param)
 	if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT))
 		rotate_player(data, 'R');
 	cast_rays(data);
+	minimap(data);
 }

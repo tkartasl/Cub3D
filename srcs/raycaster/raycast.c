@@ -12,6 +12,8 @@
 
 #include "../../includes/cub3D.h"
 
+void	minimap(t_data *data);
+
 static void error(void)
 {
 	puts(mlx_strerror(mlx_errno));
@@ -32,10 +34,9 @@ static void	calc_texels(t_data *data, int x_pos)
 	correct_angle = data->player_angle - data->rayinfo->ray_angle;
 	reset_ray_angle(&correct_angle);
 	data->texture->ty_off = 0;
-	data->rayinfo->raydist = data->rayinfo->raydist * cos(correct_angle);
-	data->texture->height = (64 / data->rayinfo->raydist) * 1100;
-	data->texture->ty_step = data->texture->wall[0]->height
-		/ (double)data->texture->height;
+	data->rayinfo->raydist *= cos(correct_angle);
+	data->texture->height = (UNITSIZE * HEIGHT) / data->rayinfo->raydist;
+	data->texture->ty_step = t_size / (double)data->texture->height;
 	get_texture_index(data, x_pos, t_size);
 	if (data->texture->height > HEIGHT)
 	{
@@ -45,9 +46,9 @@ static void	calc_texels(t_data *data, int x_pos)
 	data->texture->y = data->texture->ty_off * data->texture->ty_step;
 }
 
-static void	set_ray_values(t_data *data, int side)
+static void	set_ray_values(t_data *data)
 {
-	if (side == 0)
+	if (data->rayinfo->dist_v >= data->rayinfo->dist_h)
 	{
 		data->texture->axis = 'x';
 		data->rayinfo->raydist = data->rayinfo->dist_h;
@@ -74,10 +75,7 @@ void	cast_rays(t_data *data)
 	{
 		data->rayinfo->dist_h = check_horizontal_hit(data);
 		data->rayinfo->dist_v = check_vertical_hit(data);
-		if (data->rayinfo->dist_v >= data->rayinfo->dist_h)
-			set_ray_values(data, 0);
-		else if (data->rayinfo->dist_h >= data->rayinfo->dist_v)
-			set_ray_values(data, 1);
+		set_ray_values(data);
 		calc_texels(data, x_pos);
 		draw_walls(data, x_pos);
 		x_pos++;
@@ -118,10 +116,11 @@ void	raycaster(t_data *data)
 {
 	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
 		error();
-	if (mlx_image_to_window(data->mlx, data->minimap, 0, 0) < 0)
+	if (mlx_image_to_window(data->mlx, data->minimap, 15, 15) < 0)
 		error();
 	get_textures(data);
 	cast_rays(data);
+	minimap(data);
 	mlx_key_hook(data->mlx, &key_hook, data);
 	mlx_cursor_hook(data->mlx, &mouse_hook, data);
 	mlx_loop_hook(data->mlx, &movement, data);

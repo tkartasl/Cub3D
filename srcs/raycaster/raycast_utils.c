@@ -21,7 +21,7 @@ int	check_overflow(t_data *data)
 	y = data->rayinfo->map_y;
 	if (y < 0 || y >= data->map_height)
 		return (1);
-	if (x < 0 || x >= ft_strlen(data->map[y]))
+	if (x < 0 || x >= data->map_width)
 		return (1);
 	return (0);
 }

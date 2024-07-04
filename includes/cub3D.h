@@ -96,10 +96,9 @@ typedef struct s_data
 	int			camera_y;
 	int			map_height;
 	int			map_width;
-	int			map_size;
 	t_rayinfo	*rayinfo;
 	char		**map;
-	char		playerdir;
+	char		**grid;
 	t_parser	*parser;
 	t_textures	*texture;
 }			t_data;
@@ -138,4 +137,5 @@ void	mouse_hook(double xpos, double ypos, void *param);
 void	rotate_player(t_data *data, char direction);
 void	get_texture_index(t_data *data, int x_pos, int t_size);
 
+void	minimap(t_data *data);
 #endif

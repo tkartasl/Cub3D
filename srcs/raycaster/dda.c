@@ -19,16 +19,16 @@ static void	calc_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
 	ntan = -tan(data->rayinfo->ray_angle);
 	if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
 	{
-		*ray_x = (((int)data->camera_x >> 6) << 6) - 0.0001;
+		*ray_x = (((int)data->camera_x / UNITSIZE) * UNITSIZE) - 0.0001;
 		*ray_y = (data->camera_x - *ray_x) * ntan + data->camera_y;
-		data->rayinfo->step_x = -64;
+		data->rayinfo->step_x = -UNITSIZE;
 	}
 	else if (data->rayinfo->ray_angle < NORTH
 		|| data->rayinfo->ray_angle > SOUTH)
 	{
-		*ray_x = (((int)data->camera_x >> 6) << 6) + 64;
+		*ray_x = (((int)data->camera_x / UNITSIZE) * UNITSIZE) + UNITSIZE;
 		*ray_y = (data->camera_x - *ray_x) * ntan + data->camera_y;
-		data->rayinfo->step_x = 64;
+		data->rayinfo->step_x = UNITSIZE;
 	}
 	else if (data->rayinfo->ray_angle == 0 || data->rayinfo->ray_angle == WEST)
 	{
@@ -46,15 +46,15 @@ static void	calc_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
 	atan = -1 / tan(data->rayinfo->ray_angle);
 	if (data->rayinfo->ray_angle > WEST)
 	{
-		*ray_y = (((int)data->camera_y >> 6) << 6) - 0.0001;
+		*ray_y = (((int)data->camera_y / UNITSIZE) * UNITSIZE) - 0.0001;
 		*ray_x = (data->camera_y - *ray_y) * atan + data->camera_x;
-		data->rayinfo->step_y = -64;
+		data->rayinfo->step_y = -UNITSIZE;
 	}
 	else if (data->rayinfo->ray_angle < WEST)
 	{
-		*ray_y = (((int)data->camera_y >> 6) << 6) + 64;
+		*ray_y = (((int)data->camera_y / UNITSIZE) * UNITSIZE) + UNITSIZE;
 		*ray_x = (data->camera_y - *ray_y) * atan + data->camera_x;
-		data->rayinfo->step_y = 64;
+		data->rayinfo->step_y = UNITSIZE;
 	}
 	else if (data->rayinfo->ray_angle == WEST || data->rayinfo->ray_angle == 0)
 	{
@@ -75,8 +75,8 @@ double	check_vertical_hit(t_data *data)
 	calc_steps_v(data, &data->rayinfo->v_ray_y, &data->rayinfo->v_ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		data->rayinfo->map_x = (int)data->rayinfo->v_ray_x >> 6;
-		data->rayinfo->map_y = (int)data->rayinfo->v_ray_y >> 6;
+		data->rayinfo->map_x = (int)data->rayinfo->v_ray_x / UNITSIZE;
+		data->rayinfo->map_y = (int)data->rayinfo->v_ray_y / UNITSIZE;
 		if (check_overflow(data) == 0
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
@@ -103,8 +103,8 @@ double	check_horizontal_hit(t_data *data)
 	calc_steps_h(data, &data->rayinfo->h_ray_y, &data->rayinfo->h_ray_x, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		data->rayinfo->map_x = (int)data->rayinfo->h_ray_x >> 6;
-		data->rayinfo->map_y = (int)data->rayinfo->h_ray_y >> 6;
+		data->rayinfo->map_x = (int)data->rayinfo->h_ray_x / UNITSIZE;
+		data->rayinfo->map_y = (int)data->rayinfo->h_ray_y / UNITSIZE;
 		if (check_overflow(data) == 0
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{

@@ -62,6 +62,7 @@ SOURCES 	:= 	main.c \
 			get_next_line.c \
 			get_next_line_utils.c \
 			raycast.c \
+			minimap.c \
 			errors.c \
 			free_mem.c \
 			movement.c \
