@@ -12,109 +12,115 @@
 
 #include "../../includes/cub3D.h"
 
-static void	calc_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
+static void	calc_steps_v(t_camera *cam, t_vect *rv, double *steps, int *i)
 {
 	double	ntan;
 
-	ntan = -tan(data->rayinfo->ray_angle);
-	if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
+	ntan = -tan(rv->angle);
+	if (rv->angle > NORTH && rv->angle < SOUTH)
 	{
-		*ray_x = (((int)data->camera_x / UNITSIZE) * UNITSIZE) - 0.0001;
-		*ray_y = (data->camera_x - *ray_x) * ntan + data->camera_y;
-		data->rayinfo->step_x = -UNITSIZE;
+		rv->x = (((int)cam->cx / UNITSIZE) * UNITSIZE) - 0.0001;
+		rv->y = (cam->cx - rv->x) * ntan + cam->cy;
+		steps[0] = -UNITSIZE;
 	}
-	else if (data->rayinfo->ray_angle < NORTH
-		|| data->rayinfo->ray_angle > SOUTH)
+	else if (rv->angle < NORTH || rv->angle > SOUTH)
 	{
-		*ray_x = (((int)data->camera_x / UNITSIZE) * UNITSIZE) + UNITSIZE;
-		*ray_y = (data->camera_x - *ray_x) * ntan + data->camera_y;
-		data->rayinfo->step_x = UNITSIZE;
+		rv->x = (((int)cam->cx / UNITSIZE) * UNITSIZE) + UNITSIZE;
+		rv->y = (cam->cx - rv->x) * ntan + cam->cy;
+		steps[0] = UNITSIZE;
 	}
-	else if (data->rayinfo->ray_angle == 0 || data->rayinfo->ray_angle == WEST)
+	else if (rv->angle == 0 || rv->angle == WEST)
 	{
-		*ray_x = data->camera_x;
-		*ray_y = data->camera_y;
+		rv->x = cam->cx;
+		rv->y = cam->cy;
 		*i = MAX_VIEW_DIST;
 	}
-	data->rayinfo->step_y = -data->rayinfo->step_x * ntan;
+	steps[1] = -steps[0] * ntan;
 }
 
-static void	calc_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
+static void	calc_steps_h(t_camera *cam, t_vect *rh, double *steps, int *i)
 {
 	double	atan;
 
-	atan = -1 / tan(data->rayinfo->ray_angle);
-	if (data->rayinfo->ray_angle > WEST)
+	atan = -1 / tan(rh->angle);
+	if (rh->angle > WEST)
 	{
-		*ray_y = (((int)data->camera_y / UNITSIZE) * UNITSIZE) - 0.0001;
-		*ray_x = (data->camera_y - *ray_y) * atan + data->camera_x;
-		data->rayinfo->step_y = -UNITSIZE;
+		rh->y = (((int)cam->cy / UNITSIZE) * UNITSIZE) - 0.0001;
+		rh->x = (cam->cy - rh->y) * atan + cam->cx;
+		steps[1] = -UNITSIZE;
 	}
-	else if (data->rayinfo->ray_angle < WEST)
+	else if (rh->angle < WEST)
 	{
-		*ray_y = (((int)data->camera_y / UNITSIZE) * UNITSIZE) + UNITSIZE;
-		*ray_x = (data->camera_y - *ray_y) * atan + data->camera_x;
-		data->rayinfo->step_y = UNITSIZE;
+		rh->y = (((int)cam->cy / UNITSIZE) * UNITSIZE) + UNITSIZE;
+		rh->x = (cam->cy - rh->y) * atan + cam->cx;
+		steps[1] = -UNITSIZE;
 	}
-	else if (data->rayinfo->ray_angle == WEST || data->rayinfo->ray_angle == 0)
+	else if (rh->angle == WEST || rh->angle == 0)
 	{
-		*ray_x = data->camera_x;
-		*ray_y = data->camera_y;
+		rh->x = cam->cx;
+		rh->y = cam->cy;
 		*i = MAX_VIEW_DIST;
 	}
-	data->rayinfo->step_x = -data->rayinfo->step_y * atan;
+	steps[0] = -steps[1] * atan;
 }
 
-double	check_vertical_hit(t_data *data)
-{
-	int		i;
-	double	dist_v;
-
-	dist_v = 1000000;
-	i = 0;
-	calc_steps_v(data, &data->rayinfo->v_ray_y, &data->rayinfo->v_ray_x, &i);
-	while (i < MAX_VIEW_DIST)
-	{
-		data->rayinfo->map_x = (int)data->rayinfo->v_ray_x / UNITSIZE;
-		data->rayinfo->map_y = (int)data->rayinfo->v_ray_y / UNITSIZE;
-		if (check_overflow(data) == 0
-			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
-		{
-			dist_v = ray_length(data, 0);
-			break ;
-		}
-		else
-		{
-			data->rayinfo->v_ray_x += data->rayinfo->step_x;
-			data->rayinfo->v_ray_y += data->rayinfo->step_y;
-			i += 1;
-			}
-	}
-	return (dist_v);
-}
-
-double	check_horizontal_hit(t_data *data)
+double	check_vertical_hit(t_data *data, t_camera *cam, t_vect *rv)
 {
 	int		i;
 	double	dist;
+	int	map[2];
+	double	steps[2];
 
 	dist = 1000000;
 	i = 0;
-	calc_steps_h(data, &data->rayinfo->h_ray_y, &data->rayinfo->h_ray_x, &i);
+	calc_steps_v(cam, rv, steps, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		data->rayinfo->map_x = (int)data->rayinfo->h_ray_x / UNITSIZE;
-		data->rayinfo->map_y = (int)data->rayinfo->h_ray_y / UNITSIZE;
-		if (check_overflow(data) == 0
-			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
+		map[0] = (int)rv->x / UNITSIZE;
+		map[1] = (int)rv->y / UNITSIZE;
+		if (check_overflow(data, map) == 0 && data->map[map[1]][map[0]] == '1')
 		{
-			dist = ray_length(data, 1);
+			dist = ray_length(cam, rv);
 			break ;
 		}
 		else
 		{
-			data->rayinfo->h_ray_x += data->rayinfo->step_x;
-			data->rayinfo->h_ray_y += data->rayinfo->step_y;
+			rv->x += steps[0];
+			rv->y += steps[1];
+			i += 1;
+			}
+	}
+	return (dist);
+}
+
+double	check_horizontal_hit(t_data *data, t_camera *cam, t_vect *rh)
+{
+	int		i;
+	double	dist;
+	int	map[2];
+	double	steps[2];
+
+	dist = 1000000;
+	i = 0;
+	ft_putnbr(rh->x);
+	write(1, "\n", 1);
+	write(1, "\n", 1);
+	calc_steps_h(cam, rh, steps, &i);
+	ft_putnbr(rh->x);
+	write(1, "\n", 1);
+	while (i < MAX_VIEW_DIST)
+	{
+		map[0] = (int)rh->x / UNITSIZE;
+		map[1] = (int)rh->y / UNITSIZE;
+		if (check_overflow(data, map) == 0 && data->map[map[1]][map[0]] == '1')
+		{
+			dist = ray_length(cam, rh);
+			break ;
+		}
+		else
+		{
+			rh->x += steps[0];
+			rh->y += steps[1];
 			i += 1;
 		}
 	}

@@ -17,7 +17,7 @@ static	void	validate_push_horizontal(t_parser *parser, char **line)
 	char	*dup_line;
 
 	validate_horizontal(parser, *line);
-	dup_line = ft_strdup(*line); // TODO: do something for whitespaces?
+	dup_line = ft_strdup(*line);
 	free(*line);
 	if (vec_push(parser->map, &dup_line) == 0)
 	{

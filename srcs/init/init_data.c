@@ -48,57 +48,68 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	return (playerdir);
 }
 
-t_rayinfo	*init_rayinfo(t_parser *parser)
+// t_rayinfo	*init_rayinfo(t_parser *parser)
+// {
+// 	t_rayinfo	*rayinfo;
+//
+// 	rayinfo = (t_rayinfo *)malloc(sizeof(t_rayinfo));
+// 	if (rayinfo == NULL)
+// 		free_vecs(parser, YES, NA);
+// 	ft_memset(rayinfo, 0, sizeof(t_rayinfo));
+// 	return (rayinfo);
+// }
+//
+void	load_textures(t_data *data, t_parser *parser, int index, int text_info)
 {
-	t_rayinfo	*rayinfo;
+	t_vec	*tex_paths;
 
-	rayinfo = (t_rayinfo *)malloc(sizeof(t_rayinfo));
-	if (rayinfo == NULL)
-		free_vecs(parser, YES, NA);
-	ft_memset(rayinfo, 0, sizeof(t_rayinfo));
-	return (rayinfo);
+	tex_paths = parser->textures_paths;
+	data->texture->wall[text_info] = mlx_load_png(*(char **)vec_get(tex_paths, index));
+	if (data->texture->wall[text_info] == NULL)
+	{
+		free_vecs(parser, NA, NA);
+		freedata_exit(data, EXIT_FAILURE, YES);
+	}
 }
 
-t_textures	*init_texture(t_parser *parser, t_rayinfo **rayinfo)
+void	get_textures(t_data *data, t_parser *parser)
+{
+	int		ind;
+	t_vec	*tex_info;
+
+	ind = -1;
+	tex_info = parser->textures_info;
+	while (++ind < tex_info->len)
+	{
+		if (*(int *)vec_get(tex_info, ind) == NO)
+			load_textures(data, parser, ind, NO);
+		else if (*(int *)vec_get(tex_info, ind) == SO)
+			load_textures(data, parser, ind, SO);
+		else if (*(int *)vec_get(tex_info, ind) == EA)
+			load_textures(data, parser, ind, EA);
+		else if (*(int *)vec_get(tex_info, ind) == WE)
+			load_textures(data, parser, ind, WE);
+	}
+}
+
+void	init_texture(t_data *data, t_parser *parser)
 {
 	t_textures	*texture;
 
 	texture = (t_textures *)malloc(sizeof(t_textures));
 	if (texture == NULL)
-	{
-		free(*rayinfo);
 		free_vecs(parser, YES, NA);
-	}
 	ft_memset(texture, 0, sizeof(t_textures));
-	return (texture);
-}
-
-void	init_grid(t_data *data)
-{
-	unsigned	int	x;
-	char			**grid;
-
-	x = 0;
-	grid = (char **)malloc((MINI_WIDTH + 1) * sizeof(char *));
-	if (grid == NULL)
-		freedata_exit(data, EXIT_FAILURE, YES);
-//	ft_memset(grid, 0, sizeof(grid));
-	while (x < MINI_WIDTH)
-	{
-		grid[x] = (char *)malloc((MINI_HEIGHT + 1) * sizeof(char));
-		if (grid[x] == NULL)
-			freedata_exit(data, EXIT_FAILURE, YES);
-		++x;
-	}
-	data->grid = grid;
+	data->texture = texture;
+	get_textures(data, parser);
 }
 
 void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	char	playerdir;
 
-	data->rayinfo = init_rayinfo(parser);
-	data->texture = init_texture(data->parser, &data->rayinfo);
+//	data->rayinfo = init_rayinfo(parser);
+	init_texture(data, parser);
 	playerdir = extract_map_arr(parser, data);
 	data->parser = parser;
 	if (playerdir == 'N')
@@ -109,9 +120,7 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 		data->player_angle = SOUTH;
 	else
 		data->player_angle = EAST;
-	data->rayinfo->ray_angle = data->player_angle;
 	data->playerdir_x = cos(data->player_angle) * 7.5;
 	data->playerdir_y = sin(data->player_angle) * 7.5;
-	init_grid(data);
 	init_mlx(data);
 }

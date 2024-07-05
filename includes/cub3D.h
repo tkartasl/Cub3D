@@ -54,23 +54,14 @@ typedef struct	s_parser
 	t_vec	*map;
 }	t_parser;
 
-typedef	struct s_rayinfo
+typedef struct	s_vect
 {
-	double	dist_h;
-	double	dist_v;
-	double	raydist;
-	double	ray_angle;
-	double	step_x;
-	double	step_y;	
-	double	h_ray_x;
-	double	h_ray_y;
-	double	v_ray_x;
-	double	v_ray_y;
-	double	ray_x;
-	double	ray_y;
-	int		map_x;
-	int		map_y;
-}			t_rayinfo;
+	char	axis;
+	double	x;
+	double	y;
+	double	dist;
+	double	angle;
+}	t_vect;
 
 typedef struct s_textures
 {
@@ -96,23 +87,28 @@ typedef struct s_data
 	int			camera_y;
 	int			map_height;
 	int			map_width;
-	t_rayinfo	*rayinfo;
 	char		**map;
-	char		**grid;
 	t_parser	*parser;
 	t_textures	*texture;
 }			t_data;
 
+typedef struct	s_camera
+{
+	int	cx;
+	int	cy;
+	double	angle;
+}	t_camera;
+
 void	key_hook(mlx_key_data_t keydata, void *param);
-void	draw_walls(t_data *data, int x_pos);
+void	draw_walls(t_data *data, int x, t_vect *r);
 void	draw_ceiling(t_data *data, int x, int y);
 void	draw_floor(t_data *data, int x, int y);
-int		check_overflow(t_data *data);
 void	reset_ray_angle(double *angle);
-double	ray_length(t_data *data, int horizontal);
-double	check_horizontal_hit(t_data *data);
-double	check_vertical_hit(t_data *data);
-void	cast_rays(t_data *data);
+int	check_overflow(t_data *data, int *map);
+double	ray_length(t_camera *cam, t_vect *r);
+double	check_horizontal_hit(t_data *data, t_camera *cam, t_vect *rh);
+double	check_vertical_hit(t_data *data, t_camera *cam, t_vect *rv);
+void	cast_rays(t_data *data, t_camera *cam, t_vect *r);
 void	init_parser(t_parser *parser);
 void	init_data_mlx(t_data *data, t_parser *parser);
 int		valid_map(char **argv);
@@ -131,11 +127,11 @@ void	free_vecs(t_parser *parser, int exit_fail, int print_err);
 void	freedata_exit(t_data *data, int exit_status, int terminate_mlx);
 int 	get_rgba(int r, int g, int b, int a);
 void	movement(void *param);
-void	wall_collision(t_data *data, char key, int *new_x, int *new_y);
-void	wall_collision_strafe(t_data *data, char key, int *new_x, int *new_y);
+void	wall_collision(t_data *data, t_camera *cam, char key, int *offset);
+void	wall_collision_strafe(t_data *data, t_camera *cam, char key, int *offset);
 void	mouse_hook(double xpos, double ypos, void *param);
-void	rotate_player(t_data *data, char direction);
-void	get_texture_index(t_data *data, int x_pos, int t_size);
+void	rotate_player(t_data *data, t_camera *cam, char direction);
+void	get_texture_index(t_data *data, int x_pos, int t_size, t_vect *r);
 
-void	minimap(t_data *data);
+void	minimap(t_data *data, t_camera *cam);
 #endif

@@ -17,6 +17,11 @@ void	game_usage(void)
 	printf("%s\n", USAGE);
 }
 
+void	create_threads(t_data *data)
+{
+
+}
+
 int	main(int argc, char **argv)
 {
 	t_parser	parser;

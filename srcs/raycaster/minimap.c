@@ -27,12 +27,12 @@ void	drawstripe(t_data *data, int x, int cx, int cy)
 		if (mapx >= 0 && mapx < data->map_width && mapy >= 0 && mapy < data->map_height)
 		{
 			if (data->map[mapy][mapx] == '1')
-				mlx_put_pixel(data->minimap, x, y, get_rgba(0, 0, 0, 255));
+				mlx_put_pixel(data->minimap, x, y, get_rgba(60, 20, 90, 190));
 			else
-				mlx_put_pixel(data->minimap, x, y, get_rgba(255, 255, 255, 255));
+				mlx_put_pixel(data->minimap, x, y, get_rgba(20, 80, 10, 190));
 		}
 		else
-			mlx_put_pixel(data->minimap, x, y, get_rgba(255, 255, 255, 255));
+			mlx_put_pixel(data->minimap, x, y, get_rgba(20, 80, 10, 190));
 		++y;
 		cy += MSCALE;
 	}
@@ -56,18 +56,19 @@ void	drawplayer(t_data *data)
 	}
 }
 
-void	minimap(t_data *data)
+void	minimap(t_data *data, t_camera *cam)
 {
 	int	x;
 	int	cx;
 	int	cy;
 
 	x = 0;
-	cx = data->camera_x;
+	cx = cam->cx;
+	cy = cam->cy;
 	cx -= MUNITSIZE / MSCALE * UNITSIZE;
 	while (x < MINI_WIDTH)
 	{
-		drawstripe(data, x, cx, data->camera_y);
+		drawstripe(data, x, cx, cy);
 		++x;
 		cx += MSCALE;
 	}

@@ -12,13 +12,13 @@
 
 #include "../../includes/cub3D.h"
 
-int	check_overflow(t_data *data)
+int	check_overflow(t_data *data, int *map)
 {
 	int	x;
 	int	y;
 
-	x = data->rayinfo->map_x;
-	y = data->rayinfo->map_y;
+	x = map[0];
+	y = map[1];
 	if (y < 0 || y >= data->map_height)
 		return (1);
 	if (x < 0 || x >= data->map_width)
@@ -34,24 +34,16 @@ void	reset_ray_angle(double *angle)
 		*angle -= 2 * PI;
 }
 
-double	ray_length(t_data *data, int horizontal)
+double	ray_length(t_camera *cam, t_vect *r)
 {
 	double	ax;
 	double	ay;
 	double	bx;
 	double	by;
 
-	ax = data->camera_x;
-	ay = data->camera_y;
-	if (horizontal)
-	{
-		bx = data->rayinfo->h_ray_x;
-		by = data->rayinfo->h_ray_y;
-	}
-	else
-	{
-		bx = data->rayinfo->v_ray_x;
-		by = data->rayinfo->v_ray_y;
-	}
+	ax = cam->cx;
+	ay = cam->cy;
+	bx = r->x;
+	by = r->y;
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }

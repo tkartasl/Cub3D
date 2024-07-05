@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+# include "../../includes/cub3D.h"
 
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
@@ -24,12 +24,16 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 void	mouse_hook(double xpos, double ypos, void *param)
 {
 	t_data		*data;
+	t_camera	cam;
 	static int	old_xpos;
 
 	data = param;
+	cam.cx = data->camera_x;
+	cam.cy = data->camera_y;
+	cam.angle = data->player_angle;
 	if (xpos <= old_xpos)
-		rotate_player(data, 'L');
+		rotate_player(data, &cam, 'L');
 	else if (xpos > old_xpos)
-		rotate_player(data, 'R');
+		rotate_player(data, &cam, 'R');
 	old_xpos = xpos;
 }

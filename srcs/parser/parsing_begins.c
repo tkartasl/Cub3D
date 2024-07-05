@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
-#include <stdio.h>
 
 void	parse_until_map(t_parser *parser, int fd);
 void	parse_map(t_parser *parser, int fd);

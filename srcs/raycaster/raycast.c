@@ -12,8 +12,6 @@
 
 #include "../../includes/cub3D.h"
 
-void	minimap(t_data *data);
-
 static void error(void)
 {
 	puts(mlx_strerror(mlx_errno));
@@ -25,19 +23,19 @@ double	fps(void)
 	return (mlx_get_time());
 }
 
-static void	calc_texels(t_data *data, int x_pos)
+static void	calc_texels(t_data *data, int x, t_vect *r)
 {
 	double	correct_angle;
 	int		t_size;
 
 	t_size = data->texture->wall[0]->height;
-	correct_angle = data->player_angle - data->rayinfo->ray_angle;
+	correct_angle = data->player_angle - r->angle;
 	reset_ray_angle(&correct_angle);
 	data->texture->ty_off = 0;
-	data->rayinfo->raydist *= cos(correct_angle);
-	data->texture->height = (UNITSIZE * HEIGHT) / data->rayinfo->raydist;
+	r->dist *= cos(correct_angle);
+	data->texture->height = (UNITSIZE * HEIGHT) / r->dist;
 	data->texture->ty_step = t_size / (double)data->texture->height;
-	get_texture_index(data, x_pos, t_size);
+	get_texture_index(data, x, t_size, r);
 	if (data->texture->height > HEIGHT)
 	{
 		data->texture->ty_off = (data->texture->height - HEIGHT) / 2;
@@ -46,81 +44,68 @@ static void	calc_texels(t_data *data, int x_pos)
 	data->texture->y = data->texture->ty_off * data->texture->ty_step;
 }
 
-static void	set_ray_values(t_data *data)
+static void	set_ray_values(t_vect *r, t_vect *rh, t_vect *rv)
 {
-	if (data->rayinfo->dist_v >= data->rayinfo->dist_h)
+	if (rv->dist >= rh->dist)
 	{
-		data->texture->axis = 'x';
-		data->rayinfo->raydist = data->rayinfo->dist_h;
-		data->rayinfo->ray_x = data->rayinfo->h_ray_x;
-		data->rayinfo->ray_y = data->rayinfo->h_ray_y;
+		r->axis = 'x';
+		r->dist = rh->dist;
+		r->x = rh->x;
+		r->y = rh->y;
 	}
 	else
 	{
-		data->texture->axis = 'y';
-		data->rayinfo->raydist = data->rayinfo->dist_v;
-		data->rayinfo->ray_x = data->rayinfo->v_ray_x;
-		data->rayinfo->ray_y = data->rayinfo->v_ray_y;
+		r->axis = 'y';
+		r->dist = rv->dist;
+		r->x = rv->x;
+		r->y = rv->y;
 	}
 }
 
-void	cast_rays(t_data *data)
+void	init_ray(t_vect *ray, t_camera *cam)
 {
-	int	x_pos;
-
-	x_pos = 0;
-	data->rayinfo->ray_angle = data->player_angle - DEGREE * FOV / 2;
-	reset_ray_angle(&data->rayinfo->ray_angle);
-	while (x_pos < WIDTH)
-	{
-		data->rayinfo->dist_h = check_horizontal_hit(data);
-		data->rayinfo->dist_v = check_vertical_hit(data);
-		set_ray_values(data);
-		calc_texels(data, x_pos);
-		draw_walls(data, x_pos);
-		x_pos++;
-	}
+	ray->x = 0;
+	ray->y = 0;
+	ray->dist = 0.0;
+	ray->axis = 0;
+	ray->angle = cam->angle;
+	reset_ray_angle(&ray->angle);
 }
 
-void	load_textures(t_data *data, int index, int text_info)
+void	cast_rays(t_data *data, t_camera *cam, t_vect *r)
 {
-	t_vec	*tex_paths;
+	int	x;
+	t_vect	rh;
+	t_vect	rv;
 
-	tex_paths = data->parser->textures_paths;
-	data->texture->wall[text_info] = mlx_load_png(*(char **)vec_get(tex_paths, index));
-	if (data->texture->wall[text_info] == NULL)
-		freedata_exit(data, EXIT_FAILURE, YES);
-}
-
-void	get_textures(t_data *data)
-{
-	int		ind;
-	t_vec	*tex_info;
-
-	ind = -1;
-	tex_info = data->parser->textures_info;
-	while (++ind < tex_info->len)
+	init_ray(&rh, cam);
+	init_ray(&rv, cam);
+	while (x < WIDTH)
 	{
-		if (*(int *)vec_get(tex_info, ind) == NO)
-			load_textures(data, ind, NO);
-		else if (*(int *)vec_get(tex_info, ind) == SO)
-			load_textures(data, ind, SO);
-		else if (*(int *)vec_get(tex_info, ind) == EA)
-			load_textures(data, ind, EA);
-		else if (*(int *)vec_get(tex_info, ind) == WE)
-			load_textures(data, ind, WE);
+		rh.dist = check_horizontal_hit(data, cam, &rh);
+		rv.dist = check_vertical_hit(data, cam, &rv);
+		set_ray_values(r, &rh, &rv);
+		calc_texels(data, x, r);
+		draw_walls(data, x, r);
+		x++;
 	}
 }
 
 void	raycaster(t_data *data)
 {
+	t_camera	cam;
+	t_vect		r;
+
+	cam.cx = data->camera_x;
+	cam.cy = data->camera_y;
+	cam.angle = data->player_angle;
+	init_ray(&r, &cam);
 	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
 		error();
 	if (mlx_image_to_window(data->mlx, data->minimap, 15, 15) < 0)
 		error();
-	get_textures(data);
-	cast_rays(data);
-	minimap(data);
+	cast_rays(data, &cam, &r);
+	minimap(data, &cam);
 	mlx_key_hook(data->mlx, &key_hook, data);
 	mlx_cursor_hook(data->mlx, &mouse_hook, data);
 	mlx_loop_hook(data->mlx, &movement, data);

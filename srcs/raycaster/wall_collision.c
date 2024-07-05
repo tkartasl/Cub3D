@@ -10,54 +10,53 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+# include "../../includes/cub3D.h"
 
-void	wall_collision(t_data *data, char key, int *new_x, int *new_y)
+void	wall_collision(t_data *data, t_camera *cam, char key, int *offset)
 {
-	int	offset_x;
-	int	offset_y;
+	int	map[2];
 
-	if (data->playerdir_x < 0)
-		offset_x = -20;
-	else
-		offset_x = 20;
-	if (data->playerdir_y < 0)
-		offset_y = -20;
-	else
-		offset_y = 20;
 	if (key == 'W')
 	{
-		*new_x = (data->camera_x + offset_x) / 64;
-		*new_y = (data->camera_y + offset_y) / 64;
+		map[0] = (cam->cx + offset[0]) / UNITSIZE;;
+		map[1] = (cam->cy + offset[1]) / UNITSIZE;;
+		if (data->map[cam->cy / UNITSIZE][map[0]] != '1')
+			cam->cy += (int)data->playerdir_x;
+		if (data->map[map[1]][cam->cx / UNITSIZE] != '1')
+			cam->cy += (int)data->playerdir_y;
 	}
-	else
+	if (key == 'S')
 	{
-		*new_x = (data->camera_x - offset_x) / 64;
-		*new_y = (data->camera_y - offset_y) / 64;
+		map[0] = (cam->cx - offset[0]) / UNITSIZE;;
+		map[1] = (cam->cy - offset[1]) / UNITSIZE;;
+		if (data->map[cam->cy / UNITSIZE][map[0]] != '1')
+			cam->cx -= (int)data->playerdir_x;
+		if (data->map[map[1]][cam->cx / UNITSIZE] != '1')
+			cam->cy -= (int)data->playerdir_y;
 	}
+
 }
 
-void	wall_collision_strafe(t_data *data, char key, int *new_x, int *new_y)
+void	wall_collision_strafe(t_data *data, t_camera *cam, char key, int *offset)
 {
-	int	offset_x;
-	int	offset_y;
+	int	map[2];
 
-	if (data->playerdir_x < 0)
-		offset_x = -20;
-	else
-		offset_x = 20;
-	if (data->playerdir_y < 0)
-		offset_y = -20;
-	else
-		offset_y = 20;
 	if (key == 'A')
 	{
-		*new_x = (data->camera_x + offset_y) / 64;
-		*new_y = (data->camera_y - offset_x) / 64;
+		map[0] = (cam->cx + offset[1]) / UNITSIZE;;
+		map[1] = (cam->cy - offset[0]) / UNITSIZE;;
+		if (data->map[cam->cy / UNITSIZE][map[0]] != '1')
+			cam->cy += (int)data->playerdir_y;
+		if (data->map[map[1]][cam->cx / UNITSIZE] != '1')
+			cam->cy -= (int)data->playerdir_x;
 	}
-	else
+	if (key == 'D')
 	{
-		*new_x = (data->camera_x - offset_y) / 64;
-		*new_y = (data->camera_y + offset_x) / 64;
+		map[0] = (cam->cx - offset[1]) / UNITSIZE;;
+		map[1] = (cam->cy + offset[0]) / UNITSIZE;;
+		if (data->map[cam->cy / UNITSIZE][map[0]] != '1')
+			cam->cx -= (int)data->playerdir_y;
+		if (data->map[map[1]][cam->cx / UNITSIZE] != '1')
+			cam->cy += (int)data->playerdir_x;
 	}
 }

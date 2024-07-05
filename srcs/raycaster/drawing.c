@@ -32,12 +32,12 @@ void	draw_line(int x, int y, t_data *data)
 	data->texture->y += data->texture->ty_step;
 }
 
-void	get_texture_index(t_data *data, int x_pos, int t_size)
+void	get_texture_index(t_data *data, int x_pos, int t_size, t_vect *r)
 {
-	if (data->texture->axis == 'x')
+	if (r->axis == 'x')
 	{
-		data->texture->x = ((int)data->rayinfo->ray_x % t_size);
-		if (data->rayinfo->ray_angle < WEST)
+		data->texture->x = ((int)r->x % t_size);
+		if (r->angle < WEST)
 		{
 			data->texture->idx = NO;
 			data->texture->x = t_size - data->texture->x;
@@ -47,9 +47,8 @@ void	get_texture_index(t_data *data, int x_pos, int t_size)
 	}
 	else
 	{
-		data->texture->x = ((int)data->rayinfo->ray_y % t_size);
-		if (data->rayinfo->ray_angle > NORTH
-			&& data->rayinfo->ray_angle < SOUTH)
+		data->texture->x = ((int)r->y % t_size);
+		if (r->angle > NORTH && r->angle < SOUTH)
 		{
 			data->texture->x = t_size - data->texture->x;
 			data->texture->idx = EA;
@@ -59,7 +58,7 @@ void	get_texture_index(t_data *data, int x_pos, int t_size)
 	}
 }
 
-void	draw_walls(t_data *data, int x_pos)
+void	draw_walls(t_data *data, int x, t_vect *r)
 {
 	double	start;
 	int	y;
@@ -69,12 +68,12 @@ void	draw_walls(t_data *data, int x_pos)
 	while (++y < HEIGHT)
 	{
 		if (y <= start && (data->texture->height + start) < HEIGHT)
-			draw_ceiling(data, x_pos, y);
+			draw_ceiling(data, x, y);
 		else if (y > start && y <= (start + data->texture->height))
-			draw_line(x_pos, y, data);
+			draw_line(x, y, data);
 		else if (y > (data->texture->height + start))
-			draw_floor(data, x_pos, y);
+			draw_floor(data, x, y);
 	}
-	data->rayinfo->ray_angle += DEGREE / ((double)WIDTH / FOV);
-	reset_ray_angle(&data->rayinfo->ray_angle);	
+	r->angle += DEGREE / ((double)WIDTH / FOV);
+	reset_ray_angle(&r->angle);	
 }

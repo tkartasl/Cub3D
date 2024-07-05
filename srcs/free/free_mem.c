@@ -115,11 +115,7 @@ void	freeparser_exit(t_parser *parser)
 
 void	freedata_exit(t_data *data, int exit_status, int terminate_mlx)
 {
-	free(data->rayinfo);
 	if (terminate_mlx == YES)
 		mlx_terminate(data->mlx);
-	if (exit_status == EXIT_FAILURE)
-		free_vecs(data->parser, YES, NA);
-	free_vecs(data->parser, NA, NA);
 	exit(EXIT_SUCCESS);
 }
