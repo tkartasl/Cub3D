@@ -133,5 +133,7 @@ void	mouse_hook(double xpos, double ypos, void *param);
 void	rotate_player(t_data *data, t_camera *cam, char direction);
 void	get_texture_index(t_data *data, int x_pos, int t_size, t_vect *r);
 
+void	set_camera(t_data *data, t_camera *cam);
+void	get_camera(t_data *data, t_camera *cam);
 void	minimap(t_data *data, t_camera *cam);
 #endif

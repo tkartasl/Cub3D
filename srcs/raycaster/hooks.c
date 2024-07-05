@@ -28,12 +28,11 @@ void	mouse_hook(double xpos, double ypos, void *param)
 	static int	old_xpos;
 
 	data = param;
-	cam.cx = data->camera_x;
-	cam.cy = data->camera_y;
-	cam.angle = data->player_angle;
+	set_camera(data, &cam);
 	if (xpos <= old_xpos)
 		rotate_player(data, &cam, 'L');
 	else if (xpos > old_xpos)
 		rotate_player(data, &cam, 'R');
+	get_camera(data, &cam);
 	old_xpos = xpos;
 }

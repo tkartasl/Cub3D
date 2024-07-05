@@ -23,13 +23,13 @@ double	fps(void)
 	return (mlx_get_time());
 }
 
-static void	calc_texels(t_data *data, int x, t_vect *r)
+static void	calc_texels(t_data *data, t_camera *cam, int x, t_vect *r)
 {
 	double	correct_angle;
 	int		t_size;
 
 	t_size = data->texture->wall[0]->height;
-	correct_angle = data->player_angle - r->angle;
+	correct_angle = cam->angle - r->angle;
 	reset_ray_angle(&correct_angle);
 	data->texture->ty_off = 0;
 	r->dist *= cos(correct_angle);
@@ -60,6 +60,8 @@ static void	set_ray_values(t_vect *r, t_vect *rh, t_vect *rv)
 		r->x = rv->x;
 		r->y = rv->y;
 	}
+	rh->angle = r->angle;
+	rv->angle = r->angle;
 }
 
 void	init_ray(t_vect *ray, t_camera *cam)
@@ -85,7 +87,8 @@ void	cast_rays(t_data *data, t_camera *cam, t_vect *r)
 		rh.dist = check_horizontal_hit(data, cam, &rh);
 		rv.dist = check_vertical_hit(data, cam, &rv);
 		set_ray_values(r, &rh, &rv);
-		calc_texels(data, x, r);
+		calc_texels(data, cam, x, r);
+		ft_putnbr(data->texture->height);
 		draw_walls(data, x, r);
 		x++;
 	}

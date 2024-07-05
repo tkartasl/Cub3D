@@ -102,12 +102,7 @@ double	check_horizontal_hit(t_data *data, t_camera *cam, t_vect *rh)
 
 	dist = 1000000;
 	i = 0;
-	ft_putnbr(rh->x);
-	write(1, "\n", 1);
-	write(1, "\n", 1);
 	calc_steps_h(cam, rh, steps, &i);
-	ft_putnbr(rh->x);
-	write(1, "\n", 1);
 	while (i < MAX_VIEW_DIST)
 	{
 		map[0] = (int)rh->x / UNITSIZE;
