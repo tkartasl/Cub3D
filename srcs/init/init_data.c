@@ -21,7 +21,7 @@ void	load_textures(t_data *data, int index, int text_info)
 	tex_paths = data->parser->textures_paths;
 	data->texture->wall[text_info] = mlx_load_png(*(char **)vec_get(tex_paths, index));
 	if (data->texture->wall[text_info] == NULL)
-		freedata_exit(data, EXIT_FAILURE, YES);
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
 }
 
 void	get_textures(t_data *data)
@@ -55,7 +55,8 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	y = -1;
 	data->map_width = 0;
 	map = (char **)malloc(sizeof(char *) * (parser->map->len + 1));
-	// TODO: malloc check
+	if (map == NULL)
+		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	while (++y < parser->map->len)
 	{
 		map[y] = *(char **)vec_get(parser->map, y);
@@ -89,28 +90,30 @@ t_rayinfo	*init_rayinfo(t_parser *parser)
 	return (rayinfo);
 }
 
-t_textures	*init_texture(t_parser *parser, t_rayinfo **rayinfo)
+void	init_texture(t_data *data)
 {
 	t_textures	*texture;
 
 	texture = (t_textures *)malloc(sizeof(t_textures));
 	if (texture == NULL)
 	{
-		free(*rayinfo);
-		free_vecs(parser, YES, NA);
+		free(data->rayinfo);
+		free_vecs(data->parser, YES, NA);
 	}
 	ft_memset(texture, 0, sizeof(t_textures));
-	return (texture);
+	data->texture = texture;
+	get_textures(data);
 }
 
 void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	char	playerdir;
 
-	data->rayinfo = init_rayinfo(parser);
-	data->texture = init_texture(data->parser, &data->rayinfo);
-	playerdir = extract_map_arr(parser, data);
 	data->parser = parser;
+	data->flag = CONTINUE;
+	data->rayinfo = init_rayinfo(parser);
+	init_texture(data);
+	playerdir = extract_map_arr(parser, data);
 	if (playerdir == 'N')
 		data->player_angle = NORTH;
 	else if (playerdir == 'W')
@@ -122,10 +125,9 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->rayinfo->ray_angle = data->player_angle;
 	data->playerdir_x = cos(data->player_angle) * 7.5;
 	data->playerdir_y = sin(data->player_angle) * 7.5;
-	get_textures(data);
-	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
-		freedata_exit(data, EXIT_FAILURE, YES);
-	if (mlx_image_to_window(data->mlx, data->minimap, 15, 15) < 0)
-		freedata_exit(data, EXIT_FAILURE, YES);
 	init_mlx(data);
+	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
+	if (mlx_image_to_window(data->mlx, data->minimap, 15, 15) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
 }

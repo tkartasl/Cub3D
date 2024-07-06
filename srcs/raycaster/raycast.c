@@ -12,7 +12,8 @@
 
 # include "../../includes/cub3D.h"
 
-void	minimap(t_data *data);
+double	check_vertical_hit(t_data *data, t_camera *cam);
+double	check_horizontal_hit(t_data *data, t_camera *cam);
 
 static void error(void)
 {
@@ -31,7 +32,7 @@ static void	calc_texels(t_data *data, int x, t_camera *cam)
 	int		t_size;
 
 	t_size = data->texture->wall[0]->height;
-	correct_angle = data->player_angle - data->rayinfo->ray_angle;
+	correct_angle = cam->angle - data->rayinfo->ray_angle;
 	reset_ray_angle(&correct_angle);
 	data->texture->ty_off = 0;
 	data->rayinfo->raydist *= cos(correct_angle);
@@ -69,15 +70,15 @@ void	cast_rays(t_data *data, t_camera *cam)
 	int	x;
 
 	x = 0;
-	cam->angle -= DEGREE * FOV / 2;
-	reset_ray_angle(&cam->angle);
+	data->rayinfo->ray_angle = cam->angle - DEGREE * FOV / 2;
+	reset_ray_angle(&data->rayinfo->ray_angle);
 	while (x < WIDTH)
 	{
 		data->rayinfo->dist_h = check_horizontal_hit(data, cam);
 		data->rayinfo->dist_v = check_vertical_hit(data, cam);
 		set_ray_values(data);
 		calc_texels(data, x, cam);
-		draw_walls(data, x, cam);
+		draw_walls(data, x);
 		x++;
 	}
 }

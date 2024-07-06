@@ -40,7 +40,7 @@ int	main(int argc, char **argv)
 		init_data_mlx(&data, &parser);
 		create_threads(&data);
 		game_play(&data);
-		freedata_exit(&data, EXIT_SUCCESS, YES);
+		freedata_exit(&data, EXIT_SUCCESS, YES, NA);
 	}
 	game_usage();
 	return (SUCCESS);
