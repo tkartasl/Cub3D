@@ -12,6 +12,9 @@
 
 # include "../../includes/cub3D.h"
 
+void	join_threads(t_data *data);
+void	destroy_locks(t_data *data);
+
 void	file_error(char *path, int use_errno)
 {
 	if (use_errno == YES)
@@ -113,9 +116,30 @@ void	freeparser_exit(t_parser *parser)
 	exit(EXIT_FAILURE);
 }
 
-void	freedata_exit(t_data *data, int exit_status, int terminate_mlx)
+void	stop_game(t_data *data)
 {
-	if (terminate_mlx == YES)
-		mlx_terminate(data->mlx);
-	exit(EXIT_SUCCESS);
+	pthread_mutex_lock(&data->layers_lock[STOP_FLG]);
+	data->flag = STOP;
+	pthread_mutex_unlock(&data->layers_lock[STOP_FLG]);
+	join_threads(data);
+	destroy_locks(data);
+	mlx_close_window(data->mlx);
+}
+
+void	freedata_exit(t_data *data, int exit_status, int terminate_mlx, int premature)
+{
+	int	i;
+
+	if (premature == NA)
+	{
+		stop_game(data);
+		if (terminate_mlx == YES)
+			mlx_terminate(data->mlx);
+	}
+	free_vecs(data->parser, NA, NA);
+	i = -1;
+	while (++i < 4)
+		free(data->texture->wall[i]);
+	free(data->texture);
+	exit(exit_status);
 }

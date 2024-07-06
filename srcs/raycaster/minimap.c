@@ -6,7 +6,7 @@
 /*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:16:12 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/02 11:16:15 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/07/06 00:30:40 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	drawplayer(t_data *data)
 	}
 }
 
-void	minimap(t_data *data, t_camera *cam)
+void	draw_minimap(t_data *data, t_camera *cam)
 {
 	int	x;
 	int	cx;
@@ -73,4 +73,18 @@ void	minimap(t_data *data, t_camera *cam)
 		cx += MSCALE;
 	}
 	drawplayer(data);
+}
+
+void	*minimap(void *arg)
+{
+	t_data	*data;
+	t_camera	cam;
+
+	data = (void *)arg;
+	while (game_continues(data))
+	{
+		get_camera(data, &cam);
+		draw_minimap(data, &cam);
+	}
+	return (NULL);
 }

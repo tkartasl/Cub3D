@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/01 15:17:41 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/06 00:24:28 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "get_next_line.h"
 #include "../vec/include/vec.h"
 # include <fcntl.h>
+# include "pthread.h"
 # include <errno.h>
 # include <stdio.h>
 # include <unistd.h>
@@ -66,7 +67,6 @@ typedef struct	s_vect
 typedef struct s_textures
 {
 	mlx_texture_t	*wall[4];
-	char			axis;
 	int				idx;
 	double			x;
 	double			y;
@@ -88,8 +88,13 @@ typedef struct s_data
 	int			map_height;
 	int			map_width;
 	char		**map;
+	int		ccolors[RGB];
+	int		fcolors[RGB];
 	t_parser	*parser;
 	t_textures	*texture;
+	int		flag;
+	pthread_t	layers[LAYERS];
+	pthread_mutex_t	layers_lock[LAYERS];
 }			t_data;
 
 typedef struct	s_camera
@@ -120,11 +125,11 @@ void	validate_middle(t_parser *parser, char *line);
 int		open_validate_file(t_parser *parser, char *map_path, char *ext, int texture_path);
 void	validate_type_identifier(t_parser *parser, char **type_id);
 void	parse_file(t_parser *parser, char *map_path);
-void	raycaster(t_data *data);
+void	*raycaster(void *data);
 void	freeparser_exit(t_parser *parser);
 void	free_exit(t_parser *parser, char **type_id, int print_err);
 void	free_vecs(t_parser *parser, int exit_fail, int print_err);
-void	freedata_exit(t_data *data, int exit_status, int terminate_mlx);
+void	freedata_exit(t_data *data, int exit_status, int terminate_mlx, int premature);
 int 	get_rgba(int r, int g, int b, int a);
 void	movement(void *param);
 void	wall_collision(t_data *data, t_camera *cam, char key, int *offset);
@@ -135,5 +140,6 @@ void	get_texture_index(t_data *data, int x_pos, int t_size, t_vect *r);
 
 void	set_camera(t_data *data, t_camera *cam);
 void	get_camera(t_data *data, t_camera *cam);
-void	minimap(t_data *data, t_camera *cam);
+void	*minimap(void *args);
+int	game_continues(t_data *data);
 #endif

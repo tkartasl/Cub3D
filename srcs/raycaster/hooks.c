@@ -18,7 +18,9 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 
 	data = param;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
-		mlx_close_window(data->mlx);
+	{
+		freedata_exit(data, EXIT_SUCCESS, YES, NA);
+	}
 }
 
 void	mouse_hook(double xpos, double ypos, void *param)
@@ -28,11 +30,11 @@ void	mouse_hook(double xpos, double ypos, void *param)
 	static int	old_xpos;
 
 	data = param;
-	set_camera(data, &cam);
+	get_camera(data, &cam);
 	if (xpos <= old_xpos)
 		rotate_player(data, &cam, 'L');
 	else if (xpos > old_xpos)
 		rotate_player(data, &cam, 'R');
-	get_camera(data, &cam);
+	set_camera(data, &cam);
 	old_xpos = xpos;
 }

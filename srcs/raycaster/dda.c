@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:03:00 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/01 15:14:54 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/06 00:14:19 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ static void	calc_steps_v(t_camera *cam, t_vect *rv, double *steps, int *i)
 	{
 		rv->x = (((int)cam->cx / UNITSIZE) * UNITSIZE) - 0.0001;
 		rv->y = (cam->cx - rv->x) * ntan + cam->cy;
-		steps[0] = -UNITSIZE;
+		steps[X] = -UNITSIZE;
 	}
 	else if (rv->angle < NORTH || rv->angle > SOUTH)
 	{
 		rv->x = (((int)cam->cx / UNITSIZE) * UNITSIZE) + UNITSIZE;
 		rv->y = (cam->cx - rv->x) * ntan + cam->cy;
-		steps[0] = UNITSIZE;
+		steps[X] = UNITSIZE;
 	}
 	else if (rv->angle == 0 || rv->angle == WEST)
 	{
@@ -35,7 +35,7 @@ static void	calc_steps_v(t_camera *cam, t_vect *rv, double *steps, int *i)
 		rv->y = cam->cy;
 		*i = MAX_VIEW_DIST;
 	}
-	steps[1] = -steps[0] * ntan;
+	steps[Y] = -steps[X] * ntan;
 }
 
 static void	calc_steps_h(t_camera *cam, t_vect *rh, double *steps, int *i)
@@ -47,13 +47,13 @@ static void	calc_steps_h(t_camera *cam, t_vect *rh, double *steps, int *i)
 	{
 		rh->y = (((int)cam->cy / UNITSIZE) * UNITSIZE) - 0.0001;
 		rh->x = (cam->cy - rh->y) * atan + cam->cx;
-		steps[1] = -UNITSIZE;
+		steps[Y] = -UNITSIZE;
 	}
 	else if (rh->angle < WEST)
 	{
 		rh->y = (((int)cam->cy / UNITSIZE) * UNITSIZE) + UNITSIZE;
 		rh->x = (cam->cy - rh->y) * atan + cam->cx;
-		steps[1] = -UNITSIZE;
+		steps[Y] = -UNITSIZE;
 	}
 	else if (rh->angle == WEST || rh->angle == 0)
 	{
@@ -61,7 +61,7 @@ static void	calc_steps_h(t_camera *cam, t_vect *rh, double *steps, int *i)
 		rh->y = cam->cy;
 		*i = MAX_VIEW_DIST;
 	}
-	steps[0] = -steps[1] * atan;
+	steps[X] = -steps[Y] * atan;
 }
 
 double	check_vertical_hit(t_data *data, t_camera *cam, t_vect *rv)
@@ -76,17 +76,17 @@ double	check_vertical_hit(t_data *data, t_camera *cam, t_vect *rv)
 	calc_steps_v(cam, rv, steps, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		map[0] = (int)rv->x / UNITSIZE;
-		map[1] = (int)rv->y / UNITSIZE;
-		if (check_overflow(data, map) == 0 && data->map[map[1]][map[0]] == '1')
+		map[X] = (int)rv->x / UNITSIZE;
+		map[Y] = (int)rv->y / UNITSIZE;
+		if (check_overflow(data, map) == 0 && data->map[map[Y]][map[X]] == '1')
 		{
 			dist = ray_length(cam, rv);
 			break ;
 		}
 		else
 		{
-			rv->x += steps[0];
-			rv->y += steps[1];
+			rv->x += steps[X];
+			rv->y += steps[Y];
 			i += 1;
 			}
 	}
@@ -105,17 +105,17 @@ double	check_horizontal_hit(t_data *data, t_camera *cam, t_vect *rh)
 	calc_steps_h(cam, rh, steps, &i);
 	while (i < MAX_VIEW_DIST)
 	{
-		map[0] = (int)rh->x / UNITSIZE;
-		map[1] = (int)rh->y / UNITSIZE;
-		if (check_overflow(data, map) == 0 && data->map[map[1]][map[0]] == '1')
+		map[X] = (int)rh->x / UNITSIZE;
+		map[Y] = (int)rh->y / UNITSIZE;
+		if (check_overflow(data, map) == 0 && data->map[map[Y]][map[X]] == '1')
 		{
 			dist = ray_length(cam, rh);
 			break ;
 		}
 		else
 		{
-			rh->x += steps[0];
-			rh->y += steps[1];
+			rh->x += steps[X];
+			rh->y += steps[Y];
 			i += 1;
 		}
 	}

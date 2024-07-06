@@ -25,6 +25,8 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	y = -1;
 	data->map_width = 0;
 	map = (char **)malloc(sizeof(char *) * (parser->map->len + 1));
+	if (map == NULL)
+		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	// TODO: malloc check
 	while (++y < parser->map->len)
 	{
@@ -66,10 +68,7 @@ void	load_textures(t_data *data, t_parser *parser, int index, int text_info)
 	tex_paths = parser->textures_paths;
 	data->texture->wall[text_info] = mlx_load_png(*(char **)vec_get(tex_paths, index));
 	if (data->texture->wall[text_info] == NULL)
-	{
-		free_vecs(parser, NA, NA);
-		freedata_exit(data, EXIT_FAILURE, YES);
-	}
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
 }
 
 void	get_textures(t_data *data, t_parser *parser)
@@ -104,14 +103,24 @@ void	init_texture(t_data *data, t_parser *parser)
 	get_textures(data, parser);
 }
 
+void	extract_colors(t_data *data, t_parser *parser)
+{
+	data->ccolors[R] = *(int *)vec_get(parser->ceiling, R);
+	data->ccolors[G] = *(int *)vec_get(parser->ceiling, G);
+	data->ccolors[B] = *(int *)vec_get(parser->ceiling, B);
+	data->fcolors[R] = *(int *)vec_get(parser->floor, R);
+	data->fcolors[G] = *(int *)vec_get(parser->floor, G);
+	data->fcolors[B] = *(int *)vec_get(parser->floor, B);
+}
+
 void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	char	playerdir;
 
-//	data->rayinfo = init_rayinfo(parser);
+	data->parser = parser;
 	init_texture(data, parser);
 	playerdir = extract_map_arr(parser, data);
-	data->parser = parser;
+	extract_colors(data, parser);
 	if (playerdir == 'N')
 		data->player_angle = NORTH;
 	else if (playerdir == 'W')
@@ -122,5 +131,10 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 		data->player_angle = EAST;
 	data->playerdir_x = cos(data->player_angle) * 7.5;
 	data->playerdir_y = sin(data->player_angle) * 7.5;
+	data->flag = CONTINUE;
 	init_mlx(data);
+	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
+	if (mlx_image_to_window(data->mlx, data->minimap, 15, 15) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES, NA);
 }

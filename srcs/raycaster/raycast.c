@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/01 14:59:02 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/06 00:20:05 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	init_ray(t_vect *ray, t_camera *cam)
 	ray->y = 0;
 	ray->dist = 0.0;
 	ray->axis = 0;
-	ray->angle = cam->angle;
+	ray->angle = cam->angle - DEGREE * FOV / 2;
 	reset_ray_angle(&ray->angle);
 }
 
@@ -88,29 +88,23 @@ void	cast_rays(t_data *data, t_camera *cam, t_vect *r)
 		rv.dist = check_vertical_hit(data, cam, &rv);
 		set_ray_values(r, &rh, &rv);
 		calc_texels(data, cam, x, r);
-		ft_putnbr(data->texture->height);
 		draw_walls(data, x, r);
 		x++;
 	}
 }
 
-void	raycaster(t_data *data)
+void	*raycaster(void *arg)
 {
+	t_data	*data;
 	t_camera	cam;
 	t_vect		r;
 
-	cam.cx = data->camera_x;
-	cam.cy = data->camera_y;
-	cam.angle = data->player_angle;
-	init_ray(&r, &cam);
-	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
-		error();
-	if (mlx_image_to_window(data->mlx, data->minimap, 15, 15) < 0)
-		error();
-	cast_rays(data, &cam, &r);
-	minimap(data, &cam);
-	mlx_key_hook(data->mlx, &key_hook, data);
-	mlx_cursor_hook(data->mlx, &mouse_hook, data);
-	mlx_loop_hook(data->mlx, &movement, data);
-	mlx_loop(data->mlx);
+	data = (t_data *)arg;
+	while (game_continues(data))
+	{
+		get_camera(data, &cam);
+		init_ray(&r, &cam);
+		cast_rays(data, &cam, &r);
+	}
+	return (NULL);
 }

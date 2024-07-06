@@ -19,17 +19,16 @@ void	init_mlx(t_data *data)
 
 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (mlx == NULL)
-		freedata_exit(data, EXIT_FAILURE, NA);
+		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	data->mlx = mlx;
 	screen = mlx_new_image(mlx, WIDTH, HEIGHT);
 	if (!screen)
-		freedata_exit(data, EXIT_FAILURE, YES);
+		freedata_exit(data, EXIT_FAILURE, YES, NA);
 	data->screen = screen;
 	minimap = mlx_new_image(mlx, 320, 320);
 	if (!minimap)
-		freedata_exit(data, EXIT_FAILURE, YES);
+		freedata_exit(data, EXIT_FAILURE, YES, NA);
 	data->minimap = minimap;
 	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
-	ft_memset(data->minimap->pixels, 255, 320 * 320 * sizeof(int32_t));
-//	load_textures(data);
+	ft_memset(data->minimap->pixels, 255, MINI_WIDTH * MINI_HEIGHT * sizeof(int32_t));
 }

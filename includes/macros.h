@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 14:39:04 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/01 14:42:22 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/06 00:26:27 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,40 @@
 # define UNITSIZE 64
 # define MUNITSIZE 10
 # define MSCALE 2
+# define LAYERS 2
+# define RGB 3
+
+enum	e_rgb
+{
+	R,
+	G,
+	B,
+};
+
+enum	e_game_status
+{
+	STOP,
+	CONTINUE,
+};
+
+enum	e_mutexes
+{
+	CAMERA,
+	STOP_FLG,
+};
+
+enum	e_layers
+{
+	RAYCASTER,
+	MINIMAP,
+};
+
+
+enum	e_coords
+{
+	X,
+	Y,
+};
 
 enum	e_minimap_type
 {
