@@ -56,20 +56,34 @@ void	drawplayer(t_data *data)
 	}
 }
 
-void	minimap(t_data *data)
+void	draw_minimap(t_data *data, t_camera *cam)
 {
 	int	x;
 	int	cx;
 	int	cy;
 
 	x = 0;
-	cx = data->camera_x;
+	cx = cam->cx;
 	cx -= MUNITSIZE / MSCALE * UNITSIZE;
 	while (x < MINI_WIDTH)
 	{
-		drawstripe(data, x, cx, data->camera_y);
+		drawstripe(data, x, cx, cam->cy);
 		++x;
 		cx += MSCALE;
 	}
 	drawplayer(data);
+}
+
+void	*minimap(void *arg)
+{
+	t_data	*data;
+	t_camera	cam;
+
+	data = (void *)arg;
+	while (game_continues(data))
+	{
+		get_camera(data, &cam);
+		draw_minimap(data, &cam);
+	}
+	return (NULL);
 }

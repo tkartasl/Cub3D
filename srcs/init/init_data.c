@@ -14,6 +14,36 @@
 
 void	init_mlx(t_data *data);
 
+void	load_textures(t_data *data, int index, int text_info)
+{
+	t_vec	*tex_paths;
+
+	tex_paths = data->parser->textures_paths;
+	data->texture->wall[text_info] = mlx_load_png(*(char **)vec_get(tex_paths, index));
+	if (data->texture->wall[text_info] == NULL)
+		freedata_exit(data, EXIT_FAILURE, YES);
+}
+
+void	get_textures(t_data *data)
+{
+	int		ind;
+	t_vec	*tex_info;
+
+	ind = -1;
+	tex_info = data->parser->textures_info;
+	while (++ind < tex_info->len)
+	{
+		if (*(int *)vec_get(tex_info, ind) == NO)
+			load_textures(data, ind, NO);
+		else if (*(int *)vec_get(tex_info, ind) == SO)
+			load_textures(data, ind, SO);
+		else if (*(int *)vec_get(tex_info, ind) == EA)
+			load_textures(data, ind, EA);
+		else if (*(int *)vec_get(tex_info, ind) == WE)
+			load_textures(data, ind, WE);
+	}
+}
+
 char	extract_map_arr(t_parser *parser, t_data *data)
 {
 	int	x;
@@ -73,26 +103,6 @@ t_textures	*init_texture(t_parser *parser, t_rayinfo **rayinfo)
 	return (texture);
 }
 
-void	init_grid(t_data *data)
-{
-	unsigned	int	x;
-	char			**grid;
-
-	x = 0;
-	grid = (char **)malloc((MINI_WIDTH + 1) * sizeof(char *));
-	if (grid == NULL)
-		freedata_exit(data, EXIT_FAILURE, YES);
-//	ft_memset(grid, 0, sizeof(grid));
-	while (x < MINI_WIDTH)
-	{
-		grid[x] = (char *)malloc((MINI_HEIGHT + 1) * sizeof(char));
-		if (grid[x] == NULL)
-			freedata_exit(data, EXIT_FAILURE, YES);
-		++x;
-	}
-	data->grid = grid;
-}
-
 void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	char	playerdir;
@@ -112,6 +122,10 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->rayinfo->ray_angle = data->player_angle;
 	data->playerdir_x = cos(data->player_angle) * 7.5;
 	data->playerdir_y = sin(data->player_angle) * 7.5;
-	init_grid(data);
+	get_textures(data);
+	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES);
+	if (mlx_image_to_window(data->mlx, data->minimap, 15, 15) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES);
 	init_mlx(data);
 }
