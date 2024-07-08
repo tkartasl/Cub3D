@@ -19,6 +19,7 @@
 #include "../vec/include/vec.h"
 # include <fcntl.h>
 # include <errno.h>
+# include "pthread.h"
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -110,8 +111,21 @@ typedef struct s_data
 	char		**grid;
 	t_parser	*parser;
 	t_textures	*texture;
+	int		flag;
+	pthread_t	layers[LAYERS];
+	pthread_mutex_t	layers_lock[LAYERS];
 }			t_data;
 
+typedef struct	s_camera
+{
+	int	cx;
+	int	cy;
+	double	angle;
+}	t_camera;
+
+
+void	get_camera(t_data *data, t_camera *cam);
+void	set_camera(t_data *data, t_camera *cam);
 void	key_hook(mlx_key_data_t keydata, void *param);
 void	draw_walls(t_data *data, int x_pos);
 void	draw_ceiling(t_data *data, int x, int y);
@@ -119,9 +133,6 @@ void	draw_floor(t_data *data, int x, int y);
 int		check_overflow(t_data *data);
 void	reset_ray_angle(double *angle);
 double	ray_length(t_data *data, int horizontal);
-double	check_horizontal_hit(t_data *data);
-double	check_vertical_hit(t_data *data);
-void	cast_rays(t_data *data);
 void	init_parser(t_parser *parser);
 void	init_data_mlx(t_data *data, t_parser *parser);
 int		valid_map(char **argv);
@@ -133,18 +144,18 @@ void	validate_middle(t_parser *parser, char *line);
 int		open_validate_file(t_parser *parser, char *map_path, char *ext, int texture_path);
 void	validate_type_identifier(t_parser *parser, char **type_id);
 void	parse_file(t_parser *parser, char *map_path);
-void	raycaster(t_data *data);
+void	*raycaster(void *arg);
 void	freeparser_exit(t_parser *parser);
 void	free_exit(t_parser *parser, char **type_id, int print_err);
 void	free_vecs(t_parser *parser, int exit_fail, int print_err);
-void	freedata_exit(t_data *data, int exit_status, int terminate_mlx);
+void	freedata_exit(t_data *data, int exit_status, int terminate_mlx, int premature);
 int 	get_rgba(int r, int g, int b, int a);
 void	movement(void *param);
 void	wall_collision(t_data *data, char key, int *new_x, int *new_y);
 void	wall_collision_strafe(t_data *data, char key, int *new_x, int *new_y);
 void	mouse_hook(double xpos, double ypos, void *param);
-void	rotate_player(t_data *data, char direction);
 void	get_texture_index(t_data *data, int x_pos, int t_size);
 void	get_arrow_textures(t_data *data, int dir);
-void	minimap(t_data *data);
+void	*minimap(void *arg);
+int	game_continues(t_data *data);
 #endif

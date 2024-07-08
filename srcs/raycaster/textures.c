@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:01:45 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 13:07:13 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:20:03 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ void	get_arrow_textures(t_data *data, int dir)
 {
 	data->player = mlx_new_image(data->mlx, 12, 12);
 	if (!data->player)
-		freedata_exit(data, EXIT_FAILURE, YES);
+		freedata_exit(data, EXIT_FAILURE, YES, NA);
 	data->minimap = mlx_new_image(data->mlx, 320, 320);
 	if (!data->minimap)
-		freedata_exit(data, EXIT_FAILURE, YES);
+		freedata_exit(data, EXIT_FAILURE, YES, NA);
 	if (dir < 2)
 		load_north_south_textures(data, dir);
 	else
@@ -76,7 +76,7 @@ static void	load_textures(t_data *data, int index, int text_info)
 	data->texture->wall[text_info] = mlx_load_png(*(char **) \
 		vec_get(tex_paths, index));
 	if (data->texture->wall[text_info] == NULL)
-		freedata_exit(data, EXIT_FAILURE, YES);
+		freedata_exit(data, EXIT_FAILURE, YES, NA);;
 }
 
 void	get_textures(t_data *data)

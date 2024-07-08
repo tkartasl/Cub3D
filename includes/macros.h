@@ -29,6 +29,32 @@
 # define UNITSIZE 64
 # define MUNITSIZE 10
 # define MSCALE 2
+# define LAYERS 2
+
+enum	e_rgb
+{
+	R,
+	G,
+	B,
+};
+
+enum	e_game_status
+{
+	STOP,
+	CONTINUE,
+};
+
+enum	e_mutexes
+{
+	CAMERA,
+	STOP_FLG,
+};
+
+enum	e_layers
+{
+	RAYCASTER,
+	MINIMAP,
+};
 
 enum	e_minimap_type
 {

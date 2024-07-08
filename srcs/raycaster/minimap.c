@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:16:12 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/08 13:03:52 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:19:38 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,25 @@ static void	drawstripe(t_data *data, int x, int cx, int cy)
 	}
 }
 
-void	minimap(t_data *data)
+void	drawplayer(t_data *data)
+{
+	int	x;
+	int	y;
+	int	playerw;
+	int	playerh;
+
+	x = MINI_WIDTH / MSCALE - MUNITSIZE / MSCALE - 1;
+	playerw = MINI_WIDTH / MSCALE + MUNITSIZE / MSCALE;
+	while (++x < playerw)
+	{
+		y = MINI_HEIGHT / MSCALE - MUNITSIZE / MSCALE - 1;
+		playerh = MINI_HEIGHT / MSCALE + MUNITSIZE / MSCALE;
+		while (++y < playerh)
+			mlx_put_pixel(data->minimap, x, y, get_rgba(0, 0, 0, 255));
+	}
+}
+
+void	draw_minimap(t_data *data, t_camera *cam)
 {
 	int				x;
 	int				cx;
@@ -65,7 +83,7 @@ void	minimap(t_data *data)
 	static int		prev_dir;
 
 	x = 0;
-	cx = data->camera_x;
+	cx = cam->cx;
 	cx -= MUNITSIZE / MSCALE * UNITSIZE;
 	if (prev_dir != get_player_dir(data))
 	{
@@ -74,14 +92,28 @@ void	minimap(t_data *data)
 		prev_dir = get_player_dir(data);
 		get_arrow_textures(data, prev_dir);
 		if (mlx_image_to_window(data->mlx, data->minimap, 10, 10) < 0)
-			freedata_exit(data, EXIT_FAILURE, YES);
+			freedata_exit(data, EXIT_FAILURE, YES, NA);
 		if (mlx_image_to_window(data->mlx, data->player, 165, 165) < 0)
-			freedata_exit(data, EXIT_FAILURE, YES);
+			freedata_exit(data, EXIT_FAILURE, YES, NA);
 	}
 	while (x < MINI_WIDTH)
 	{
-		drawstripe(data, x, cx, data->camera_y);
+		drawstripe(data, x, cx, cam->cy);
 		++x;
 		cx += MSCALE;
 	}
+}
+
+void	*minimap(void *arg)
+{
+	t_data	*data;
+	t_camera	cam;
+
+	data = (void *)arg;
+	while (game_continues(data))
+	{
+		get_camera(data, &cam);
+		draw_minimap(data, &cam);
+	}
+	return (NULL);
 }
