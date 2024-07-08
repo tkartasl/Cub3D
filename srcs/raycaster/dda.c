@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:03:00 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/05 16:17:00 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:01:19 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ double	check_vertical_hit(t_data *data, t_camera *cam)
 			data->rayinfo->v_ray_x += data->rayinfo->step_x;
 			data->rayinfo->v_ray_y += data->rayinfo->step_y;
 			i += 1;
-			}
+		}
 	}
 	return (dist_v);
 }

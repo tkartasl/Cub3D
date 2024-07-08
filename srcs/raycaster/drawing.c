@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:59:04 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/01 15:01:03 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:02:55 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	draw_line(int x, int y, t_data *data)
 {
 	mlx_texture_t	*wall;
-	uint32_t 		pixel;
+	uint32_t		pixel;
 	int				offset;
 	int				t_size;
 
@@ -24,7 +24,7 @@ void	draw_line(int x, int y, t_data *data)
 	offset = 0;
 	wall = data->texture->wall[data->texture->idx];
 	offset = (((int)data->texture->y * t_size + (int)data->texture->x))
-		 * sizeof(uint32_t);
+		* sizeof(uint32_t);
 	if (offset < (t_size * t_size * 4))
 		pixel = (wall->pixels[offset] << 24) | (wall->pixels[offset + 1] << 16)
 			| (wall->pixels[offset + 2] << 8) | wall->pixels[offset + 3];
@@ -62,7 +62,7 @@ void	get_texture_index(t_data *data, int x_pos, int t_size)
 void	draw_walls(t_data *data, int x_pos)
 {
 	double	start;
-	int	y;
+	int		y;
 
 	start = (HEIGHT / 2) - (data->texture->height / 2);
 	y = -1;
@@ -76,5 +76,5 @@ void	draw_walls(t_data *data, int x_pos)
 			draw_floor(data, x_pos, y);
 	}
 	data->rayinfo->ray_angle += DEGREE / ((double)WIDTH / FOV);
-	reset_ray_angle(&data->rayinfo->ray_angle);	
+	reset_ray_angle(&data->rayinfo->ray_angle);
 }

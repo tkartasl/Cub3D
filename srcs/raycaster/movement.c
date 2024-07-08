@@ -6,11 +6,11 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:55:10 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/01 14:49:41 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:04:16 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/cub3D.h"
+#include "../../includes/cub3D.h"
 
 void	rotate_player(t_data *data, char direction, t_camera *cam)
 {

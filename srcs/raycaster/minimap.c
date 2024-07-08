@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:16:12 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/08 11:04:51 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:19:38 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ static int	get_player_dir(t_data *data)
 
 static void	drawstripe(t_data *data, int x, int cx, int cy)
 {
-	unsigned	int	y;
-	int			mapx;
-	int			mapy;
+	unsigned int	y;
+	int				mapx;
+	int				mapy;
 
 	cy -= 10 / MSCALE * UNITSIZE;
 	y = 0;
@@ -47,7 +47,7 @@ static void	drawstripe(t_data *data, int x, int cx, int cy)
 		{
 			if (data->map[mapy][mapx] == '1')
 				mlx_put_pixel(data->minimap, x, y, get_rgba(0, 0, 0, 255));
-			else	
+			else
 				mlx_put_pixel(data->minimap, x, y, get_rgba(10, 200, 99, 200));
 		}
 		else
