@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 12:40:25 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:04:44 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ static void	set_ray_values(t_data *data)
 		data->rayinfo->ray_x = data->rayinfo->v_ray_x;
 		data->rayinfo->ray_y = data->rayinfo->v_ray_y;
 	}
-	//printf("dist: %f\n", data->rayinfo->raydist);
-	//printf("ray x: %f\nray y: %f\n", data->rayinfo->ray_x, data->rayinfo->ray_y);
 }
 
 void	cast_rays(t_data *data)

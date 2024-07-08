@@ -6,21 +6,21 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 14:39:04 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/01 14:42:22 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 13:11:15 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MACROS_H
 # define MACROS_H
 
-# define	USAGE "USAGE:\n\t./cub3D <mapfile>\n"
+# define USAGE "USAGE:\n\t./cub3D <mapfile>\n"
 # define PI 3.14159265359
 # define FOV 60
 # define EAST 0
-# define NORTH PI / 2
+# define NORTH 1.57079632
 # define WEST PI
-# define SOUTH 3 * PI / 2
-# define DEGREE	0.01745329251
+# define SOUTH 4.71238898
+# define DEGREE	0.01745329
 # define MAX_VIEW_DIST 1000
 # define HEIGHT 1024
 # define WIDTH 1280
@@ -61,6 +61,5 @@ enum	e_directions
 	WE,
 	EA,
 };
-
 
 #endif
