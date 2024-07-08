@@ -10,14 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
-#include <stdio.h>
+#include "../../includes/cub3D.h"
 
 static void	load_north_south_textures(t_data *data, int dir)
 {
 	mlx_texture_t	*tex;
 
-	if (dir == 0)
+	if (dir == SO)
 	{
 		tex = mlx_load_png("textures/arrow_south_small.png");
 		if (tex == NULL)
@@ -38,7 +37,7 @@ static void	load_east_west_textures(t_data *data, int dir)
 {
 	mlx_texture_t	*tex;
 
-	if (dir == 2)
+	if (dir == WE)
 	{
 		tex = mlx_load_png("textures/arrow_west_small.png");
 		if (tex == NULL)
@@ -57,23 +56,23 @@ static void	load_east_west_textures(t_data *data, int dir)
 
 void	get_arrow_textures(t_data *data, int dir)
 {
-	data->player = mlx_new_image(data->mlx, 12, 12);
-	if (!data->player)
-		freedata_exit(data, EXIT_FAILURE, YES, NA);
-	data->minimap = mlx_new_image(data->mlx, 320, 320);
-	if (!data->minimap)
-		freedata_exit(data, EXIT_FAILURE, YES, NA);
-	if (dir < 2)
+	mlx_image_t	*minimap;
+
+	if (dir < WE)
 		load_north_south_textures(data, dir);
 	else
 		load_east_west_textures(data, dir);
+	minimap = mlx_new_image(data->mlx, 320, 320);
+	if (!minimap)
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
+	data->minimap = minimap;
+	ft_memset(data->minimap->pixels, 255, 320 * 320 * sizeof(int32_t));
 }
 
 static void	load_textures(t_data *data, int index, int text_info)
 {
 	t_vec	*tex_paths;
 	char	*p;
-	mlx_texture_t	*t;
 
 	tex_paths = data->parser->textures_paths;
 	data->texture->wall[text_info] = mlx_load_png(*(char **) \

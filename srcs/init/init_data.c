@@ -99,6 +99,8 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	init_mlx(data);
 	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
 		freedata_exit(data, EXIT_FAILURE, YES, YES);
-	if (mlx_image_to_window(data->mlx, data->minimap, 15, 15) < 0)
+	if (mlx_image_to_window(data->mlx, data->minimap, 10, 10) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
+	if (mlx_image_to_window(data->mlx, data->player, 165, 165) < 0)
 		freedata_exit(data, EXIT_FAILURE, YES, YES);
 }

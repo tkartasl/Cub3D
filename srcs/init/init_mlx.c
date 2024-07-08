@@ -12,10 +12,21 @@
 
 #include "../../includes/cub3D.h"
 
+static	void	init_player(t_data *data)
+{
+	if (data->player_angle == SOUTH - PI)
+		get_arrow_textures(data, SO);
+	else if (data->player_angle == NORTH + PI)
+		get_arrow_textures(data, NO);
+	else if (data->player_angle == WEST)
+		get_arrow_textures(data, WE);
+	else
+	        get_arrow_textures(data, EA);
+}
+
 void	init_mlx(t_data *data)
 {
 	mlx_image_t	*screen;
-	mlx_image_t	*minimap;
 	
 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (mlx == NULL)
@@ -25,10 +36,6 @@ void	init_mlx(t_data *data)
 	if (!screen)
 		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	data->screen = screen;
-	minimap = mlx_new_image(mlx, 320, 320);
-	if (!minimap)
-		freedata_exit(data, EXIT_FAILURE, YES, YES);
-	data->minimap = minimap;
 	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
-	ft_memset(data->minimap->pixels, 255, 320 * 320 * sizeof(int32_t));
+	init_player(data);
 }

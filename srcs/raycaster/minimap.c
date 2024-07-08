@@ -12,21 +12,21 @@
 
 #include "../../includes/cub3D.h"
 
-static int	get_player_dir(t_data *data)
+static int	get_player_dir(t_camera *cam)
 {
 	double	oct;
 
 	oct = 0.78539816;
-	if (data->player_angle < NORTH + oct && data->player_angle > NORTH - oct)
-		return (0);
-	else if (data->player_angle < SOUTH + oct
-		&& data->player_angle > SOUTH - oct)
-		return (1);
-	else if (data->player_angle < WEST + oct
-		&& data->player_angle > WEST - oct)
-		return (2);
+	if (cam->angle < NORTH + oct && cam->angle > NORTH - oct)
+		return (SO);
+	else if (cam->angle < SOUTH + oct
+		&& cam->angle > SOUTH - oct)
+		return (NO);
+	else if (cam->angle < WEST + oct
+		&& cam->angle > WEST - oct)
+		return (WE);
 	else
-		return (3);
+		return (EA);
 	return (4);
 }
 
@@ -85,11 +85,11 @@ void	draw_minimap(t_data *data, t_camera *cam)
 	x = 0;
 	cx = cam->cx;
 	cx -= MUNITSIZE / MSCALE * UNITSIZE;
-	if (prev_dir != get_player_dir(data))
+	if (prev_dir != get_player_dir(cam))
 	{
 		mlx_delete_image(data->mlx, data->player);
 		mlx_delete_image(data->mlx, data->minimap);
-		prev_dir = get_player_dir(data);
+		prev_dir = get_player_dir(cam);
 		get_arrow_textures(data, prev_dir);
 		if (mlx_image_to_window(data->mlx, data->minimap, 10, 10) < 0)
 			freedata_exit(data, EXIT_FAILURE, YES, NA);
