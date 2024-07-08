@@ -6,7 +6,7 @@
 #    By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/05 12:11:11 by tkartasl          #+#    #+#              #
-#    Updated: 2024/07/08 11:02:51 by tkartasl         ###   ########.fr        #
+#    Updated: 2024/07/08 15:19:08 by tkartasl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ RM			:=	rm -rf
 AR			:=	ar -rcs
 CC			:=	cc
 CFLAGS		:=	-Wall -Werror -Wextra
-DEBUGFLAGS	:=	-g -fsanitize=address
+DEBUGFLAGS	:=	-g #-fsanitize=address
 DEPFLAGS	:=	-c -MT $$@ -MMD -MP -MF $(DEPSDIR)/$$*.d
 SCREENCLR	:=	printf "\033c"
 SLEEP		:=	sleep .1

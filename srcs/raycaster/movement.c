@@ -6,14 +6,18 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:55:10 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 13:04:16 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:27:24 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
+int	get_player_dir(t_camera *cam);
+
 void	rotate_player(t_data *data, char direction, t_camera *cam)
 {
+	static int		prev_dir;
+
 	if (direction == 'R')
 	{
 		cam->angle += 0.05;
@@ -29,6 +33,14 @@ void	rotate_player(t_data *data, char direction, t_camera *cam)
 			cam->angle += 2 * PI;
 		data->playerdir_x = cos(cam->angle) * 5.5;
 		data->playerdir_y = sin(cam->angle) * 5.5;
+	}
+	if (prev_dir != get_player_dir(cam))
+	{
+		mlx_delete_image(data->mlx, data->player);
+		prev_dir = get_player_dir(cam);
+		get_arrow_textures(data, prev_dir);
+		if (mlx_image_to_window(data->mlx, data->player, 165, 165) < 0)
+			freedata_exit(data, EXIT_FAILURE, YES, NA);
 	}
 }
 

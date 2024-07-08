@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 09:33:51 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/26 10:45:11 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 15:23:44 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,5 @@ void	mouse_hook(double xpos, double ypos, void *param)
 	else if (xpos > old_xpos)
 		rotate_player(data, 'R', &cam);
 	old_xpos = xpos;
+	set_camera(data, &cam);
 }

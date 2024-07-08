@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:01:45 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 13:35:58 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:35:00 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,10 @@ static void	load_east_west_textures(t_data *data, int dir)
 
 void	get_arrow_textures(t_data *data, int dir)
 {
-	mlx_image_t	*minimap;
-
 	if (dir < WE)
 		load_north_south_textures(data, dir);
 	else
 		load_east_west_textures(data, dir);
-	minimap = mlx_new_image(data->mlx, 320, 320);
-	if (!minimap)
-		freedata_exit(data, EXIT_FAILURE, YES, YES);
-	data->minimap = minimap;
-	ft_memset(data->minimap->pixels, 255, 320 * 320 * sizeof(int32_t));
 }
 
 static void	load_textures(t_data *data, int index, int text_info)
