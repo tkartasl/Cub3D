@@ -19,14 +19,14 @@ static void	load_north_south_textures(t_data *data, int dir)
 	{
 		tex = mlx_load_png("textures/arrow_south_small.png");
 		if (tex == NULL)
-			freedata_exit(data, EXIT_FAILURE, YES);
+			freedata_exit(data, EXIT_FAILURE, YES, NA);
 		data->player = mlx_texture_to_image(data->mlx,tex);	
 	}
 	else
 	{
 		tex = mlx_load_png("textures/arrow_north_small.png");
 		if (tex == NULL)
-			freedata_exit(data, EXIT_FAILURE, YES);
+			freedata_exit(data, EXIT_FAILURE, YES, NA);
 		data->player = mlx_texture_to_image(data->mlx,tex);
 	}
 	mlx_delete_texture(tex);
@@ -39,14 +39,14 @@ static void	load_east_west_textures(t_data *data, int dir)
 	{
 		tex = mlx_load_png("textures/arrow_west_small.png");
 		if (tex == NULL)
-			freedata_exit(data, EXIT_FAILURE, YES);
+			freedata_exit(data, EXIT_FAILURE, YES, NA);
 		data->player = mlx_texture_to_image(data->mlx,tex);
 	}
 	else
 	{
 		tex = mlx_load_png("textures/arrow_east_small.png");
 		if (tex == NULL)
-			freedata_exit(data, EXIT_FAILURE, YES);
+			freedata_exit(data, EXIT_FAILURE, YES, NA);
 		data->player = mlx_texture_to_image(data->mlx,tex);
 	}
 	mlx_delete_texture(tex);
@@ -56,10 +56,10 @@ void	get_arrow_textures(t_data *data, int dir)
 {
 	data->player = mlx_new_image(data->mlx, 12, 12);
 	if (!data->player)
-		freedata_exit(data, EXIT_FAILURE, YES);
+		freedata_exit(data, EXIT_FAILURE, YES, NA);
 	data->minimap = mlx_new_image(data->mlx, 320, 320);
 	if (!data->minimap)
-		freedata_exit(data, EXIT_FAILURE, YES);
+		freedata_exit(data, EXIT_FAILURE, YES, NA);
 	if (dir < 2)
 		load_north_south_textures(data, dir);
 	else
@@ -73,7 +73,7 @@ static void	load_textures(t_data *data, int index, int text_info)
 	tex_paths = data->parser->textures_paths;
 	data->texture->wall[text_info] = mlx_load_png(*(char **)vec_get(tex_paths, index));
 	if (data->texture->wall[text_info] == NULL)
-		freedata_exit(data, EXIT_FAILURE, YES);
+		freedata_exit(data, EXIT_FAILURE, YES, NA);;
 }
 
 void	get_textures(t_data *data)

@@ -13,36 +13,7 @@
 #include "../../includes/cub3D.h"
 
 void	init_mlx(t_data *data);
-
-void	load_textures(t_data *data, int index, int text_info)
-{
-	t_vec	*tex_paths;
-
-	tex_paths = data->parser->textures_paths;
-	data->texture->wall[text_info] = mlx_load_png(*(char **)vec_get(tex_paths, index));
-	if (data->texture->wall[text_info] == NULL)
-		freedata_exit(data, EXIT_FAILURE, YES, YES);
-}
-
-void	get_textures(t_data *data)
-{
-	int		ind;
-	t_vec	*tex_info;
-
-	ind = -1;
-	tex_info = data->parser->textures_info;
-	while (++ind < tex_info->len)
-	{
-		if (*(int *)vec_get(tex_info, ind) == NO)
-			load_textures(data, ind, NO);
-		else if (*(int *)vec_get(tex_info, ind) == SO)
-			load_textures(data, ind, SO);
-		else if (*(int *)vec_get(tex_info, ind) == EA)
-			load_textures(data, ind, EA);
-		else if (*(int *)vec_get(tex_info, ind) == WE)
-			load_textures(data, ind, WE);
-	}
-}
+void	get_textures(t_data *data);
 
 char	extract_map_arr(t_parser *parser, t_data *data)
 {
