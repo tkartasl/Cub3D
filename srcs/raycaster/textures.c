@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cub3D.h"
+#include <stdio.h>
 
 static void	load_north_south_textures(t_data *data, int dir)
 {
@@ -71,6 +72,8 @@ void	get_arrow_textures(t_data *data, int dir)
 static void	load_textures(t_data *data, int index, int text_info)
 {
 	t_vec	*tex_paths;
+	char	*p;
+	mlx_texture_t	*t;
 
 	tex_paths = data->parser->textures_paths;
 	data->texture->wall[text_info] = mlx_load_png(*(char **) \
