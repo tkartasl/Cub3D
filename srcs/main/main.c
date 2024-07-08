@@ -12,9 +12,20 @@
 
 #include "../../includes/cub3D.h"
 
+
+void	create_threads(t_data *data);
+
 void	game_usage(void)
 {
 	printf("%s\n", USAGE);
+}
+
+void	game_play(t_data *data)
+{
+	mlx_key_hook(data->mlx, &key_hook, data);
+	mlx_cursor_hook(data->mlx, &mouse_hook, data);
+	mlx_loop_hook(data->mlx, &movement, data);
+	mlx_loop(data->mlx);
 }
 
 int	main(int argc, char **argv)
@@ -27,8 +38,9 @@ int	main(int argc, char **argv)
 		init_parser(&parser);
 		parse_file(&parser, argv[1]);
 		init_data_mlx(&data, &parser);
-		raycaster(&data);
-		freedata_exit(&data, EXIT_SUCCESS, YES);
+		create_threads(&data);
+		game_play(&data);
+		freedata_exit(&data, EXIT_SUCCESS, YES, NA);
 	}
 	game_usage();
 	return (SUCCESS);

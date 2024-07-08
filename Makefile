@@ -43,6 +43,7 @@ MODULES		:=	main \
 				init \
 				parser \
 				get_next_line \
+				multi_threader \
 				validator \
 				raycaster \
 				free \
@@ -61,6 +62,8 @@ SOURCES 	:= 	main.c \
 			files_path_validation.c \
 			get_next_line.c \
 			get_next_line_utils.c \
+			multi_threads.c \
+			threads_helpers.c \
 			raycast.c \
 			minimap.c \
 			errors.c \
