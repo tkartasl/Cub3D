@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/07/01 15:27:29 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 12:51:40 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ void	init_grid(t_data *data)
 	grid = (char **)malloc((MINI_WIDTH + 1) * sizeof(char *));
 	if (grid == NULL)
 		freedata_exit(data, EXIT_FAILURE, YES);
-//	ft_memset(grid, 0, sizeof(grid));
 	while (x < MINI_WIDTH)
 	{
 		grid[x] = (char *)malloc((MINI_HEIGHT + 1) * sizeof(char));
@@ -102,11 +101,11 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	playerdir = extract_map_arr(parser, data);
 	data->parser = parser;
 	if (playerdir == 'N')
-		data->player_angle = NORTH;
+		data->player_angle = NORTH + PI;
 	else if (playerdir == 'W')
 		data->player_angle = WEST;
 	else if (playerdir == 'S')
-		data->player_angle = SOUTH;
+		data->player_angle = SOUTH - PI;
 	else
 		data->player_angle = EAST;
 	data->rayinfo->ray_angle = data->player_angle;

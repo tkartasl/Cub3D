@@ -6,24 +6,14 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/01 14:59:02 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 12:40:25 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
 void	minimap(t_data *data);
-
-static void error(void)
-{
-	puts(mlx_strerror(mlx_errno));
-	exit(EXIT_FAILURE);
-}
-
-double	fps(void)
-{
-	return (mlx_get_time());
-}
+void	get_textures(t_data *data);
 
 static void	calc_texels(t_data *data, int x_pos)
 {
@@ -62,6 +52,8 @@ static void	set_ray_values(t_data *data)
 		data->rayinfo->ray_x = data->rayinfo->v_ray_x;
 		data->rayinfo->ray_y = data->rayinfo->v_ray_y;
 	}
+	//printf("dist: %f\n", data->rayinfo->raydist);
+	//printf("ray x: %f\nray y: %f\n", data->rayinfo->ray_x, data->rayinfo->ray_y);
 }
 
 void	cast_rays(t_data *data)
@@ -76,48 +68,29 @@ void	cast_rays(t_data *data)
 		data->rayinfo->dist_h = check_horizontal_hit(data);
 		data->rayinfo->dist_v = check_vertical_hit(data);
 		set_ray_values(data);
+		printf("angle: %f\n", data->rayinfo->ray_angle);
 		calc_texels(data, x_pos);
 		draw_walls(data, x_pos);
 		x_pos++;
 	}
 }
 
-void	load_textures(t_data *data, int index, int text_info)
-{
-	t_vec	*tex_paths;
-
-	tex_paths = data->parser->textures_paths;
-	data->texture->wall[text_info] = mlx_load_png(*(char **)vec_get(tex_paths, index));
-	if (data->texture->wall[text_info] == NULL)
-		freedata_exit(data, EXIT_FAILURE, YES);
-}
-
-void	get_textures(t_data *data)
-{
-	int		ind;
-	t_vec	*tex_info;
-
-	ind = -1;
-	tex_info = data->parser->textures_info;
-	while (++ind < tex_info->len)
-	{
-		if (*(int *)vec_get(tex_info, ind) == NO)
-			load_textures(data, ind, NO);
-		else if (*(int *)vec_get(tex_info, ind) == SO)
-			load_textures(data, ind, SO);
-		else if (*(int *)vec_get(tex_info, ind) == EA)
-			load_textures(data, ind, EA);
-		else if (*(int *)vec_get(tex_info, ind) == WE)
-			load_textures(data, ind, WE);
-	}
-}
-
 void	raycaster(t_data *data)
 {
 	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
-		error();
-	if (mlx_image_to_window(data->mlx, data->minimap, 15, 15) < 0)
-		error();
+		freedata_exit(data, EXIT_FAILURE, YES);
+	if (data->player_angle == SOUTH - PI)
+		get_arrow_textures(data, 0);
+	else if (data->player_angle == NORTH + PI)
+		get_arrow_textures(data, 1);
+	else if (data->player_angle == WEST)
+		get_arrow_textures(data, 2);
+	else
+		get_arrow_textures(data, 3);
+	if (mlx_image_to_window(data->mlx, data->minimap, 10, 10) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES);
+	if (mlx_image_to_window(data->mlx, data->player, 165, 165) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES);
 	get_textures(data);
 	cast_rays(data);
 	minimap(data);

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:03:00 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/01 15:14:54 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/05 16:17:00 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ static void	calc_steps_v(t_data *data, double *ray_y, double *ray_x, int *i)
 	ntan = -tan(data->rayinfo->ray_angle);
 	if (data->rayinfo->ray_angle > NORTH && data->rayinfo->ray_angle < SOUTH)
 	{
-		*ray_x = (((int)data->camera_x / UNITSIZE) * UNITSIZE) - 0.0001;
+		*ray_x = ((data->camera_x / UNITSIZE) * UNITSIZE) - 0.0001;
 		*ray_y = (data->camera_x - *ray_x) * ntan + data->camera_y;
 		data->rayinfo->step_x = -UNITSIZE;
 	}
 	else if (data->rayinfo->ray_angle < NORTH
 		|| data->rayinfo->ray_angle > SOUTH)
 	{
-		*ray_x = (((int)data->camera_x / UNITSIZE) * UNITSIZE) + UNITSIZE;
+		*ray_x = ((data->camera_x / UNITSIZE) * UNITSIZE) + UNITSIZE;
 		*ray_y = (data->camera_x - *ray_x) * ntan + data->camera_y;
 		data->rayinfo->step_x = UNITSIZE;
 	}
@@ -46,13 +46,13 @@ static void	calc_steps_h(t_data *data, double *ray_y, double *ray_x, int *i)
 	atan = -1 / tan(data->rayinfo->ray_angle);
 	if (data->rayinfo->ray_angle > WEST)
 	{
-		*ray_y = (((int)data->camera_y / UNITSIZE) * UNITSIZE) - 0.0001;
+		*ray_y = ((data->camera_y / UNITSIZE) * UNITSIZE) - 0.0001;
 		*ray_x = (data->camera_y - *ray_y) * atan + data->camera_x;
 		data->rayinfo->step_y = -UNITSIZE;
 	}
 	else if (data->rayinfo->ray_angle < WEST)
 	{
-		*ray_y = (((int)data->camera_y / UNITSIZE) * UNITSIZE) + UNITSIZE;
+		*ray_y = ((data->camera_y / UNITSIZE) * UNITSIZE) + UNITSIZE;
 		*ray_x = (data->camera_y - *ray_y) * atan + data->camera_x;
 		data->rayinfo->step_y = UNITSIZE;
 	}

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/01 15:17:41 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 10:56:56 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,15 @@ typedef struct s_data
 	mlx_t		*mlx;
 	mlx_image_t *screen;
 	mlx_image_t *minimap;
+	mlx_image_t *player;
+	mlx_image_t *player_n;
+	mlx_image_t *player_ne;
+	mlx_image_t *player_e;
+	mlx_image_t *player_se;
+	mlx_image_t *player_s;
+	mlx_image_t *player_sw;
+	mlx_image_t *player_w;
+	mlx_image_t *player_nw;
 	double		player_angle;
 	double		playerdir_x;
 	double		playerdir_y;
@@ -136,6 +145,6 @@ void	wall_collision_strafe(t_data *data, char key, int *new_x, int *new_y);
 void	mouse_hook(double xpos, double ypos, void *param);
 void	rotate_player(t_data *data, char direction);
 void	get_texture_index(t_data *data, int x_pos, int t_size);
-
+void	get_arrow_textures(t_data *data, int dir);
 void	minimap(t_data *data);
 #endif
