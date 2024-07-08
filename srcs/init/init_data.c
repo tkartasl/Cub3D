@@ -72,6 +72,7 @@ void	init_texture(t_data *data)
 		free_vecs(data->parser, YES, NA);
 	}
 	ft_memset(texture, 0, sizeof(t_textures));
+	data->texture = texture;
 	get_textures(data);
 }
 
