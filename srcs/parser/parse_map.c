@@ -6,23 +6,26 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:11:50 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/18 14:39:18 by username         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:59:57 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-static void	validate_push_horizontal(t_parser *parser, char **line)
+void	validate_horizontal(t_parser *parser, char *line, char *msg);
+void	validate_middle(t_parser *parser, char *line);
+
+static void	validate_push_horizontal(t_parser *parser, char **line, char *msg)
 {
 	char	*dup_line;
 
-	validate_horizontal(parser, *line);
+	validate_horizontal(parser, *line, msg);
 	dup_line = ft_strdup(*line);
 	free(*line);
 	if (vec_push(parser->map, &dup_line) == 0)
 	{
 		free(dup_line);
-		free_vecs(parser, YES, NO);
+		free_vecs(parser, YES, NULL);
 	}
 }
 
@@ -36,7 +39,7 @@ static void	validate_push_middle(t_parser *parser)
 	if (vec_push(parser->map, &dup_line) == 0)
 	{
 		free(dup_line);
-		free_vecs(parser, YES, NO);
+		free_vecs(parser, YES, NULL);
 	}
 }
 
@@ -55,7 +58,7 @@ static int	last_line(t_parser *parser, char *line)
 			break ;
 	}
 	if (ind == len)
-		free_vecs(parser, YES, YES);
+		free_vecs(parser, YES, ALLSPACES);
 	ind = -1;
 	while (++ind < len)
 	{
@@ -85,7 +88,7 @@ static void	something_follows_map(t_parser *parser, int fd)
 		while (line[ind])
 		{
 			if (!ft_isspace(line[ind]))
-				free_exit(parser, &line, YES);
+				free_exit(parser, &line, SOMETHING);
 			ind++;
 		}
 		free(line);
@@ -100,7 +103,7 @@ void	parse_map(t_parser *parser, int fd)
 	char	*line;
 
 	malloc_flag = 0;
-	validate_push_horizontal(parser, parser->line);
+	validate_push_horizontal(parser, parser->line, FHWALL);
 	*parser->line = get_next_line(fd, &malloc_flag);
 	eof_malloc_check(parser, malloc_flag, YES, fd);
 	while (*parser->line)
@@ -110,13 +113,13 @@ void	parse_map(t_parser *parser, int fd)
 				|| line[0] == '\0'))
 			break ;
 		if (*parser->line[0] == '\0' || *parser->line[0] == '0')
-			free_vecs(parser, YES, YES);
+			free_vecs(parser, YES, INVALMAP);
 		validate_push_middle(parser);
 		*parser->line = line;
 		eof_malloc_check(parser, malloc_flag, YES, fd);
 	}
 	if (*parser->line == NULL || parser->dir_info == 0)
-		free_vecs(parser, YES, YES);
-	validate_push_horizontal(parser, &(*parser->line));
+		free_vecs(parser, YES, NOPLAYER);
+	validate_push_horizontal(parser, &(*parser->line), LHWALL);
 	something_follows_map(parser, fd);
 }

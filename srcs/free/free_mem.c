@@ -14,31 +14,23 @@
 
 void		join_threads(t_data *data);
 void		destroy_locks(t_data *data);
-void		file_error(char *path, int use_errno);
+void		file_error(char *path, int use_errno, char *msg);
 
-static void	free_lines(t_parser *parser, int lines)
+static void	free_map(t_data *data)
 {
-	int	ind;
+	unsigned int	ind;
 
-	ind = -1;
-	if (lines == TEXTURE)
-	{
-		while (++ind < parser->textures_paths->len)
-			free(*(char **)vec_get(parser->textures_paths, ind));
-	}
-	else if (lines == MAP)
-	{
-		while (++ind < parser->map->len)
-			free(*(char **)vec_get(parser->map, ind));
-	}
+	ind = 0;
+	while (data->map[ind] != NULL)
+		free(data->map[ind++]);
+	free(data->map);
+	data->map = NULL;
 }
 
-void	free_vecs(t_parser *parser, int exit_fail, int print_err)
+void	free_vecs(t_parser *parser, int exit_fail, char *msg)
 {
-	if (print_err == YES)
-		file_error(parser->file, 42);
-	if (parser->textures_paths && parser->textures_paths->len)
-		free_lines(parser, TEXTURE);
+	if (msg != NULL)
+		file_error(parser->file, FT, msg);
 	vec_free(parser->textures_paths);
 	free(parser->textures_paths);
 	vec_free(parser->textures_info);
@@ -47,8 +39,6 @@ void	free_vecs(t_parser *parser, int exit_fail, int print_err)
 	free(parser->floor);
 	vec_free(parser->ceiling);
 	free(parser->ceiling);
-	// if (parser->map && parser->map->len)
-	// 	free_lines(parser, MAP);
 	vec_free(parser->map);
 	free(parser->map);
 	if (exit_fail == YES)
@@ -77,15 +67,16 @@ void	stop_game(t_data *data)
 void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 		int premature)
 {
-	int	i;
+	unsigned int	i;
 
 	if (premature == NA)
 		stop_game(data);
 	if (terminate_mlx == YES)
 		mlx_terminate(data->mlx);
-	i = -1;
-	while (++i < 4)
-		mlx_delete_texture(data->texture->wall[i]);
+	i = 0;
+	while (i < 4)
+		mlx_delete_texture(data->texture->wall[i++]);
+	free_map(data);
 	free(data->texture);
 	free(data->rayinfo);
 	exit(exit_status);

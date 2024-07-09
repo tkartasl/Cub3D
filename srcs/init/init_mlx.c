@@ -12,7 +12,7 @@
 
 #include "../../includes/cub3D.h"
 
-static	void	init_player(t_data *data)
+static void	init_player(t_data *data)
 {
 	if (data->player_angle == SOUTH - PI)
 		get_arrow_textures(data, SO);
@@ -21,14 +21,15 @@ static	void	init_player(t_data *data)
 	else if (data->player_angle == WEST)
 		get_arrow_textures(data, WE);
 	else
-	    get_arrow_textures(data, EA);
+		get_arrow_textures(data, EA);
 }
 
 void	init_mlx(t_data *data)
 {
 	mlx_image_t	*screen;
-	
-	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
+	mlx_t		*mlx;
+
+	mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (mlx == NULL)
 		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	data->mlx = mlx;

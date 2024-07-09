@@ -63,22 +63,28 @@ void	get_arrow_textures(t_data *data, int dir)
 		load_east_west_textures(data, dir);
 }
 
-static void	load_textures(t_parser *parser, t_data *data, int index, int text_info)
+static void	load_textures(t_parser *parser, t_data *data, int index,
+		int text_info)
 {
 	t_vec	*tex_paths;
-	char	*p;
+	char	*texpath;
 
 	tex_paths = parser->textures_paths;
-	data->texture->wall[text_info] = mlx_load_png(*(char **) \
-		vec_get(tex_paths, index));
+	texpath = *(char **)vec_get(tex_paths, index);
+	data->texture->wall[text_info] = mlx_load_png(texpath);
 	if (data->texture->wall[text_info] == NULL)
+	{
+		free(texpath);
+		free_vecs(parser, NA, NULL);
 		freedata_exit(data, EXIT_FAILURE, YES, NA);
+	}
+	free(texpath);
 }
 
 void	get_textures(t_data *data, t_parser *parser)
 {
-	int				ind;
-	t_vec			*tex_info;
+	int		ind;
+	t_vec	*tex_info;
 
 	ind = -1;
 	tex_info = parser->textures_info;

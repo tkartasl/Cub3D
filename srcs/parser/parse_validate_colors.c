@@ -23,7 +23,7 @@ static int	all_digits(char *rgb)
 	while (rgb[++ind])
 	{
 		if (!ft_isdigit(rgb[ind]))
-			return (42);
+			return (FT);
 	}
 	return (YES);
 }
@@ -36,15 +36,15 @@ static char	*next_rgb(t_parser *parser, char *line, t_indices *inds)
 	skip_spaces(line, &inds->st);
 	inds->end = inds->st;
 	if (line[inds->st] == '\0')
-		free_vecs(parser, YES, YES);
+		free_vecs(parser, YES, INVALCOLOR);
 	next_strings_end(line, &inds->end, 1);
 	rgb = ft_substr(line, inds->st, inds->end - inds->st);
 	if (rgb == NULL)
-		free_vecs(parser, YES, NO);
+		free_vecs(parser, YES, NULL);
 	if (all_digits(rgb) != YES)
 	{
 		free(rgb);
-		free_vecs(parser, YES, YES);
+		free_vecs(parser, YES, INVALCOLOR);
 	}
 	--inds->counter;
 	if (inds->counter == 0)
@@ -59,7 +59,7 @@ static void	skip_comma(t_parser *parser, char *line, t_indices *inds, int count)
 	inds->st = inds->end;
 	skip_spaces(line, &inds->st);
 	if (line[inds->st] != ',')
-		free_vecs(parser, YES, YES);
+		free_vecs(parser, YES, INVALCOLOR);
 	inds->st++;
 	inds->end = inds->st;
 }
@@ -79,17 +79,17 @@ static void	parse_color(t_parser *parser, t_indices *inds, int type)
 		if (type == FLOOR)
 		{
 			if (vec_push(parser->floor, &rgb_n) == 0)
-				free_exit(parser, &rgb_s, NO);
+				free_exit(parser, &rgb_s, NULL);
 		}
 		else if (type == CEILING)
 		{
 			if (vec_push(parser->ceiling, &rgb_n) == 0)
-				free_exit(parser, &rgb_s, NO);
+				free_exit(parser, &rgb_s, NULL);
 		}
 		skip_comma(parser, *parser->line, inds, count);
 	}
 	if (inds->counter)
-		free_vecs(parser, YES, YES);
+		free_vecs(parser, YES, INVALCOLOR);
 }
 
 void	parse_push_colors(t_parser *parser, char **type_id, t_indices *inds,
@@ -99,7 +99,7 @@ void	parse_push_colors(t_parser *parser, char **type_id, t_indices *inds,
 	{
 		count->c++;
 		if (count->c > 1)
-			free_exit(parser, type_id, YES);
+			free_exit(parser, type_id, MOREFLOOR);
 		free(*type_id);
 		parse_color(parser, inds, CEILING);
 		return ;
@@ -108,10 +108,10 @@ void	parse_push_colors(t_parser *parser, char **type_id, t_indices *inds,
 	{
 		count->f++;
 		if (count->f > 1)
-			free_exit(parser, type_id, YES);
+			free_exit(parser, type_id, MORECEILING);
 		free(*type_id);
 		parse_color(parser, inds, FLOOR);
 		return ;
 	}
-	free_exit(parser, type_id, YES);
+	free_exit(parser, type_id, INVALCOLOR);
 }

@@ -40,12 +40,13 @@ ifeq ($(shell uname), Darwin)
 endif
 
 MODULES		:=	main \
+				get_next_line \
 				init \
 				parser \
-				get_next_line \
-				multi_threader \
 				validator \
+				multi_threader \
 				raycaster \
+				minimap \
 				free \
 
 SOURCES 	:= 	main.c \

@@ -6,21 +6,20 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 14:39:04 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/08 13:11:15 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:50:35 by uahmed           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MACROS_H
 # define MACROS_H
 
-# define USAGE "USAGE:\n\t./cub3D <mapfile>\n"
 # define PI 3.14159265359
 # define FOV 60
 # define EAST 0
 # define NORTH 1.57079632
 # define WEST PI
 # define SOUTH 4.71238898
-# define DEGREE	0.01745329
+# define DEGREE 0.01745329
 # define MAX_VIEW_DIST 1000
 # define HEIGHT 1024
 # define WIDTH 1280
@@ -30,8 +29,19 @@
 # define MUNITSIZE 10
 # define MSCALE 2
 # define LAYERS 1
-# define ROTATE_SPEED 0.07
+# define ROTATE_SPEED 0.05
 # define MOVE_SPEED 7.5
+# define FT 42
+
+// Define color codes
+# define RED "\033[1;31m"
+# define GREEN "\033[1;32m"
+# define YELLOW "\033[1;33m"
+# define BLUE "\033[1;34m"
+# define MAGENTA "\033[1;35m"
+# define CYAN "\033[1;36m"
+# define WHITE "\033[1;37m"
+# define RESET "\033[0m"
 
 enum	e_rgba
 {

@@ -22,20 +22,20 @@ void	parse_push_textures(t_parser *parser, t_indices *inds)
 	inds->st = inds->end;
 	skip_spaces(line, &inds->st);
 	if (line[inds->st] == '\0')
-		free_vecs(parser, YES, YES);
+		free_vecs(parser, YES, NOPATH);
 	inds->end = inds->st;
 	next_strings_end(line, &inds->end, 0);
 	end = inds->end;
 	skip_spaces(line, &end);
 	if (end < (int)ft_strlen(line) && line[end] != '\0')
-		free_vecs(parser, YES, YES);
+		free_vecs(parser, YES, NOPATH);
 	path = ft_substr(*parser->line, inds->st, inds->end - inds->st);
 	if (path == NULL)
-		free_vecs(parser, YES, NO);
+		free_vecs(parser, YES, NULL);
 	open_validate_file(parser, path, ".png", YES);
 	if (vec_push(parser->textures_paths, &path) == 0)
 	{
 		free(path);
-		free_vecs(parser, YES, NO);
+		free_vecs(parser, YES, NULL);
 	}
 }

@@ -53,7 +53,7 @@ static void	identifiers_type(t_parser *parser, char **type_id, int *type_info,
 		*type_info = EA;
 	}
 	if (count->no > 1 || count->so > 1 || count->we > 1 || count->ea > 1)
-		free_exit(parser, type_id, YES);
+		free_exit(parser, type_id, TEXREPEAT);
 }
 
 static int	type_identifier(t_parser *parser, t_indices *inds, t_count *count)
@@ -61,22 +61,22 @@ static int	type_identifier(t_parser *parser, t_indices *inds, t_count *count)
 	char	*type_id;
 	int		type_id_info;
 
-	type_id_info = 42;
+	type_id_info = FT;
 	type_id = NULL;
 	type_id = ft_substr(*parser->line, inds->st, inds->end - inds->st);
 	if (type_id == NULL)
-		free_vecs(parser, YES, NO);
+		free_vecs(parser, YES, NULL);
 	identifiers_type(parser, &type_id, &type_id_info, count);
-	if (type_id_info != 42)
+	if (type_id_info != FT)
 	{
 		free(type_id);
 		if (vec_push(parser->textures_info, &type_id_info) == 0)
-			free_exit(parser, &type_id, NO);
+			free_exit(parser, &type_id, NULL);
 		return (TEXTURE);
 	}
 	validate_type_identifier(parser, &type_id);
 	parse_push_colors(parser, &type_id, inds, count);
-	return (42);
+	return (FT);
 }
 
 static int	parse_push_lineinfo(t_parser *parser, int fd, t_count *count)
@@ -111,7 +111,7 @@ void	parse_until_map(t_parser *parser, int fd)
 	int		tids;
 
 	init_tex_count(&count);
-	qontinue = 42;
+	qontinue = FT;
 	tids = 0;
 	while (qontinue != NA)
 	{
@@ -120,5 +120,5 @@ void	parse_until_map(t_parser *parser, int fd)
 			tids++;
 	}
 	if (tids < TOT_TIDS)
-		free_vecs(parser, YES, YES);
+		free_vecs(parser, YES, TIDS);
 }
