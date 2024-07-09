@@ -12,39 +12,47 @@
 
 #include "../../includes/cub3D.h"
 
-void	init_mlx(t_data *data);
-void	get_textures(t_data *data);
+void		init_mlx(t_data *data);
+void		get_textures(t_data *data);
 void		get_ceiling_color(t_data *data);
 void		get_floor_color(t_data *data);
 
+void	find_player(t_data *data, char **map, unsigned int y, char *playerdir)
+{
+	unsigned	int	x;
+
+	x = 0;
+	while (map[y][x])
+	{
+		if (map[y][x] == 'S' || map[y][x] == 'N' || map[y][x] == 'W'
+			|| map[y][x] == 'E')
+		{
+			data->camera_y = y * UNITSIZE + UNITSIZE / 2;
+			data->camera_x = x * UNITSIZE + UNITSIZE / 2;
+			*playerdir = map[y][x];
+		}
+		++x;
+	}
+	if (data->map_width < x)
+		data->map_width = x;
+}
+
 char	extract_map_arr(t_parser *parser, t_data *data)
 {
-	int	x;
-	int	y;
+	unsigned	int	y;
 	char	**map;
 	char	playerdir;
 
-	x = -1;
-	y = -1;
+	y = 0;
 	data->map_width = 0;
 	map = (char **)malloc(sizeof(char *) * (parser->map->len + 1));
 	if (map == NULL)
 		freedata_exit(data, EXIT_FAILURE, NA, YES);
-	while (++y < parser->map->len)
+	while (y < parser->map->len)
 	{
 		map[y] = *(char **)vec_get(parser->map, y);
-		x = -1;
-		while (map[y][++x])
-		{
-			if (map[y][x] == 'S' || map[y][x] == 'N' || map[y][x] == 'W' || map[y][x] == 'E')
-			{
-				data->camera_y = y * UNITSIZE + UNITSIZE/2;
-				data->camera_x = x * UNITSIZE + UNITSIZE/2;
-				playerdir = map[y][x];
-			}
-		}
-		if (data->map_width < x)
-			data->map_width = x;
+		find_player(data, map, y, &playerdir);
+		++y;
 	}
 	map[y] = NULL;
 	data->map_height = y;
@@ -86,6 +94,8 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->flag = CONTINUE;
 	data->rayinfo = init_rayinfo(parser);
 	init_texture(data);
+	get_ceiling_color(data);
+	get_floor_color(data);
 	playerdir = extract_map_arr(parser, data);
 	if (playerdir == 'N')
 		data->player_angle = NORTH + PI;
@@ -99,10 +109,4 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->playerdir_x = cos(data->player_angle) * MOVE_SPEED;
 	data->playerdir_y = sin(data->player_angle) * MOVE_SPEED;
 	init_mlx(data);
-	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
-		freedata_exit(data, EXIT_FAILURE, YES, YES);
-	if (mlx_image_to_window(data->mlx, data->minimap, 10, 10) < 0)
-		freedata_exit(data, EXIT_FAILURE, YES, YES);
-	if (mlx_image_to_window(data->mlx, data->player, 165, 165) < 0)
-		freedata_exit(data, EXIT_FAILURE, YES, YES);
 }

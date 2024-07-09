@@ -30,14 +30,15 @@
 # define MUNITSIZE 10
 # define MSCALE 2
 # define LAYERS 1
-# define ROTATE_SPEED 0.09
+# define ROTATE_SPEED 0.07
 # define MOVE_SPEED 7.5
 
-enum	e_rgb
+enum	e_rgba
 {
 	R,
 	G,
 	B,
+	A = 210,
 };
 
 enum	e_game_status

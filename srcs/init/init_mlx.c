@@ -36,9 +36,15 @@ void	init_mlx(t_data *data)
 	if (!screen)
 		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	data->screen = screen;
-	data->minimap = mlx_new_image(data->mlx, 320, 320);
+	data->minimap = mlx_new_image(data->mlx, MINI_WIDTH, MINI_HEIGHT);
 	if (!data->minimap)
 		freedata_exit(data, EXIT_FAILURE, YES, YES);
 	ft_memset(data->screen->pixels, 255, WIDTH * HEIGHT * sizeof(int32_t));
 	init_player(data);
+	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
+	if (mlx_image_to_window(data->mlx, data->minimap, 10, 10) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
+	if (mlx_image_to_window(data->mlx, data->player, 165, 165) < 0)
+		freedata_exit(data, EXIT_FAILURE, YES, YES);
 }

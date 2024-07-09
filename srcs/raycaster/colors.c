@@ -26,7 +26,7 @@ void	get_ceiling_color(t_data *data)
 	red = *(int *)vec_get(data->parser->ceiling, R);
 	green = *(int *)vec_get(data->parser->ceiling, G);
 	blue = *(int *)vec_get(data->parser->ceiling, B);
-	data->ceiling_color = get_rgba(red, green, blue, 210);
+	data->ceiling_color = get_rgba(red, green, blue, A);
 }
 
 void	get_floor_color(t_data *data)
@@ -38,7 +38,5 @@ void	get_floor_color(t_data *data)
 	red = *(int *)vec_get(data->parser->floor, R);
 	green = *(int *)vec_get(data->parser->floor, G);
 	blue = *(int *)vec_get(data->parser->floor, B);
-	data->floor_color = (red, green, blue, 210);
+	data->floor_color = get_rgba(red, green, blue, A);
 }
-
-

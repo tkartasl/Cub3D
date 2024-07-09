@@ -19,11 +19,9 @@ int	get_player_dir(t_camera *cam)
 	oct = 0.78539816;
 	if (cam->angle < NORTH + oct && cam->angle > NORTH - oct)
 		return (SO);
-	else if (cam->angle < SOUTH + oct
-		&& cam->angle > SOUTH - oct)
+	else if (cam->angle < SOUTH + oct && cam->angle > SOUTH - oct)
 		return (NO);
-	else if (cam->angle < WEST + oct
-		&& cam->angle > WEST - oct)
+	else if (cam->angle < WEST + oct && cam->angle > WEST - oct)
 		return (WE);
 	else
 		return (EA);
@@ -46,14 +44,11 @@ static void	drawstripe(t_data *data, int x, int cx, int cy)
 			&& mapy < data->map_height)
 		{
 			if (data->map[mapy][mapx] == '1')
-				//mlx_put_pixel(data->minimap, x, y, data->ceiling_color);
 				mlx_put_pixel(data->minimap, x, y, get_rgba(0, 0, 0, 255));
 			else
 				mlx_put_pixel(data->minimap, x, y, data->floor_color);
-				//mlx_put_pixel(data->minimap, x, y, get_rgba(10, 200, 99, 200));
 		}
 		else
-			//mlx_put_pixel(data->minimap, x, y, data->ceiling_color);
 			mlx_put_pixel(data->minimap, x, y, get_rgba(255, 255, 255, 255));
 		++y;
 		cy += MSCALE;
@@ -62,9 +57,9 @@ static void	drawstripe(t_data *data, int x, int cx, int cy)
 
 void	draw_minimap(t_data *data, t_camera *cam)
 {
-	int				x;
-	int				cx;
-	int				cy;
+	int	x;
+	int	cx;
+	int	cy;
 
 	x = 0;
 	cx = cam->cx;

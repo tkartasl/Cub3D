@@ -60,7 +60,8 @@ void	init_parser(t_parser *parser)
 	t_vec	*textures_info;
 	t_vec	*map;
 
-	ft_memset(parser, 0, sizeof(t_parser));
+//	ft_memset(parser, 0, sizeof(t_parser));
+	parser->line = NULL;
 	textures_paths = (t_vec *)malloc(sizeof(t_vec));
 	if (textures_paths == NULL)
 		exit(EXIT_FAILURE);

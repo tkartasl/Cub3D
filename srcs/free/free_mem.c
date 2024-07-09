@@ -45,6 +45,7 @@ void	free_vecs(t_parser *parser, int exit_fail, int print_err)
 	free(parser->textures_paths);
 	vec_free(parser->textures_info);
 	free(parser->textures_info);
+	write(1, "here\n", 5);
 	vec_free(parser->floor);
 	free(parser->floor);
 	vec_free(parser->ceiling);
