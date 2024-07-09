@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:55:10 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 16:27:24 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:47:52 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,22 @@ void	rotate_player(t_data *data, char direction, t_camera *cam)
 
 	if (direction == 'R')
 	{
-		cam->angle += 0.05;
+		cam->angle += ROTATE_SPEED;
 		if (cam->angle >= 2 * PI)
 			cam->angle -= 2 * PI;
-		data->playerdir_x = cos(cam->angle) * 5.5;
-		data->playerdir_y = sin(cam->angle) * 5.5;
+		data->playerdir_x = cos(cam->angle) * MOVE_SPEED;
+		data->playerdir_y = sin(cam->angle) * MOVE_SPEED;
 	}
 	if (direction == 'L')
 	{
-		cam->angle -= 0.05;
+		cam->angle -= ROTATE_SPEED;
 		if (cam->angle < 0)
 			cam->angle += 2 * PI;
-		data->playerdir_x = cos(cam->angle) * 5.5;
-		data->playerdir_y = sin(cam->angle) * 5.5;
+		data->playerdir_x = cos(cam->angle) * MOVE_SPEED;
+		data->playerdir_y = sin(cam->angle) * MOVE_SPEED;
 	}
 	if (prev_dir != get_player_dir(cam))
 	{
-		mlx_delete_image(data->mlx, data->player);
 		prev_dir = get_player_dir(cam);
 		get_arrow_textures(data, prev_dir);
 		if (mlx_image_to_window(data->mlx, data->player, 165, 165) < 0)
@@ -94,27 +93,9 @@ static void	move_player_straight(t_data *data, char key, t_camera *cam)
 	}
 }
 
-void	get_camera(t_data *data, t_camera *cam)
-{
-	pthread_mutex_lock(&data->layers_lock[CAMERA]);
-	cam->cx = data->camera_x;
-	cam->cy = data->camera_y;
-	cam->angle = data->player_angle;
-	pthread_mutex_unlock(&data->layers_lock[CAMERA]);
-}
-
-void	set_camera(t_data *data, t_camera *cam)
-{
-	pthread_mutex_lock(&data->layers_lock[CAMERA]);
-	data->camera_x = cam->cx;
-	data->camera_y = cam->cy;
-	data->player_angle = cam->angle;
-	pthread_mutex_unlock(&data->layers_lock[CAMERA]);
-}
-
 void	movement(void *param)
 {
-	t_data	*data;
+	t_data		*data;
 	t_camera	cam;
 
 	data = param;
@@ -132,4 +113,5 @@ void	movement(void *param)
 	if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT))
 		rotate_player(data, 'R', &cam);
 	set_camera(data, &cam);
+	raycaster(data);
 }

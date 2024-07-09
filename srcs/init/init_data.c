@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/07/08 15:18:31 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 17:12:58 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,37 @@ void	init_texture(t_data *data)
 	get_textures(data);
 }
 
+int	get_floor_color(t_data *data)
+{
+	int	red;
+	int	green;
+	int	blue;
+
+	red = *(int *)vec_get(data->parser->floor, R);
+	green = *(int *)vec_get(data->parser->floor, G);
+	blue = *(int *)vec_get(data->parser->floor, B);
+	return (get_rgba(red, green, blue, 210));
+}
+
+int	get_ceiling_color(t_data *data)
+{
+	int	red;
+	int	green;
+	int	blue;
+
+	red = *(int *)vec_get(data->parser->ceiling, R);
+	green = *(int *)vec_get(data->parser->ceiling, G);
+	blue = *(int *)vec_get(data->parser->ceiling, B);
+	return (get_rgba(red, green, blue, 210));
+}
 void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	char	playerdir;
 
 	data->parser = parser;
 	data->flag = CONTINUE;
+	data->floor_color = get_floor_color(data);
+	data->ceiling_color = get_ceiling_color(data);
 	data->rayinfo = init_rayinfo(parser);
 	init_texture(data);
 	playerdir = extract_map_arr(parser, data);
@@ -94,8 +119,8 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	else
 		data->player_angle = EAST;
 	data->rayinfo->ray_angle = data->player_angle;
-	data->playerdir_x = cos(data->player_angle) * 5.5;
-	data->playerdir_y = sin(data->player_angle) * 5.5;
+	data->playerdir_x = cos(data->player_angle) * MOVE_SPEED;
+	data->playerdir_y = sin(data->player_angle) * MOVE_SPEED;
 	init_mlx(data);
 	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
 		freedata_exit(data, EXIT_FAILURE, YES, YES);

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:16:12 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/08 16:34:45 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:46:37 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,14 @@ static void	drawstripe(t_data *data, int x, int cx, int cy)
 			&& mapy < data->map_height)
 		{
 			if (data->map[mapy][mapx] == '1')
+				//mlx_put_pixel(data->minimap, x, y, data->ceiling_color);
 				mlx_put_pixel(data->minimap, x, y, get_rgba(0, 0, 0, 255));
 			else
-				mlx_put_pixel(data->minimap, x, y, get_rgba(10, 200, 99, 200));
+				mlx_put_pixel(data->minimap, x, y, data->floor_color);
+				//mlx_put_pixel(data->minimap, x, y, get_rgba(10, 200, 99, 200));
 		}
 		else
+			//mlx_put_pixel(data->minimap, x, y, data->ceiling_color);
 			mlx_put_pixel(data->minimap, x, y, get_rgba(255, 255, 255, 255));
 		++y;
 		cy += MSCALE;
@@ -62,7 +65,6 @@ void	draw_minimap(t_data *data, t_camera *cam)
 	int				x;
 	int				cx;
 	int				cy;
-	//static int		prev_dir;
 
 	x = 0;
 	cx = cam->cx;
@@ -77,7 +79,7 @@ void	draw_minimap(t_data *data, t_camera *cam)
 
 void	*minimap(void *arg)
 {
-	t_data	*data;
+	t_data		*data;
 	t_camera	cam;
 
 	data = (void *)arg;

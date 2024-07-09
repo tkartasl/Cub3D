@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:00:41 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/08 16:11:25 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 10:52:18 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	game_usage(void)
 
 void	game_play(t_data *data)
 {
+	raycaster(data);
 	mlx_key_hook(data->mlx, &key_hook, data);
 	mlx_cursor_hook(data->mlx, &mouse_hook, data);
 	mlx_loop_hook(data->mlx, &movement, data);

@@ -69,11 +69,11 @@ void	draw_walls(t_data *data, int x_pos)
 	while (++y < HEIGHT)
 	{
 		if (y <= start && (data->texture->height + start) < HEIGHT)
-			draw_ceiling(data, x_pos, y);
+			mlx_put_pixel(data->screen, x_pos, y, data->ceiling_color);
 		else if (y > start && y <= (start + data->texture->height))
 			draw_line(x_pos, y, data);
 		else if (y > (data->texture->height + start))
-			draw_floor(data, x_pos, y);
+			mlx_put_pixel(data->screen, x_pos, y, data->floor_color);
 	}
 	data->rayinfo->ray_angle += DEGREE / ((double)WIDTH / FOV);
 	reset_ray_angle(&data->rayinfo->ray_angle);

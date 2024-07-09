@@ -29,7 +29,9 @@
 # define UNITSIZE 64
 # define MUNITSIZE 10
 # define MSCALE 2
-# define LAYERS 2
+# define LAYERS 1
+# define ROTATE_SPEED 0.09
+# define MOVE_SPEED 7.5
 
 enum	e_rgb
 {
@@ -52,7 +54,6 @@ enum	e_mutexes
 
 enum	e_layers
 {
-	RAYCASTER,
 	MINIMAP,
 };
 

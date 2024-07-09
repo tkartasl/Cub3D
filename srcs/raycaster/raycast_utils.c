@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:04:55 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/06/28 14:05:18 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:48:16 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,22 @@ double	ray_length(t_data *data, int horizontal)
 		by = data->rayinfo->v_ray_y;
 	}
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
+}
+
+void	get_camera(t_data *data, t_camera *cam)
+{
+	pthread_mutex_lock(&data->layers_lock[CAMERA]);
+	cam->cx = data->camera_x;
+	cam->cy = data->camera_y;
+	cam->angle = data->player_angle;
+	pthread_mutex_unlock(&data->layers_lock[CAMERA]);
+}
+
+void	set_camera(t_data *data, t_camera *cam)
+{
+	pthread_mutex_lock(&data->layers_lock[CAMERA]);
+	data->camera_x = cam->cx;
+	data->camera_y = cam->cy;
+	data->player_angle = cam->angle;
+	pthread_mutex_unlock(&data->layers_lock[CAMERA]);
 }
