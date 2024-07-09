@@ -6,7 +6,7 @@
 #    By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/05 12:11:11 by tkartasl          #+#    #+#              #
-#    Updated: 2024/07/08 15:19:08 by tkartasl         ###   ########.fr        #
+#    Updated: 2024/07/09 13:52:52 by tkartasl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ SOURCES 	:= 	main.c \
 			print_errors.c \
 			movement.c \
 			drawing.c \
-			draw_colors.c \
+			colors.c \
 			dda.c \
 			raycast_utils.c \
 			wall_collision.c \

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/07/08 17:12:58 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 13:58:49 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	init_mlx(t_data *data);
 void	get_textures(t_data *data);
+void		get_ceiling_color(t_data *data);
+void		get_floor_color(t_data *data);
 
 char	extract_map_arr(t_parser *parser, t_data *data)
 {
@@ -76,37 +78,12 @@ void	init_texture(t_data *data)
 	get_textures(data);
 }
 
-int	get_floor_color(t_data *data)
-{
-	int	red;
-	int	green;
-	int	blue;
-
-	red = *(int *)vec_get(data->parser->floor, R);
-	green = *(int *)vec_get(data->parser->floor, G);
-	blue = *(int *)vec_get(data->parser->floor, B);
-	return (get_rgba(red, green, blue, 210));
-}
-
-int	get_ceiling_color(t_data *data)
-{
-	int	red;
-	int	green;
-	int	blue;
-
-	red = *(int *)vec_get(data->parser->ceiling, R);
-	green = *(int *)vec_get(data->parser->ceiling, G);
-	blue = *(int *)vec_get(data->parser->ceiling, B);
-	return (get_rgba(red, green, blue, 210));
-}
 void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	char	playerdir;
 
 	data->parser = parser;
 	data->flag = CONTINUE;
-	data->floor_color = get_floor_color(data);
-	data->ceiling_color = get_ceiling_color(data);
 	data->rayinfo = init_rayinfo(parser);
 	init_texture(data);
 	playerdir = extract_map_arr(parser, data);

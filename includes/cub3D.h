@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 16:41:03 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 13:55:07 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "../MLX42/include/MLX42/MLX42.h"
 # include "macros.h"
 # include "get_next_line.h"
-#include "../vec/include/vec.h"
+# include "../vec/include/vec.h"
 # include <fcntl.h>
 # include <errno.h>
 # include "pthread.h"
@@ -117,11 +117,8 @@ typedef struct	s_camera
 	double	angle;
 }	t_camera;
 
-
 void	key_hook(mlx_key_data_t keydata, void *param);
 void	draw_walls(t_data *data, int x_pos);
-void	draw_ceiling(t_data *data, int x, int y);
-void	draw_floor(t_data *data, int x, int y);
 int		check_overflow(t_data *data);
 void	reset_ray_angle(double *angle);
 double	ray_length(t_data *data, int horizontal);
@@ -149,7 +146,7 @@ void	mouse_hook(double xpos, double ypos, void *param);
 void	get_texture_index(t_data *data, int x_pos, int t_size);
 void	get_arrow_textures(t_data *data, int dir);
 void	*minimap(void *arg);
-int	game_continues(t_data *data);
+int		game_continues(t_data *data);
 void	get_camera(t_data *data, t_camera *cam);
 void	set_camera(t_data *data, t_camera *cam);
 #endif

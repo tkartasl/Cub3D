@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_mem.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tomppa <tomppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:05:43 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/01 15:19:22 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 10:09:51 by tomppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 	free_vecs(data->parser, NA, NA);
 	i = -1;
 	while (++i < 4)
-		free(data->texture->wall[i]);
+		mlx_delete_texture(data->texture->wall[i]);
 	free(data->texture);
+	//free(data->rayinfo);
 	exit(exit_status);
 }
