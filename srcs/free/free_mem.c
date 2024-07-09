@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
+#include <stdio.h>
 
 void		join_threads(t_data *data);
 void		destroy_locks(t_data *data);
@@ -37,21 +38,18 @@ void	free_vecs(t_parser *parser, int exit_fail, int print_err)
 {
 	if (print_err == YES)
 		file_error(parser->file, 42);
-	if (parser->line != NULL && *parser->line != NULL)
-		free(*parser->line);
 	if (parser->textures_paths && parser->textures_paths->len)
 		free_lines(parser, TEXTURE);
 	vec_free(parser->textures_paths);
 	free(parser->textures_paths);
 	vec_free(parser->textures_info);
 	free(parser->textures_info);
-	write(1, "here\n", 5);
 	vec_free(parser->floor);
 	free(parser->floor);
 	vec_free(parser->ceiling);
 	free(parser->ceiling);
-	if (parser->map && parser->map->len)
-		free_lines(parser, MAP);
+	// if (parser->map && parser->map->len)
+	// 	free_lines(parser, MAP);
 	vec_free(parser->map);
 	free(parser->map);
 	if (exit_fail == YES)
@@ -87,11 +85,10 @@ void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 		stop_game(data);
 	if (terminate_mlx == YES)
 		mlx_terminate(data->mlx);
-	free_vecs(data->parser, NA, NA);
 	i = -1;
 	while (++i < 4)
 		mlx_delete_texture(data->texture->wall[i]);
 	free(data->texture);
-	//free(data->rayinfo);
+	free(data->rayinfo);
 	exit(exit_status);
 }

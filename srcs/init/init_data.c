@@ -13,9 +13,9 @@
 #include "../../includes/cub3D.h"
 
 void		init_mlx(t_data *data);
-void		get_textures(t_data *data);
-void		get_ceiling_color(t_data *data);
-void		get_floor_color(t_data *data);
+void		get_textures(t_data *data, t_parser *parser);
+void		get_ceiling_color(t_parser *parser, t_data *data);
+void		get_floor_color(t_parser *parser, t_data *data);
 
 void	find_player(t_data *data, char **map, unsigned int y, char *playerdir)
 {
@@ -71,7 +71,7 @@ t_rayinfo	*init_rayinfo(t_parser *parser)
 	return (rayinfo);
 }
 
-void	init_texture(t_data *data)
+void	init_texture(t_data *data, t_parser *parser)
 {
 	t_textures	*texture;
 
@@ -79,23 +79,24 @@ void	init_texture(t_data *data)
 	if (texture == NULL)
 	{
 		free(data->rayinfo);
-		free_vecs(data->parser, YES, NA);
+		free_vecs(parser, YES, NA);
 	}
 	ft_memset(texture, 0, sizeof(t_textures));
 	data->texture = texture;
-	get_textures(data);
+	get_textures(data, parser);
 }
 
 void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	char	playerdir;
 
-	data->parser = parser;
+	if (parser->line != NULL && *parser->line != NULL)
+		free(*parser->line);
 	data->flag = CONTINUE;
 	data->rayinfo = init_rayinfo(parser);
-	init_texture(data);
-	get_ceiling_color(data);
-	get_floor_color(data);
+	init_texture(data, parser);
+	get_ceiling_color(parser, data);
+	get_floor_color(parser, data);
 	playerdir = extract_map_arr(parser, data);
 	if (playerdir == 'N')
 		data->player_angle = NORTH + PI;
@@ -109,4 +110,5 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->playerdir_x = cos(data->player_angle) * MOVE_SPEED;
 	data->playerdir_y = sin(data->player_angle) * MOVE_SPEED;
 	init_mlx(data);
+	free_vecs(parser, NA, NA);
 }
