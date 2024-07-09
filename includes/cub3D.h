@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/09 13:17:27 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 13:55:07 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,6 @@ typedef struct	s_camera
 
 void	key_hook(mlx_key_data_t keydata, void *param);
 void	draw_walls(t_data *data, int x_pos);
-void	draw_ceiling(t_data *data, int x, int y);
-void	draw_floor(t_data *data, int x, int y);
 int		check_overflow(t_data *data);
 void	reset_ray_angle(double *angle);
 double	ray_length(t_data *data, int horizontal);
