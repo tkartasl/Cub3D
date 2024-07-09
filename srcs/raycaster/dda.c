@@ -6,13 +6,13 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:03:00 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 13:01:19 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:44:25 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-static void	calc_steps_v(t_data *data, double *ray_y, double *ray_x, int *i, t_camera *cam)
+static int	step_v(t_data *data, double *ray_y, double *ray_x, t_camera *cam)
 {
 	double	ntan;
 
@@ -34,12 +34,13 @@ static void	calc_steps_v(t_data *data, double *ray_y, double *ray_x, int *i, t_c
 	{
 		*ray_x = cam->cx;
 		*ray_y = cam->cy;
-		*i = MAX_VIEW_DIST;
+		return (MAX_VIEW_DIST);
 	}
 	data->rayinfo->step_y = -data->rayinfo->step_x * ntan;
+	return (0);
 }
 
-static void	calc_steps_h(t_data *data, double *ray_y, double *ray_x, int *i, t_camera *cam)
+static int	step_h(t_data *data, double *ray_y, double *ray_x, t_camera *cam)
 {
 	double	atan;
 
@@ -60,9 +61,10 @@ static void	calc_steps_h(t_data *data, double *ray_y, double *ray_x, int *i, t_c
 	{
 		*ray_x = cam->cx;
 		*ray_y = cam->cy;
-		*i = MAX_VIEW_DIST;
+		return (MAX_VIEW_DIST);
 	}
 	data->rayinfo->step_x = -data->rayinfo->step_y * atan;
+	return (0);
 }
 
 double	check_vertical_hit(t_data *data, t_camera *cam)
@@ -71,8 +73,7 @@ double	check_vertical_hit(t_data *data, t_camera *cam)
 	double	dist_v;
 
 	dist_v = 1000000;
-	i = 0;
-	calc_steps_v(data, &data->rayinfo->v_ray_y, &data->rayinfo->v_ray_x, &i, cam);
+	i = step_v(data, &data->rayinfo->v_ray_y, &data->rayinfo->v_ray_x, cam);
 	while (i < MAX_VIEW_DIST)
 	{
 		data->rayinfo->map_x = (int)data->rayinfo->v_ray_x / UNITSIZE;
@@ -99,8 +100,7 @@ double	check_horizontal_hit(t_data *data, t_camera *cam)
 	double	dist;
 
 	dist = 1000000;
-	i = 0;
-	calc_steps_h(data, &data->rayinfo->h_ray_y, &data->rayinfo->h_ray_x, &i, cam);
+	i = step_h(data, &data->rayinfo->h_ray_y, &data->rayinfo->h_ray_x, cam);
 	while (i < MAX_VIEW_DIST)
 	{
 		data->rayinfo->map_x = (int)data->rayinfo->h_ray_x / UNITSIZE;

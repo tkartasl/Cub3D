@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:55:10 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 16:27:24 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:47:52 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	rotate_player(t_data *data, char direction, t_camera *cam)
 	}
 	if (prev_dir != get_player_dir(cam))
 	{
-		mlx_delete_image(data->mlx, data->player);
 		prev_dir = get_player_dir(cam);
 		get_arrow_textures(data, prev_dir);
 		if (mlx_image_to_window(data->mlx, data->player, 165, 165) < 0)
@@ -96,7 +95,7 @@ static void	move_player_straight(t_data *data, char key, t_camera *cam)
 
 void	movement(void *param)
 {
-	t_data	*data;
+	t_data		*data;
 	t_camera	cam;
 
 	data = param;

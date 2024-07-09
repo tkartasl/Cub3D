@@ -6,25 +6,14 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 09:16:02 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 16:25:55 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:46:27 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/cub3D.h"
+#include "../../includes/cub3D.h"
 
 double	check_vertical_hit(t_data *data, t_camera *cam);
 double	check_horizontal_hit(t_data *data, t_camera *cam);
-
-static void error(void)
-{
-	puts(mlx_strerror(mlx_errno));
-	exit(EXIT_FAILURE);
-}
-
-double	fps(void)
-{
-	return (mlx_get_time());
-}
 
 static void	calc_texels(t_data *data, int x, t_camera *cam)
 {

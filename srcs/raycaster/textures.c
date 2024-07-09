@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:01:45 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 16:35:00 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 09:38:38 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static void	load_east_west_textures(t_data *data, int dir)
 
 void	get_arrow_textures(t_data *data, int dir)
 {
+	mlx_delete_image(data->mlx, data->player);
 	if (dir < WE)
 		load_north_south_textures(data, dir);
 	else
