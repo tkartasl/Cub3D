@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/07/09 13:58:49 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 14:16:42 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	init_mlx(t_data *data);
 void	get_textures(t_data *data);
-void		get_ceiling_color(t_data *data);
-void		get_floor_color(t_data *data);
+void	get_ceiling_color(t_data *data);
+void	get_floor_color(t_data *data);
 
 char	extract_map_arr(t_parser *parser, t_data *data)
 {
@@ -85,6 +85,8 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->parser = parser;
 	data->flag = CONTINUE;
 	data->rayinfo = init_rayinfo(parser);
+	get_ceiling_color(data);
+	get_floor_color(data);
 	init_texture(data);
 	playerdir = extract_map_arr(parser, data);
 	if (playerdir == 'N')

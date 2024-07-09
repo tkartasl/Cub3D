@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_mem.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tomppa <tomppa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:05:43 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/09 10:09:51 by tomppa           ###   ########.fr       */
+/*   Updated: 2024/07/09 14:47:48 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	stop_game(t_data *data)
 	pthread_mutex_unlock(&data->layers_lock[STOP_FLG]);
 	join_threads(data);
 	destroy_locks(data);
-	mlx_close_window(data->mlx);
+	//mlx_close_window(data->mlx);
 }
 
 void	freedata_exit(t_data *data, int exit_status, int terminate_mlx, int premature)
@@ -139,6 +139,5 @@ void	freedata_exit(t_data *data, int exit_status, int terminate_mlx, int prematu
 	while (++i < 4)
 		mlx_delete_texture(data->texture->wall[i]);
 	free(data->texture);
-	//free(data->rayinfo);
 	exit(exit_status);
 }

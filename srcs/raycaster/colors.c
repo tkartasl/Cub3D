@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 16:13:20 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/09 13:57:02 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 14:18:23 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	get_floor_color(t_data *data)
 	red = *(int *)vec_get(data->parser->floor, R);
 	green = *(int *)vec_get(data->parser->floor, G);
 	blue = *(int *)vec_get(data->parser->floor, B);
-	data->floor_color = (red, green, blue, 210);
+	data->floor_color = get_rgba(red, green, blue, 210);
 }
-
 
