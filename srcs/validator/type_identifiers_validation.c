@@ -12,7 +12,8 @@
 
 #include "../../includes/cub3D.h"
 
-void	check_invalid_color(t_parser *parser, char *line, t_indices *inds, char **rgb)
+void	check_invalid_color(t_parser *parser, char *line, t_indices *inds,
+		char **rgb)
 {
 	skip_spaces(line, &inds->end);
 	if (line[inds->end] != '\0' && !ft_isspace(line[inds->end]))

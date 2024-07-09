@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
-#include <stdio.h>
 
 void	parse_until_map(t_parser *parser, int fd);
 void	parse_map(t_parser *parser, int fd);
@@ -44,7 +43,6 @@ void	skip_spaces(char *s, int *ind)
 
 void	eof_malloc_check(t_parser *parser, int malloc_flag, int map, int fd)
 {
-	// TODO: take this function where gnl is called
 	if (*parser->line == NULL && malloc_flag == 1)
 	{
 		close(fd);
@@ -60,7 +58,7 @@ void	eof_malloc_check(t_parser *parser, int malloc_flag, int map, int fd)
 void	parse_file(t_parser *parser, char *map_path)
 {
 	char	*line;
-	int	fd;
+	int		fd;
 
 	line = NULL;
 	parser->file = map_path;

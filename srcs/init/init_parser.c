@@ -29,39 +29,29 @@ void	init_tex_count(t_count *count)
 	count->c = 0;
 }
 
-static	void	init_vecs(t_parser *parser)
+static void	init_vecs(t_parser *parser)
 {
 	vec_new(parser->textures_paths, 0, sizeof(char **));
 	vec_new(parser->textures_info, 0, sizeof(int));
-	vec_new(parser->ceiling, 0, sizeof(int)); // TODO: change int to what it is
-	vec_new(parser->floor, 0, sizeof(int)); // TODO: change int to what it is
+	vec_new(parser->ceiling, 0, sizeof(int));
+	vec_new(parser->floor, 0, sizeof(int));
 	vec_new(parser->map, 0, sizeof(char **));
 }
 
-static	void	alloc_init_vecs(t_parser *parser)
+static void	alloc_init_vecs(t_parser *parser)
 {
 	t_vec	*ceiling;
 	t_vec	*floor;
 
-	ceiling	= (t_vec *)malloc(sizeof(t_vec));
+	ceiling = (t_vec *)malloc(sizeof(t_vec));
 	if (ceiling == NULL)
 		freeparser_exit(parser);
 	parser->ceiling = ceiling;
-	floor	= (t_vec *)malloc(sizeof(t_vec));
+	floor = (t_vec *)malloc(sizeof(t_vec));
 	if (floor == NULL)
 		freeparser_exit(parser);
 	parser->floor = floor;
 	init_vecs(parser);
-}
-
-void	null_parser(t_parser *parser)
-{
-	parser->dir_info = 0;
-	parser->line = NULL;
-	parser->textures_info = NULL;
-	parser->map = NULL;
-	parser->floor = NULL;
-	parser->ceiling = NULL;
 }
 
 void	init_parser(t_parser *parser)
@@ -70,7 +60,7 @@ void	init_parser(t_parser *parser)
 	t_vec	*textures_info;
 	t_vec	*map;
 
-	null_parser(parser);
+	ft_memset(parser, 0, sizeof(t_parser));
 	textures_paths = (t_vec *)malloc(sizeof(t_vec));
 	if (textures_paths == NULL)
 		exit(EXIT_FAILURE);
@@ -80,7 +70,7 @@ void	init_parser(t_parser *parser)
 		freeparser_exit(parser);
 	parser->textures_info = textures_info;
 	map = (t_vec *)malloc(sizeof(t_vec));
-	if (map  == NULL)
+	if (map == NULL)
 		freeparser_exit(parser);
 	parser->map = map;
 	alloc_init_vecs(parser);

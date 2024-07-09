@@ -12,13 +12,8 @@
 
 #include "../../includes/cub3D.h"
 
-
+void	game_usage(void);
 void	create_threads(t_data *data);
-
-void	game_usage(void)
-{
-	printf("%s\n", USAGE);
-}
 
 void	game_play(t_data *data)
 {

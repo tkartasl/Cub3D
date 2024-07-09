@@ -55,4 +55,3 @@ double	ray_length(t_data *data, int horizontal)
 	}
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }
-

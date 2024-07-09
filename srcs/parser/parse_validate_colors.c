@@ -10,11 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/cub3D.h"
+#include "../../includes/cub3D.h"
 
-void	check_invalid_color(t_parser *parser, char *line, t_indices *inds, char **rgb);
+void		check_invalid_color(t_parser *parser, char *line, t_indices *inds,
+				char **rgb);
 
-static	int	all_digits(char *rgb)
+static int	all_digits(char *rgb)
 {
 	int	ind;
 
@@ -27,7 +28,7 @@ static	int	all_digits(char *rgb)
 	return (YES);
 }
 
-static	char	*next_rgb(t_parser *parser, char *line, t_indices *inds)
+static char	*next_rgb(t_parser *parser, char *line, t_indices *inds)
 {
 	char	*rgb;
 
@@ -42,17 +43,16 @@ static	char	*next_rgb(t_parser *parser, char *line, t_indices *inds)
 		free_vecs(parser, YES, NO);
 	if (all_digits(rgb) != YES)
 	{
-		// TODO: look for negative rgb values
 		free(rgb);
 		free_vecs(parser, YES, YES);
 	}
-	--inds->counter; // NOTE: might not need this counter
-	if (inds->counter == 0) // NOTE: might not need this counter
+	--inds->counter;
+	if (inds->counter == 0)
 		check_invalid_color(parser, *parser->line, inds, &rgb);
 	return (rgb);
 }
 
-static	void	skip_comma(t_parser *parser, char *line, t_indices *inds, int count)
+static void	skip_comma(t_parser *parser, char *line, t_indices *inds, int count)
 {
 	if (count == 2)
 		return ;
@@ -64,14 +64,14 @@ static	void	skip_comma(t_parser *parser, char *line, t_indices *inds, int count)
 	inds->end = inds->st;
 }
 
-static	void	parse_color(t_parser *parser, t_indices *inds, int type)
+static void	parse_color(t_parser *parser, t_indices *inds, int type)
 {
 	char	*rgb_s;
-	int	rgb_n;
-	int	count;
+	int		rgb_n;
+	int		count;
 
 	count = -1;
-	while (inds->counter && ++count < 3) // NOTE: might not need this counter
+	while (inds->counter && ++count < 3)
 	{
 		rgb_s = next_rgb(parser, *parser->line, inds);
 		rgb_n = ft_atoi(rgb_s);
@@ -88,11 +88,12 @@ static	void	parse_color(t_parser *parser, t_indices *inds, int type)
 		}
 		skip_comma(parser, *parser->line, inds, count);
 	}
-	if (inds->counter) // NOTE: might not need this counter
+	if (inds->counter)
 		free_vecs(parser, YES, YES);
 }
 
-void	parse_push_colors(t_parser *parser, char **type_id, t_indices *inds, t_count *count)
+void	parse_push_colors(t_parser *parser, char **type_id, t_indices *inds,
+		t_count *count)
 {
 	if (!ft_strncmp(*type_id, "C", 1))
 	{
@@ -110,7 +111,7 @@ void	parse_push_colors(t_parser *parser, char **type_id, t_indices *inds, t_coun
 			free_exit(parser, type_id, YES);
 		free(*type_id);
 		parse_color(parser, inds, FLOOR);
-		return;
+		return ;
 	}
-	free_exit(parser, type_id, YES); // TODO: print error
+	free_exit(parser, type_id, YES);
 }
