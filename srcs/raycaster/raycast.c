@@ -83,16 +83,10 @@ void	cast_rays(t_data *data, t_camera *cam)
 	}
 }
 
-void	*raycaster(void *arg)
+void	raycaster(t_data *data)
 {
-	t_data	*data;
 	t_camera	cam;
 
-	data = (t_data *)arg;
-	while (game_continues(data))
-	{
-		get_camera(data, &cam);
-		cast_rays(data, &cam);
-	}
-	return (NULL);
+	get_camera(data, &cam);
+	cast_rays(data, &cam);
 }

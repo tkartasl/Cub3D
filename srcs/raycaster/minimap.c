@@ -46,11 +46,14 @@ static void	drawstripe(t_data *data, int x, int cx, int cy)
 			&& mapy < data->map_height)
 		{
 			if (data->map[mapy][mapx] == '1')
+				//mlx_put_pixel(data->minimap, x, y, data->ceiling_color);
 				mlx_put_pixel(data->minimap, x, y, get_rgba(0, 0, 0, 255));
 			else
-				mlx_put_pixel(data->minimap, x, y, get_rgba(10, 200, 99, 200));
+				mlx_put_pixel(data->minimap, x, y, data->floor_color);
+				//mlx_put_pixel(data->minimap, x, y, get_rgba(10, 200, 99, 200));
 		}
 		else
+			//mlx_put_pixel(data->minimap, x, y, data->ceiling_color);
 			mlx_put_pixel(data->minimap, x, y, get_rgba(255, 255, 255, 255));
 		++y;
 		cy += MSCALE;

@@ -22,6 +22,7 @@ void	game_usage(void)
 
 void	game_play(t_data *data)
 {
+	raycaster(data);
 	mlx_key_hook(data->mlx, &key_hook, data);
 	mlx_cursor_hook(data->mlx, &mouse_hook, data);
 	mlx_loop_hook(data->mlx, &movement, data);

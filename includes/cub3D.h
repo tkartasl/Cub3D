@@ -110,6 +110,8 @@ typedef struct s_data
 	char		**map;
 	char		**grid;
 	t_parser	*parser;
+	int		floor_color;
+	int		ceiling_color;
 	t_textures	*texture;
 	int		flag;
 	pthread_t	layers[LAYERS];
@@ -124,8 +126,6 @@ typedef struct	s_camera
 }	t_camera;
 
 
-void	get_camera(t_data *data, t_camera *cam);
-void	set_camera(t_data *data, t_camera *cam);
 void	key_hook(mlx_key_data_t keydata, void *param);
 void	draw_walls(t_data *data, int x_pos);
 void	draw_ceiling(t_data *data, int x, int y);
@@ -144,7 +144,7 @@ void	validate_middle(t_parser *parser, char *line);
 int		open_validate_file(t_parser *parser, char *map_path, char *ext, int texture_path);
 void	validate_type_identifier(t_parser *parser, char **type_id);
 void	parse_file(t_parser *parser, char *map_path);
-void	*raycaster(void *arg);
+void	raycaster(t_data *data);
 void	freeparser_exit(t_parser *parser);
 void	free_exit(t_parser *parser, char **type_id, int print_err);
 void	free_vecs(t_parser *parser, int exit_fail, int print_err);
@@ -158,4 +158,6 @@ void	get_texture_index(t_data *data, int x_pos, int t_size);
 void	get_arrow_textures(t_data *data, int dir);
 void	*minimap(void *arg);
 int	game_continues(t_data *data);
+void	get_camera(t_data *data, t_camera *cam);
+void	set_camera(t_data *data, t_camera *cam);
 #endif
