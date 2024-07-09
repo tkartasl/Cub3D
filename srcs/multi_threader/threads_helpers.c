@@ -14,7 +14,7 @@
 
 int	game_continues(t_data *data)
 {
-	unsigned	int	status;
+	unsigned int	status;
 
 	pthread_mutex_lock(&data->layers_lock[STOP_FLG]);
 	status = data->flag;
@@ -39,5 +39,3 @@ void	set_camera(t_data *data, t_camera *cam)
 	data->player_angle = cam->angle;
 	pthread_mutex_unlock(&data->layers_lock[CAMERA]);
 }
-
-

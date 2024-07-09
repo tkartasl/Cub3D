@@ -55,21 +55,3 @@ double	ray_length(t_data *data, int horizontal)
 	}
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay)));
 }
-
-void	get_camera(t_data *data, t_camera *cam)
-{
-	pthread_mutex_lock(&data->layers_lock[CAMERA]);
-	cam->cx = data->camera_x;
-	cam->cy = data->camera_y;
-	cam->angle = data->player_angle;
-	pthread_mutex_unlock(&data->layers_lock[CAMERA]);
-}
-
-void	set_camera(t_data *data, t_camera *cam)
-{
-	pthread_mutex_lock(&data->layers_lock[CAMERA]);
-	data->camera_x = cam->cx;
-	data->camera_y = cam->cy;
-	data->player_angle = cam->angle;
-	pthread_mutex_unlock(&data->layers_lock[CAMERA]);
-}

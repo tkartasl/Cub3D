@@ -12,7 +12,7 @@
 
 #include "../../includes/cub3D.h"
 
-static	char	check_wall_unit(t_parser *parser, int *ind, int first)
+static char	check_wall_unit(t_parser *parser, int *ind, int first)
 {
 	char	c;
 
@@ -24,14 +24,15 @@ static	char	check_wall_unit(t_parser *parser, int *ind, int first)
 	return (c);
 }
 
-static	void	check_update_direction_info(t_parser *parser, char c)
+static void	check_update_direction_info(t_parser *parser, char c)
 {
 	if (parser->dir_info > 0)
 		free_vecs(parser, YES, YES);
 	parser->dir_info++;
 }
 
-static	char	ones_surround_spaces(t_parser *parser, char c, char prev_c, int *ind)
+static char	ones_surround_spaces(t_parser *parser, char c, char prev_c,
+		int *ind)
 {
 	if (ft_isspace(c) && prev_c != '1')
 		free_vecs(parser, YES, YES);
@@ -47,16 +48,16 @@ static	char	ones_surround_spaces(t_parser *parser, char c, char prev_c, int *ind
 
 void	validate_middle(t_parser *parser, char *line)
 {
-	int	ind;
+	int		ind;
 	char	c;
 	char	prev_c;
-	int	len;
+	int		len;
 
 	ind = 0;
 	len = ft_strlen(line);
 	prev_c = check_wall_unit(parser, &ind, YES);
 	c = line[++ind];
-	while ((line)[ind+1])
+	while ((line)[ind + 1])
 	{
 		c = ones_surround_spaces(parser, c, prev_c, &ind);
 		if (c == '\0')

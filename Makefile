@@ -68,6 +68,7 @@ SOURCES 	:= 	main.c \
 			minimap.c \
 			errors.c \
 			free_mem.c \
+			print_errors.c \
 			movement.c \
 			drawing.c \
 			draw_colors.c \

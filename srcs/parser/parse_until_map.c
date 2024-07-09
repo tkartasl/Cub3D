@@ -10,14 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/cub3D.h"
+#include "../../includes/cub3D.h"
 
-void	init_inds(t_indices *inds);
-void	init_tex_count(t_count *count);
-void	parse_push_textures(t_parser *parser, t_indices *inds);
-void	parse_push_colors(t_parser *parser, char **type_id, t_indices *inds, t_count *count);
+void		init_inds(t_indices *inds);
+void		init_tex_count(t_count *count);
+void		parse_push_textures(t_parser *parser, t_indices *inds);
+void		parse_push_colors(t_parser *parser, char **type_id, t_indices *inds,
+				t_count *count);
 
-static	int	not_yes(t_parser *parser, char c)
+static int	not_yes(t_parser *parser, char c)
 {
 	if (c == '\0')
 	{
@@ -28,8 +29,9 @@ static	int	not_yes(t_parser *parser, char c)
 	return (NA);
 }
 
-static	void	identifiers_type(t_parser *parser, char **type_id, int *type_info, t_count *count)
-{	
+static void	identifiers_type(t_parser *parser, char **type_id, int *type_info,
+		t_count *count)
+{
 	if (!ft_strncmp(*type_id, "NO", 2))
 	{
 		count->no++;
@@ -50,15 +52,14 @@ static	void	identifiers_type(t_parser *parser, char **type_id, int *type_info, t
 		count->ea++;
 		*type_info = EA;
 	}
-	if (count->no > 1 || count->so > 1 || count->we > 1
-			|| count->ea > 1)
-			free_exit(parser, type_id, YES);
+	if (count->no > 1 || count->so > 1 || count->we > 1 || count->ea > 1)
+		free_exit(parser, type_id, YES);
 }
 
-static	int	type_identifier(t_parser *parser, t_indices *inds, t_count *count)
+static int	type_identifier(t_parser *parser, t_indices *inds, t_count *count)
 {
 	char	*type_id;
-	int	type_id_info;
+	int		type_id_info;
 
 	type_id_info = 42;
 	type_id = NULL;
@@ -78,11 +79,11 @@ static	int	type_identifier(t_parser *parser, t_indices *inds, t_count *count)
 	return (42);
 }
 
-static	int	parse_push_lineinfo(t_parser *parser, int fd, t_count *count)
+static int	parse_push_lineinfo(t_parser *parser, int fd, t_count *count)
 {
 	t_indices	inds;
 	char		c;
-	int		malloc_flag;
+	int			malloc_flag;
 	char		*line;
 
 	init_inds(&inds);
@@ -105,9 +106,9 @@ static	int	parse_push_lineinfo(t_parser *parser, int fd, t_count *count)
 
 void	parse_until_map(t_parser *parser, int fd)
 {
-	int	qontinue;
+	int		qontinue;
 	t_count	count;
-	int	tids;
+	int		tids;
 
 	init_tex_count(&count);
 	qontinue = 42;

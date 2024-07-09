@@ -12,12 +12,12 @@
 
 #include "../../includes/cub3D.h"
 
-static	void	validate_push_horizontal(t_parser *parser, char **line)
+static void	validate_push_horizontal(t_parser *parser, char **line)
 {
 	char	*dup_line;
 
 	validate_horizontal(parser, *line);
-	dup_line = ft_strdup(*line); // TODO: do something for whitespaces?
+	dup_line = ft_strdup(*line);
 	free(*line);
 	if (vec_push(parser->map, &dup_line) == 0)
 	{
@@ -26,7 +26,7 @@ static	void	validate_push_horizontal(t_parser *parser, char **line)
 	}
 }
 
-static	void	validate_push_middle(t_parser *parser)
+static void	validate_push_middle(t_parser *parser)
 {
 	char	*dup_line;
 
@@ -40,7 +40,7 @@ static	void	validate_push_middle(t_parser *parser)
 	}
 }
 
-static	int	last_line(t_parser *parser, char *line)
+static int	last_line(t_parser *parser, char *line)
 {
 	int	ind;
 	int	len;
@@ -69,11 +69,11 @@ static	int	last_line(t_parser *parser, char *line)
 	return (YES);
 }
 
-static	void	something_follows_map(t_parser *parser, int fd)
+static void	something_follows_map(t_parser *parser, int fd)
 {
 	char	*line;
-	int	malloc_flag;
-	int	ind;
+	int		malloc_flag;
+	int		ind;
 
 	malloc_flag = 0;
 	ind = -1;
@@ -96,7 +96,7 @@ static	void	something_follows_map(t_parser *parser, int fd)
 
 void	parse_map(t_parser *parser, int fd)
 {
-	int	malloc_flag;
+	int		malloc_flag;
 	char	*line;
 
 	malloc_flag = 0;
@@ -106,7 +106,8 @@ void	parse_map(t_parser *parser, int fd)
 	while (*parser->line)
 	{
 		line = get_next_line(fd, &malloc_flag);
-		if (last_line(parser, *parser->line) == YES && (!line || line[0] == '\0'))
+		if (last_line(parser, *parser->line) == YES && (!line
+				|| line[0] == '\0'))
 			break ;
 		if (*parser->line[0] == '\0' || *parser->line[0] == '0')
 			free_vecs(parser, YES, YES);
