@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/07/08 15:18:31 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/08 17:12:58 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	else
 		data->player_angle = EAST;
 	data->rayinfo->ray_angle = data->player_angle;
-	data->playerdir_x = cos(data->player_angle) * 5.5;
-	data->playerdir_y = sin(data->player_angle) * 5.5;
+	data->playerdir_x = cos(data->player_angle) * 2.5;
+	data->playerdir_y = sin(data->player_angle) * 2.5;
 	init_mlx(data);
 	if (mlx_image_to_window(data->mlx, data->screen, 0, 0) < 0)
 		freedata_exit(data, EXIT_FAILURE, YES, YES);
