@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 09:33:51 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 15:23:44 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/09 14:47:38 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 
 	data = param;
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
-		freedata_exit(data, EXIT_SUCCESS, YES, NA);
+		mlx_close_window(data->mlx);
 }
 
 void	mouse_hook(double xpos, double ypos, void *param)
