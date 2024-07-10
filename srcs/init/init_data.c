@@ -11,12 +11,13 @@
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
+#include <stdio.h>
 
 void	init_mlx(t_data *data);
 void	get_textures(t_data *data, t_parser *parser);
 void	get_ceiling_color(t_parser *parser, t_data *data);
 void	get_floor_color(t_parser *parser, t_data *data);
-void	fill_spaces(char **map, t_data *data);
+void	fill_spaces(char **map, t_parser *parser, int maph);
 
 void	find_player(t_data *data, char **map, unsigned int y, char *playerdir)
 {
@@ -57,7 +58,7 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	}
 	map[y] = NULL;
 	data->map_height = y;
-	fill_spaces(map, data);
+	fill_spaces(map, parser, data->map_height);
 	data->map = map;
 	return (playerdir);
 }
@@ -94,6 +95,7 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 
 	if (parser->line != NULL && *parser->line != NULL)
 		free(*parser->line);
+	printf("here\n");
 	playerdir = extract_map_arr(parser, data);
 	data->flag = CONTINUE;
 	data->rayinfo = init_rayinfo(parser);

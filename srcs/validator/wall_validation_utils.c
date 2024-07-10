@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../../includes/cub3D.h"
 
-void	check_holes_start(char **map, t_data *data);
-void	check_holes_end(char **map, t_data *data);
+void	check_holes_start(char **map, t_parser *parser, int maph);
+void	check_holes_end(char **map, t_parser *parser, int maph);
 
 static int	ft_skip_space(char *line)
 {
@@ -37,7 +37,7 @@ int	get_line_end(char *line)
 	return (i);
 }
 
-void	fill_spaces(char **map, t_data *data)
+void	fill_spaces(char **map, t_parser *parser, int maph)
 {
 	int	x;
 	int	y;
@@ -60,6 +60,6 @@ void	fill_spaces(char **map, t_data *data)
 		x = 0;
 		y++;
 	}
-	check_holes_start(map, data);
-	check_holes_end(map, data);
+	check_holes_start(map, parser, maph);
+	check_holes_end(map, parser, maph);
 }

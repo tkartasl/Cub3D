@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../../includes/cub3D.h"
 
 int	get_line_end(char *line);
 
-static void	check_first_line_end(char **map, int x, int y)
+static void	check_first_line_end(char **map, int x, int y, t_parser *parser)
 {
 	int	len_bot;
 
@@ -24,12 +24,12 @@ static void	check_first_line_end(char **map, int x, int y)
 	while (map[y][x] != 0)
 	{
 		if (map[y][x] == '0')
-			printf("error\n");
+			free_vecs(parser, YES, MAPHOLE);
 		x++;
 	}	
 }
 
-static void	check_mid_line_end(char **map, int x, int y)
+static void	check_mid_line_end(char **map, int x, int y, t_parser *parser)
 {
 	int	len_top;
 	int	len_bot;
@@ -37,8 +37,10 @@ static void	check_mid_line_end(char **map, int x, int y)
 	len_top = get_line_end(map[y - 1]);
 	len_bot = get_line_end(map[y + 1]);
 	if (len_bot <= len_top)
+	{
 		if (x > len_bot)
 			x = len_bot + 1;
+	}
 	else
 	{
 		if (x > len_top)
@@ -47,12 +49,12 @@ static void	check_mid_line_end(char **map, int x, int y)
 	while (map[y][x] != 0)
 	{
 		if (map[y][x] == '0')
-			printf("error\n");
+			free_vecs(parser, YES, MAPHOLE);
 		x++;
 	}
 }
 
-static void	check_last_line_end(char **map, int x, int y)
+static void	check_last_line_end(char **map, int x, int y, t_parser *parser)
 {
 	int	len_top;
 
@@ -62,12 +64,12 @@ static void	check_last_line_end(char **map, int x, int y)
 	while (map[y][x] != 0)
 	{
 		if (map[y][x] == '0')
-			printf("error\n");
+			free_vecs(parser, YES, MAPHOLE);
 		x++;
 	}
 }
 
-void	check_holes_end(char **map, t_data *data)
+void	check_holes_end(char **map, t_parser *parser, int maph)
 {
 	int	x;
 	int	y;
@@ -80,18 +82,18 @@ void	check_holes_end(char **map, t_data *data)
 		while (map[y][x] != 0)
 		{
 			if (y == 0 && x > get_line_end(map[y + 1]))
-				check_first_line_end(map, x, y);
-			else if (y > 0 && y < (data->map_height - 1))
-				check_mid_line_end(data, x, y);
-			else if (y == (data->map_height - 1))
-				check_last_line_end(data, x, y);
+				check_first_line_end(map, x, y, parser);
+			else if (y > 0 && y < (maph - 1))
+				check_mid_line_end(map, x, y, parser);
+			else if (y == (maph - 1))
+				check_last_line_end(map, x, y, parser);
 		}
 		x = 0;
 		y++;
 	}
 }
 
-void	check_holes_start(char **map, t_data *data)
+void	check_holes_start(char **map, t_parser *parser, int maph)
 {
 	int	x;
 	int	y;
@@ -105,12 +107,12 @@ void	check_holes_start(char **map, t_data *data)
 			while (map[y][x] != '1')
 			{
 				if (y == 0 && map[y + 1][x] == '0')
-					printf("error\n"); //free_vecs(parser, YES, MAPHOLE);
-				else if (y > 0 && y < data->map_height - 1
+					free_vecs(parser, YES, MAPHOLE);
+				else if (y > 0 && y < maph - 1
 					&& (map[y + 1][x] == '0' || map[y - 1][x] == '0'))
-					printf("error\n");//free_vecs(parser, YES, MAPHOLE);
-				else if (y == (data->map_height - 1) && map[y - 1][x] == '0')
-					printf("error\n");//free_vecs(parser, YES, MAPHOLE);
+					free_vecs(parser, YES, MAPHOLE);
+				else if (y == (maph - 1) && map[y - 1][x] == '0')
+					free_vecs(parser, YES, MAPHOLE);
 				++x;
 			}
 		}
