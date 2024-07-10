@@ -20,14 +20,14 @@ static char	check_wall_unit(t_parser *parser, int *ind, int first, char *msg)
 		skip_spaces(*parser->line, ind);
 	c = (*parser->line)[*ind];
 	if (c != '1')
-		free_vecs(parser, YES, msg);
+		free_vecs(parser, YES, msg, NULL);
 	return (c);
 }
 
 static void	check_update_direction_info(t_parser *parser, char c)
 {
 	if (parser->dir_info > 0)
-		free_vecs(parser, YES, MOREPLAYER);
+		free_vecs(parser, YES, MOREPLAYER, NULL);
 	parser->dir_info++;
 }
 
@@ -48,7 +48,7 @@ void	validate_middle(t_parser *parser, char *line)
 		if (c == 'W' || c == 'N' || c == 'S' || c == 'E')
 			check_update_direction_info(parser, c);
 		else if (c != '1' && c != '0' && c != ' ' && c != '\t')
-			free_vecs(parser, YES, INVALCHAR);
+			free_vecs(parser, YES, INVALCHAR, NULL);
 		c = (line)[++ind];
 		if (c == '\0')
 			return ;
@@ -67,7 +67,7 @@ void	validate_horizontal(t_parser *parser, char *line, char *msg)
 	len = ft_strlen(line);
 	skip_spaces(line, &ind);
 	if (ind < len && line[ind] != '1')
-		free_vecs(parser, YES, msg);
+		free_vecs(parser, YES, msg, NULL);
 	while (++ind < (len - 1))
 	{
 		count++;
@@ -75,8 +75,8 @@ void	validate_horizontal(t_parser *parser, char *line, char *msg)
 		if (count != 1 && line[ind] == '\0')
 			return ;
 		if (line[ind] != '1' && !ft_isspace(line[ind]))
-			free_vecs(parser, YES, msg);
+			free_vecs(parser, YES, msg, NULL);
 	}
 	if (ind < len && line[ind] != '1')
-		free_vecs(parser, YES, msg);
+		free_vecs(parser, YES, msg, NULL);
 }

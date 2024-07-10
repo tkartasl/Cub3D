@@ -11,13 +11,12 @@
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
-#include <stdio.h>
 
 void	init_mlx(t_data *data);
 void	get_textures(t_data *data, t_parser *parser);
 void	get_ceiling_color(t_parser *parser, t_data *data);
 void	get_floor_color(t_parser *parser, t_data *data);
-void	fill_spaces(char **map, t_parser *parser, int maph);
+void	find_mapholes(char **map, t_parser *parser, int maph);
 
 void	find_player(t_data *data, char **map, unsigned int y, char *playerdir)
 {
@@ -58,23 +57,23 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	}
 	map[y] = NULL;
 	data->map_height = y;
-	fill_spaces(map, parser, data->map_height);
+	find_mapholes(map, parser, data->map_height);
 	data->map = map;
 	return (playerdir);
 }
 
-t_rayinfo	*init_rayinfo(t_parser *parser)
+static	t_rayinfo	*init_rayinfo(t_parser *parser, t_data *data)
 {
 	t_rayinfo	*rayinfo;
 
 	rayinfo = (t_rayinfo *)malloc(sizeof(t_rayinfo));
 	if (rayinfo == NULL)
-		free_vecs(parser, YES, NULL);
+		free_vecs(parser, YES, NULL, data->map);
 	ft_memset(rayinfo, 0, sizeof(t_rayinfo));
 	return (rayinfo);
 }
 
-void	init_texture(t_data *data, t_parser *parser)
+static	void	init_texture(t_data *data, t_parser *parser)
 {
 	t_textures	*texture;
 
@@ -82,7 +81,7 @@ void	init_texture(t_data *data, t_parser *parser)
 	if (texture == NULL)
 	{
 		free(data->rayinfo);
-		free_vecs(parser, YES, NULL);
+		free_vecs(parser, YES, NULL, data->map);
 	}
 	ft_memset(texture, 0, sizeof(t_textures));
 	data->texture = texture;
@@ -95,10 +94,9 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 
 	if (parser->line != NULL && *parser->line != NULL)
 		free(*parser->line);
-	printf("here\n");
 	playerdir = extract_map_arr(parser, data);
 	data->flag = CONTINUE;
-	data->rayinfo = init_rayinfo(parser);
+	data->rayinfo = init_rayinfo(parser, data);
 	init_texture(data, parser);
 	get_ceiling_color(parser, data);
 	get_floor_color(parser, data);
@@ -114,5 +112,5 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->playerdir_x = cos(data->player_angle) * MOVE_SPEED;
 	data->playerdir_y = sin(data->player_angle) * MOVE_SPEED;
 	init_mlx(data);
-	free_vecs(parser, NA, NULL);
+	free_vecs(parser, NA, NULL, NULL);
 }

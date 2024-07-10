@@ -29,7 +29,7 @@
 # define MUNITSIZE 10
 # define MSCALE 2
 # define LAYERS 1
-# define ROTATE_SPEED 0.05
+# define ROTATE_SPEED 0.03
 # define MOVE_SPEED 7.5
 # define FT 42
 

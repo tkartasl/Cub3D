@@ -15,16 +15,6 @@
 void	check_holes_start(char **map, t_parser *parser, int maph);
 void	check_holes_end(char **map, t_parser *parser, int maph);
 
-static int	ft_skip_space(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i] == ' ' || line[i] == '\t')
-		i++;
-	return (i);
-}
-
 int	get_line_end(char *line)
 {
 	int	i;
@@ -37,7 +27,34 @@ int	get_line_end(char *line)
 	return (i);
 }
 
-void	fill_spaces(char **map, t_parser *parser, int maph)
+
+void	check_first_line_end(char **map, int x, int y, t_parser *parser)
+{
+	int	len_bot;
+
+	len_bot = get_line_end(map[y + 1]);
+	if (x > len_bot)
+		x = len_bot + 1;
+	while (map[y][x] != 0)
+	{
+		if (map[y][x] == '0')
+			free_vecs(parser, YES, MAPHOLE, map);
+		x++;
+	}
+}
+
+
+static int	ft_skip_space(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] == ' ' || line[i] == '\t')
+		i++;
+	return (i);
+}
+
+void	fill_map_spaces(char **map)
 {
 	int	x;
 	int	y;
@@ -60,6 +77,4 @@ void	fill_spaces(char **map, t_parser *parser, int maph)
 		x = 0;
 		y++;
 	}
-	check_holes_start(map, parser, maph);
-	check_holes_end(map, parser, maph);
 }

@@ -75,7 +75,7 @@ static void	load_textures(t_parser *parser, t_data *data, int index,
 	if (data->texture->wall[text_info] == NULL)
 	{
 		free(texpath);
-		free_vecs(parser, NA, NULL);
+		free_vecs(parser, NA, NULL, data->map);
 		freedata_exit(data, EXIT_FAILURE, YES, NA);
 	}
 	free(texpath);

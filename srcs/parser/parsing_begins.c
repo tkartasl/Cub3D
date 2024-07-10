@@ -19,7 +19,7 @@ void	parse_map(t_parser *parser, int fd);
 void	free_exit(t_parser *parser, char **type_id, char *msg)
 {
 	free(*type_id);
-	free_vecs(parser, YES, msg);
+	free_vecs(parser, YES, msg, NULL);
 }
 
 void	next_strings_end(char *line, int *end, int check_comma)
@@ -47,12 +47,12 @@ void	eof_malloc_check(t_parser *parser, int malloc_flag, int map, int fd)
 	if (*parser->line == NULL && malloc_flag == 1)
 	{
 		close(fd);
-		free_vecs(parser, YES, NULL);
+		free_vecs(parser, YES, NULL, NULL);
 	}
 	if (*parser->line == NULL && malloc_flag == 0 && map == NA)
 	{
 		close(fd);
-		free_vecs(parser, YES, NOMAP);
+		free_vecs(parser, YES, NOMAP, NULL);
 	}
 }
 

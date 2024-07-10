@@ -19,7 +19,7 @@ void	check_invalid_color(t_parser *parser, char *line, t_indices *inds,
 	if (line[inds->end] != '\0' && !ft_isspace(line[inds->end]))
 	{
 		free(*rgb);
-		free_vecs(parser, YES, INVALCOLOR);
+		free_vecs(parser, YES, INVALCOLOR, NULL);
 	}
 }
 
@@ -28,6 +28,6 @@ void	validate_type_identifier(t_parser *parser, char **type_id)
 	if (ft_strlen(*type_id) > 1)
 	{
 		free(*type_id);
-		free_vecs(parser, YES, INVALCOLOR);
+		free_vecs(parser, YES, INVALCOLOR, NULL);
 	}
 }

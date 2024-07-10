@@ -136,7 +136,7 @@ void				parse_file(t_parser *parser, char *map_path);
 void				raycaster(t_data *data);
 void				freeparser_exit(t_parser *parser);
 void				free_exit(t_parser *parser, char **type_id, char *msg);
-void				free_vecs(t_parser *parser, int exit_fail, char *msg);
+void				free_vecs(t_parser *parser, int exit_fail, char *msg, char **map);
 void				freedata_exit(t_data *data, int exit_status,
 						int terminate_mlx, int premature);
 int					get_rgba(int r, int g, int b, int a);

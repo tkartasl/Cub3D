@@ -12,22 +12,9 @@
 
 #include "../../includes/cub3D.h"
 
-int	get_line_end(char *line);
-
-static void	check_first_line_end(char **map, int x, int y, t_parser *parser)
-{
-	int	len_bot;
-
-	len_bot = get_line_end(map[y + 1]);
-	if (x > len_bot)
-		x = len_bot + 1;
-	while (map[y][x] != 0)
-	{
-		if (map[y][x] == '0')
-			free_vecs(parser, YES, MAPHOLE);
-		x++;
-	}	
-}
+int			get_line_end(char *line);
+void	fill_map_spaces(char **map);
+void	check_first_line_end(char **map, int x, int y, t_parser *parser);
 
 static void	check_mid_line_end(char **map, int x, int y, t_parser *parser)
 {
@@ -49,7 +36,7 @@ static void	check_mid_line_end(char **map, int x, int y, t_parser *parser)
 	while (map[y][x] != 0)
 	{
 		if (map[y][x] == '0')
-			free_vecs(parser, YES, MAPHOLE);
+			free_vecs(parser, YES, MAPHOLE, map);
 		x++;
 	}
 }
@@ -64,12 +51,12 @@ static void	check_last_line_end(char **map, int x, int y, t_parser *parser)
 	while (map[y][x] != 0)
 	{
 		if (map[y][x] == '0')
-			free_vecs(parser, YES, MAPHOLE);
+			free_vecs(parser, YES, MAPHOLE, map);
 		x++;
 	}
 }
 
-void	check_holes_end(char **map, t_parser *parser, int maph)
+static	void	check_holes_end(char **map, t_parser *parser, int maph)
 {
 	int	x;
 	int	y;
@@ -87,13 +74,14 @@ void	check_holes_end(char **map, t_parser *parser, int maph)
 				check_mid_line_end(map, x, y, parser);
 			else if (y == (maph - 1))
 				check_last_line_end(map, x, y, parser);
+			++x;
 		}
 		x = 0;
 		y++;
 	}
 }
 
-void	check_holes_start(char **map, t_parser *parser, int maph)
+static	void	check_holes_start(char **map, t_parser *parser, int maph)
 {
 	int	x;
 	int	y;
@@ -107,16 +95,23 @@ void	check_holes_start(char **map, t_parser *parser, int maph)
 			while (map[y][x] != '1')
 			{
 				if (y == 0 && map[y + 1][x] == '0')
-					free_vecs(parser, YES, MAPHOLE);
-				else if (y > 0 && y < maph - 1
-					&& (map[y + 1][x] == '0' || map[y - 1][x] == '0'))
-					free_vecs(parser, YES, MAPHOLE);
+					free_vecs(parser, YES, MAPHOLE, map);
+				else if (y > 0 && y < maph - 1 && (map[y + 1][x] == '0' || map[y
+						- 1][x] == '0'))
+					free_vecs(parser, YES, MAPHOLE, map);
 				else if (y == (maph - 1) && map[y - 1][x] == '0')
-					free_vecs(parser, YES, MAPHOLE);
+					free_vecs(parser, YES, MAPHOLE, map);
 				++x;
 			}
 		}
 		x = 0;
 		y++;
 	}
+}
+
+void	find_mapholes(char **map, t_parser *parser, int maph)
+{
+	fill_map_spaces(map);
+	check_holes_start(map, parser, maph);
+	check_holes_end(map, parser, maph);
 }

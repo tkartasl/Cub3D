@@ -65,7 +65,7 @@ static int	type_identifier(t_parser *parser, t_indices *inds, t_count *count)
 	type_id = NULL;
 	type_id = ft_substr(*parser->line, inds->st, inds->end - inds->st);
 	if (type_id == NULL)
-		free_vecs(parser, YES, NULL);
+		free_vecs(parser, YES, NULL, NULL);
 	identifiers_type(parser, &type_id, &type_id_info, count);
 	if (type_id_info != FT)
 	{
@@ -120,5 +120,5 @@ void	parse_until_map(t_parser *parser, int fd)
 			tids++;
 	}
 	if (tids < TOT_TIDS)
-		free_vecs(parser, YES, TIDS);
+		free_vecs(parser, YES, TIDS, NULL);
 }

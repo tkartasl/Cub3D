@@ -16,21 +16,23 @@ void		join_threads(t_data *data);
 void		destroy_locks(t_data *data);
 void		file_error(char *path, int use_errno, char *msg);
 
-static void	free_map(t_data *data)
+static void	free_map(char **map)
 {
 	unsigned int	ind;
 
 	ind = 0;
-	while (data->map[ind] != NULL)
-		free(data->map[ind++]);
-	free(data->map);
-	data->map = NULL;
+	while (map[ind] != NULL)
+		free(map[ind++]);
+	free(map);
+	map = NULL;
 }
 
-void	free_vecs(t_parser *parser, int exit_fail, char *msg)
+void	free_vecs(t_parser *parser, int exit_fail, char *msg, char **map)
 {
 	if (msg != NULL)
 		file_error(parser->file, FT, msg);
+	if (map != NULL)
+		free_map(map);
 	vec_free(parser->textures_paths);
 	free(parser->textures_paths);
 	vec_free(parser->textures_info);
@@ -76,7 +78,7 @@ void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 	i = 0;
 	while (i < 4)
 		mlx_delete_texture(data->texture->wall[i++]);
-	free_map(data);
+	free_map(data->map);
 	free(data->texture);
 	free(data->rayinfo);
 	exit(exit_status);

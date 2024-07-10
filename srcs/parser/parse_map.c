@@ -13,7 +13,7 @@
 #include "../../includes/cub3D.h"
 
 void	validate_horizontal(t_parser *parser, char *line, char *msg);
-void	validate_middle(t_parser *parser, char **line);
+void	validate_middle(t_parser *parser, char *line);
 
 static void	validate_push_horizontal(t_parser *parser, char **line, char *msg)
 {
@@ -25,7 +25,7 @@ static void	validate_push_horizontal(t_parser *parser, char **line, char *msg)
 	if (vec_push(parser->map, &dup_line) == 0)
 	{
 		free(dup_line);
-		free_vecs(parser, YES, NULL);
+		free_vecs(parser, YES, NULL, NULL);
 	}
 }
 
@@ -33,13 +33,13 @@ static void	validate_push_middle(t_parser *parser)
 {
 	char	*dup_line;
 
-	validate_middle(parser, parser->line);
+	validate_middle(parser, *parser->line);
 	dup_line = ft_strdup(*parser->line);
 	free(*parser->line);
 	if (vec_push(parser->map, &dup_line) == 0)
 	{
 		free(dup_line);
-		free_vecs(parser, YES, NULL);
+		free_vecs(parser, YES, NULL, NULL);
 	}
 }
 
@@ -58,7 +58,7 @@ static int	last_line(t_parser *parser, char *line)
 			break ;
 	}
 	if (ind == len)
-		free_vecs(parser, YES, ALLSPACES);
+		free_vecs(parser, YES, ALLSPACES, NULL);
 	ind = -1;
 	while (++ind < len)
 	{
@@ -113,13 +113,13 @@ void	parse_map(t_parser *parser, int fd)
 				|| line[0] == '\0'))
 			break ;
 		if (*parser->line[0] == '\0' || *parser->line[0] == '0')
-			free_vecs(parser, YES, INVALMAP);
+			free_vecs(parser, YES, INVALMAP, NULL);
 		validate_push_middle(parser);
 		*parser->line = line;
 		eof_malloc_check(parser, malloc_flag, YES, fd);
 	}
 	if (*parser->line == NULL || parser->dir_info == 0)
-		free_vecs(parser, YES, NOPLAYER);
+		free_vecs(parser, YES, NOPLAYER, NULL);
 	validate_push_horizontal(parser, &(*parser->line), LHWALL);
 	something_follows_map(parser, fd);
 }

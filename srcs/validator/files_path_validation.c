@@ -21,11 +21,11 @@ static int	open_file(t_parser *parser, char *map_path)
 	if (fd != -1)
 	{
 		close(fd);
-		free_vecs(parser, YES, DPATH);
+		free_vecs(parser, YES, DPATH, NULL);
 	}
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
-		free_vecs(parser, YES, WRPATH);
+		free_vecs(parser, YES, WRPATH, NULL);
 	return (fd);
 }
 
@@ -39,7 +39,7 @@ int	open_validate_file(t_parser *parser, char *map_path, char *ext,
 	path_len = ft_strlen(map_path);
 	bfr_ext = path_len - 4;
 	if (ft_strncmp(ext, &map_path[bfr_ext], path_len - bfr_ext))
-		free_vecs(parser, YES, OPATH);
+		free_vecs(parser, YES, OPATH, NULL);
 	fd = open_file(parser, map_path);
 	if (texture_path == YES)
 	{

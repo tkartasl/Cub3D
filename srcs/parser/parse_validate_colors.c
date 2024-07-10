@@ -36,15 +36,15 @@ static char	*next_rgb(t_parser *parser, char *line, t_indices *inds)
 	skip_spaces(line, &inds->st);
 	inds->end = inds->st;
 	if (line[inds->st] == '\0')
-		free_vecs(parser, YES, INVALCOLOR);
+		free_vecs(parser, YES, INVALCOLOR, NULL);
 	next_strings_end(line, &inds->end, 1);
 	rgb = ft_substr(line, inds->st, inds->end - inds->st);
 	if (rgb == NULL)
-		free_vecs(parser, YES, NULL);
+		free_vecs(parser, YES, NULL, NULL);
 	if (all_digits(rgb) != YES)
 	{
 		free(rgb);
-		free_vecs(parser, YES, INVALCOLOR);
+		free_vecs(parser, YES, INVALCOLOR, NULL);
 	}
 	--inds->counter;
 	if (inds->counter == 0)
@@ -59,7 +59,7 @@ static void	skip_comma(t_parser *parser, char *line, t_indices *inds, int count)
 	inds->st = inds->end;
 	skip_spaces(line, &inds->st);
 	if (line[inds->st] != ',')
-		free_vecs(parser, YES, INVALCOLOR);
+		free_vecs(parser, YES, INVALCOLOR, NULL);
 	inds->st++;
 	inds->end = inds->st;
 }
@@ -89,7 +89,7 @@ static void	parse_color(t_parser *parser, t_indices *inds, int type)
 		skip_comma(parser, *parser->line, inds, count);
 	}
 	if (inds->counter)
-		free_vecs(parser, YES, INVALCOLOR);
+		free_vecs(parser, YES, INVALCOLOR, NULL);
 }
 
 void	parse_push_colors(t_parser *parser, char **type_id, t_indices *inds,
