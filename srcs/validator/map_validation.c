@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:01:33 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/09 17:03:57 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/07/10 16:35:29 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,6 @@ static void	check_update_direction_info(t_parser *parser, char c)
 		free_vecs(parser, YES, MOREPLAYER);
 	parser->dir_info++;
 }
-
-// static char	ones_surround_spaces(t_parser *parser, char c, char prev_c,
-// 		int *ind)
-// {
-// 	if (ft_isspace(c) && prev_c != '1')
-// 		free_vecs(parser, YES, YES);
-// 	if (ft_isspace(c) && prev_c == '1')
-// 	{
-// 		skip_spaces(*parser->line, ind);
-// 		c = (*parser->line)[*ind];
-// 		if (c && c != '1')
-// 			free_vecs(parser, YES, YES);
-// 	}
-// 	return (c);
-// }
-//
 
 void	validate_middle(t_parser *parser, char *line)
 {

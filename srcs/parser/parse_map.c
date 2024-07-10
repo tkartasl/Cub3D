@@ -6,14 +6,14 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:11:50 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/09 16:59:57 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/07/10 12:16:29 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
 void	validate_horizontal(t_parser *parser, char *line, char *msg);
-void	validate_middle(t_parser *parser, char *line);
+void	validate_middle(t_parser *parser, char **line);
 
 static void	validate_push_horizontal(t_parser *parser, char **line, char *msg)
 {
@@ -33,7 +33,7 @@ static void	validate_push_middle(t_parser *parser)
 {
 	char	*dup_line;
 
-	validate_middle(parser, *parser->line);
+	validate_middle(parser, parser->line);
 	dup_line = ft_strdup(*parser->line);
 	free(*parser->line);
 	if (vec_push(parser->map, &dup_line) == 0)

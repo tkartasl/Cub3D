@@ -6,16 +6,17 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/07/09 14:16:42 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:32:03 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3D.h"
 
-void		init_mlx(t_data *data);
-void		get_textures(t_data *data, t_parser *parser);
-void		get_ceiling_color(t_parser *parser, t_data *data);
-void		get_floor_color(t_parser *parser, t_data *data);
+void	init_mlx(t_data *data);
+void	get_textures(t_data *data, t_parser *parser);
+void	get_ceiling_color(t_parser *parser, t_data *data);
+void	get_floor_color(t_parser *parser, t_data *data);
+void	fill_spaces(char **map, t_data *data);
 
 void	find_player(t_data *data, char **map, unsigned int y, char *playerdir)
 {
@@ -56,6 +57,7 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	}
 	map[y] = NULL;
 	data->map_height = y;
+	fill_spaces(map, data);
 	data->map = map;
 	return (playerdir);
 }
@@ -92,12 +94,12 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 
 	if (parser->line != NULL && *parser->line != NULL)
 		free(*parser->line);
+	playerdir = extract_map_arr(parser, data);
 	data->flag = CONTINUE;
 	data->rayinfo = init_rayinfo(parser);
 	init_texture(data, parser);
 	get_ceiling_color(parser, data);
 	get_floor_color(parser, data);
-	playerdir = extract_map_arr(parser, data);
 	if (playerdir == 'N')
 		data->player_angle = NORTH + PI;
 	else if (playerdir == 'W')

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_msgs.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:49:37 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/09 17:03:47 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/07/10 11:38:46 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@
 # define MORECEILING "More than one ceiling color given\n"
 # define INVALCOLOR "Invalid color\n"
 # define TEXREPEAT "More than one same textures given\n"
+# define MAPHOLE "The map has got a hole\n"
 
 #endif

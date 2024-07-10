@@ -6,7 +6,7 @@
 #    By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/05 12:11:11 by tkartasl          #+#    #+#              #
-#    Updated: 2024/07/10 10:18:07 by tkartasl         ###   ########.fr        #
+#    Updated: 2024/07/10 16:32:53 by tkartasl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,7 +77,9 @@ SOURCES 	:= 	main.c \
 			raycast_utils.c \
 			wall_collision.c \
 			hooks.c \
-			get_textures.c
+			get_textures.c \
+			wall_validation.c \
+			wall_validation_utils.c
 
 SOURCEDIR	:=	$(addprefix $(SRCSDIR)/, $(MODULES))
 BUILDDIR	:=	$(addprefix $(OBJSDIR)/, $(MODULES))
