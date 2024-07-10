@@ -6,7 +6,7 @@
 #    By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/05 12:11:11 by tkartasl          #+#    #+#              #
-#    Updated: 2024/07/09 13:52:52 by tkartasl         ###   ########.fr        #
+#    Updated: 2024/07/10 10:18:07 by tkartasl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ RM			:=	rm -rf
 AR			:=	ar -rcs
 CC			:=	cc
 CFLAGS		:=	-Wall -Werror -Wextra
-DEBUGFLAGS	:=	-g #-fsanitize=address
+DEBUGFLAGS	:=	-g -fsanitize=address
 DEPFLAGS	:=	-c -MT $$@ -MMD -MP -MF $(DEPSDIR)/$$*.d
 SCREENCLR	:=	printf "\033c"
 SLEEP		:=	sleep .1
@@ -72,12 +72,12 @@ SOURCES 	:= 	main.c \
 			print_errors.c \
 			movement.c \
 			drawing.c \
-			colors.c \
+			get_colors.c \
 			dda.c \
 			raycast_utils.c \
 			wall_collision.c \
 			hooks.c \
-			textures.c
+			get_textures.c
 
 SOURCEDIR	:=	$(addprefix $(SRCSDIR)/, $(MODULES))
 BUILDDIR	:=	$(addprefix $(OBJSDIR)/, $(MODULES))

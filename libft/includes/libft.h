@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsavolai <vsavolai@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 11:04:48 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/04/03 14:05:25 by vsavolai         ###   ########.fr       */
+/*   Updated: 2024/07/10 10:09:17 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ int		ft_putstr(char *str);
 int		ft_putnbr(long int n);
 int		ft_write_fail_test(int count, int i);
 int		ft_printf(const char *s, ...);
-
 
 size_t	ft_gnl_strlen(const char *s);
 char	*ft_gnl_strchr(char *s, int c);
