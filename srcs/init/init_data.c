@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+# include "cub3D.h"
 
 void	init_mlx(t_data *data);
 void	get_textures(t_data *data, t_parser *parser);

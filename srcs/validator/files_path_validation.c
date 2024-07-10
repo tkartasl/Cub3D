@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+# include "cub3D.h"
 
 static int	open_file(t_parser *parser, char *map_path)
 {

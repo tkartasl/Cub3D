@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+# include "cub3D.h"
 
 static void	init_player(t_data *data)
 {

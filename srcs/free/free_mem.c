@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+# include "cub3D.h"
 
 void		join_threads(t_data *data);
 void		destroy_locks(t_data *data);
@@ -66,6 +66,12 @@ void	stop_game(t_data *data)
 	destroy_locks(data);
 }
 
+void check_leaks() {
+    char cmd[256];
+    sprintf(cmd, "leaks %d", getpid());
+    system(cmd);
+}
+
 void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 		int premature)
 {
@@ -81,5 +87,6 @@ void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 	free_map(data->map);
 	free(data->texture);
 	free(data->rayinfo);
+	atexit(check_leaks);
 	exit(exit_status);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+# include "cub3D.h"
 
 int			get_line_end(char *line);
 void	fill_map_spaces(char **map);

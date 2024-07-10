@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+# include "cub3D.h"
 
 static int	step_v(t_data *data, double *ray_y, double *ray_x, t_camera *cam)
 {

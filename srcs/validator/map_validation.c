@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+# include "cub3D.h"
 
 static char	check_wall_unit(t_parser *parser, int *ind, int first, char *msg)
 {

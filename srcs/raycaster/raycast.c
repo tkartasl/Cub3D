@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+# include "cub3D.h"
 
 double	check_vertical_hit(t_data *data, t_camera *cam);
 double	check_horizontal_hit(t_data *data, t_camera *cam);

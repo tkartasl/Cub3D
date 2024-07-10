@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3D.h"
+# include "cub3D.h"
 
 void	check_holes_start(char **map, t_parser *parser, int maph);
 void	check_holes_end(char **map, t_parser *parser, int maph);
