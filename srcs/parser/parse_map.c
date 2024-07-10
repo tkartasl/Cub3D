@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:11:50 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/10 12:16:29 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/10 21:14:40 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	last_line(t_parser *parser, char *line)
 		if (count != 1 && line[ind] == '\0')
 			break ;
 		if (line[ind] != '1')
-			return (NA);
+			return (YES);
 	}
 	return (YES);
 }
@@ -118,7 +118,7 @@ void	parse_map(t_parser *parser, int fd)
 		*parser->line = line;
 		eof_malloc_check(parser, malloc_flag, YES, fd);
 	}
-	if (*parser->line == NULL || parser->dir_info == 0)
+	if (parser->dir_info == 0)
 		free_vecs(parser, YES, NOPLAYER, NULL);
 	validate_push_horizontal(parser, &(*parser->line), LHWALL);
 	something_follows_map(parser, fd);

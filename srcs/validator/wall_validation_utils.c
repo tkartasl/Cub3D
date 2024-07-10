@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:13:31 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/10 16:49:41 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:36:20 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,27 +22,10 @@ int	get_line_end(char *line)
 	i = 0;
 	while (line[i] != 0)
 		i++;
-	while (i >= 0 && line[i] != '1')
+	while (i >= 0 && line[i] != '1' && line[i] != '0')
 		i--;
 	return (i);
 }
-
-
-void	check_first_line_end(char **map, int x, int y, t_parser *parser)
-{
-	int	len_bot;
-
-	len_bot = get_line_end(map[y + 1]);
-	if (x > len_bot)
-		x = len_bot + 1;
-	while (map[y][x] != 0)
-	{
-		if (map[y][x] == '0')
-			free_vecs(parser, YES, MAPHOLE, map);
-		x++;
-	}
-}
-
 
 static int	ft_skip_space(char *line)
 {
@@ -54,7 +37,7 @@ static int	ft_skip_space(char *line)
 	return (i);
 }
 
-void	fill_map_spaces(char **map)
+void	fill_map_spaces(char **map, int maph)
 {
 	int	x;
 	int	y;
@@ -68,11 +51,14 @@ void	fill_map_spaces(char **map)
 		line_end = get_line_end(map[y]);
 		x = ft_skip_space(map[y]);
 		x++;
-		while (x < line_end)
+		if (y != 0 && y != maph - 1)
 		{
-			if (map[y][x] == ' ' || map[y][x] == '\t')
-				map[y][x] = '0';
-			x++;
+			while (x < line_end)
+			{
+				if (map[y][x] == ' ' || map[y][x] == '\t')
+					map[y][x] = '0';
+				x++;
+			}
 		}
 		x = 0;
 		y++;

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/10 16:37:09 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/10 19:44:02 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ typedef struct s_camera
 }					t_camera;
 
 void				key_hook(mlx_key_data_t keydata, void *param);
+int					get_line_end(char *line);
 void				draw_walls(t_data *data, int x_pos);
 int					check_overflow(t_data *data);
 void				reset_ray_angle(double *angle);

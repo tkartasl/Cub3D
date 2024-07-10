@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:01:33 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/10 16:35:29 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/10 20:04:07 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static char	check_wall_unit(t_parser *parser, int *ind, int first, char *msg)
 
 	if (first == YES)
 		skip_spaces(*parser->line, ind);
+	else
+		*ind = get_line_end(*parser->line);
 	c = (*parser->line)[*ind];
 	if (c != '1')
 		free_vecs(parser, YES, msg, NULL);
@@ -77,6 +79,7 @@ void	validate_horizontal(t_parser *parser, char *line, char *msg)
 		if (line[ind] != '1' && !ft_isspace(line[ind]))
 			free_vecs(parser, YES, msg, NULL);
 	}
-	if (ind < len && line[ind] != '1')
+	ind = get_line_end(line);
+	if (line[ind] != '1')
 		free_vecs(parser, YES, msg, NULL);
 }
