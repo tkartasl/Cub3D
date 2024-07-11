@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 16:49:37 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/10 11:38:46 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/11 10:50:28 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 # define MORECEILING "\tMore than one ceiling color given\n"
 # define INVALCOLOR "\tInvalid color\n"
 # define TEXREPEAT "\tMore than one same textures given\n"
+# define IVALTEX "\tTexture file is invalid\n"
 # define MAPHOLE "\tThe map has got a hole\n"
 
 #endif

@@ -6,11 +6,11 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:05:43 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/09 14:47:48 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/11 10:52:16 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cub3D.h"
+#include "cub3D.h"
 
 void		join_threads(t_data *data);
 void		destroy_locks(t_data *data);
@@ -66,12 +66,6 @@ void	stop_game(t_data *data)
 	destroy_locks(data);
 }
 
-void check_leaks() {
-    char cmd[256];
-    sprintf(cmd, "leaks %d", getpid());
-    system(cmd);
-}
-
 void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 		int premature)
 {
@@ -82,11 +76,14 @@ void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 	if (terminate_mlx == YES)
 		mlx_terminate(data->mlx);
 	i = 0;
-	while (i < 4)
-		mlx_delete_texture(data->texture->wall[i++]);
+	while (i < data->tex_index)
+	{
+		if (data->texture->wall[i] != NULL)
+			mlx_delete_texture(data->texture->wall[i]);
+		i++;
+	}
 	free_map(data->map);
 	free(data->texture);
 	free(data->rayinfo);
-	atexit(check_leaks);
 	exit(exit_status);
 }

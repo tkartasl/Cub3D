@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/10 19:44:02 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/11 10:50:54 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct s_data
 	int				ceiling_color;
 	t_textures		*texture;
 	int				flag;
+	int				tex_index;
 	pthread_t		layers[LAYERS];
 	pthread_mutex_t	layers_lock[LAYERS];
 }					t_data;
@@ -125,7 +126,6 @@ void				reset_ray_angle(double *angle);
 double				ray_length(t_data *data, int horizontal);
 void				init_parser(t_parser *parser);
 void				init_data_mlx(t_data *data, t_parser *parser);
-int					valid_map(char **argv);
 void				skip_spaces(char *s, int *ind);
 void				next_strings_end(char *line, int *end, int check_comma);
 void				eof_malloc_check(t_parser *parser, int malloc_flag, int map,
@@ -137,7 +137,8 @@ void				parse_file(t_parser *parser, char *map_path);
 void				raycaster(t_data *data);
 void				freeparser_exit(t_parser *parser);
 void				free_exit(t_parser *parser, char **type_id, char *msg);
-void				free_vecs(t_parser *parser, int exit_fail, char *msg, char **map);
+void				free_vecs(t_parser *parser, int exit_fail,
+						char *msg, char **map);
 void				freedata_exit(t_data *data, int exit_status,
 						int terminate_mlx, int premature);
 int					get_rgba(int r, int g, int b, int a);
@@ -153,4 +154,5 @@ void				*minimap(void *arg);
 int					game_continues(t_data *data);
 void				get_camera(t_data *data, t_camera *cam);
 void				set_camera(t_data *data, t_camera *cam);
+
 #endif

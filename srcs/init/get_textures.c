@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   textures.c                                         :+:      :+:    :+:   */
+/*   get_textures.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:01:45 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/09 09:38:38 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/11 10:52:25 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cub3D.h"
+#include "cub3D.h"
 
 static void	load_north_south_textures(t_data *data, int dir)
 {
@@ -75,8 +75,8 @@ static void	load_textures(t_parser *parser, t_data *data, int index,
 	if (data->texture->wall[text_info] == NULL)
 	{
 		free(texpath);
-		free_vecs(parser, NA, NULL, data->map);
-		freedata_exit(data, EXIT_FAILURE, YES, NA);
+		free_vecs(parser, NA, IVALTEX, NULL);
+		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	}
 	free(texpath);
 }
@@ -90,6 +90,7 @@ void	get_textures(t_data *data, t_parser *parser)
 	tex_info = parser->textures_info;
 	while (++ind < tex_info->len)
 	{
+		data->tex_index = ind;
 		if (*(int *)vec_get(tex_info, ind) == SO)
 			load_textures(parser, data, ind, NO);
 		else if (*(int *)vec_get(tex_info, ind) == NO)
