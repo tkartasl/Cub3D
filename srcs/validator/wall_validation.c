@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:11:50 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/10 20:58:53 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/11 09:47:55 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	check_first_last_line(char **map, int end, int y, t_parser *parser)
 	while (x < end)
 	{
 		if (map[y][x] == ' ' || map[y][x] == '\t')
-			if (map[index][x] != '1')
+			if (x <= get_line_end(map[index]) && map[index][x] == '0')
 				free_vecs(parser, YES, MAPHOLE, map);
 		x++;
 	}
