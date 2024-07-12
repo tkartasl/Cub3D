@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/07/12 10:52:23 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/12 13:55:31 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	}
 	map[y] = NULL;
 	data->map_height = y;
-	find_mapholes(map, parser, data);
+	check_mapholes(map, parser, data);
 	data->map = map;
 	return (playerdir);
 }
