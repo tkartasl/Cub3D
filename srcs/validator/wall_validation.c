@@ -6,59 +6,25 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:11:50 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/11 09:47:55 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/12 11:32:17 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cub3D.h"
 
-void	fill_map_spaces(char **map, int maph);
-
-static void	check_middle_lines(char **map, int x, int y, t_parser *parser)
+int	get_line_end(char *line)
 {
-	int	len_top;
-	int	len_bot;
+	int	i;
 
-	len_top = get_line_end(map[y - 1]);
-	len_bot = get_line_end(map[y + 1]);
-	if (len_bot <= len_top)
-	{
-		if (x > len_bot)
-			x = len_bot + 1;
-	}
-	else
-	{
-		if (x > len_top)
-			x = len_top + 1;
-	}
-	while (map[y][x] != 0)
-	{
-		if (map[y][x] == '0')
-			free_vecs(parser, YES, MAPHOLE, map);
-		x++;
-	}
+	i = 0;
+	while (line[i] != 0)
+		i++;
+	while (i >= 0 && line[i] != '1' && line[i] != '0')
+		i--;
+	return (i);
 }
 
-void	check_first_last_line(char **map, int end, int y, t_parser *parser)
-{
-	int	x;
-	int	index;
-
-	x = 0;
-	if (y == 0)
-		index = y + 1;
-	else
-		index = y - 1;
-	while (x < end)
-	{
-		if (map[y][x] == ' ' || map[y][x] == '\t')
-			if (x <= get_line_end(map[index]) && map[index][x] == '0')
-				free_vecs(parser, YES, MAPHOLE, map);
-		x++;
-	}
-}
-
-static	void	check_holes_end(char **map, t_parser *parser, int maph)
+void	fill_map_spaces(char **map)
 {
 	int	x;
 	int	y;
@@ -67,48 +33,65 @@ static	void	check_holes_end(char **map, t_parser *parser, int maph)
 	y = 0;
 	while (map[y] != 0)
 	{
-		x = get_line_end(map[y]);
-		if (y == 0)
-			check_first_last_line(map, x, y, parser);
-		else if (y > 0 && y < (maph - 1))
-			check_middle_lines(map, x, y, parser);
-		else if (y == maph - 1)
-			check_first_last_line(map, x, y, parser);
-		y++;
-	}
-}
-
-static	void	check_holes_start(char **map, t_parser *parser, int maph)
-{
-	int	x;
-	int	y;
-
-	x = 0;
-	y = 0;
-	while (map[y] != 0)
-	{
-		if (x == 0 && (map[y][x] == ' ' || map[y][x] == '\t'))
+		while (map[y][x] != 0)
 		{
-			while (map[y][x] != '1')
-			{
-				if (y == 0 && map[y + 1][x] == '0')
-					free_vecs(parser, YES, MAPHOLE, map);
-				else if (y > 0 && y < maph - 1 && (map[y + 1][x] == '0'
-					|| map[y - 1][x] == '0'))
-					free_vecs(parser, YES, MAPHOLE, map);
-				else if (y == (maph - 1) && map[y - 1][x] == '0')
-					free_vecs(parser, YES, MAPHOLE, map);
-				++x;
-			}
+			if (ft_strchr("01NESW", map[y][x]) == 0)
+				map[y][x] = '.';
+			x++;
 		}
 		x = 0;
 		y++;
 	}
 }
 
-void	find_mapholes(char **map, t_parser *parser, int maph)
+int	check_surroundings(char **map, t_data *data, int x, int y)
 {
-	fill_map_spaces(map, maph);
-	check_holes_start(map, parser, maph);
-	check_holes_end(map, parser, maph);
+	if (x + 1 < data->map_width)
+	{
+		if (map[y][x + 1] == '.')
+			return (1);		
+	}
+	if (y + 1 < data->map_height)
+	{
+		if (map[y + 1][x] == '.')
+			return (1);		
+	}
+	if (x - 1 >= 0)
+	{
+		if (map[y][x - 1] == '.')
+			return (1);		
+	}
+	if (y - 1 >= 0)
+	{
+		if (map[y - 1][x] == '.')
+			return (1);		
+	}
+	return (0);
+}
+
+void	check_holes(char **map, t_parser *parser, t_data *data)
+{
+	int	x;
+	int	y;
+
+	x = 0;
+	y = 0;
+	while (map[y] != 0)
+	{
+		while (map[y][x] != 0)
+		{
+			if (map[y][x] == '0')
+				if (check_surroundings(map, data, x, y) == 1)
+					free_vecs(parser, YES, MAPHOLE, map);
+			x++;
+		}
+		x = 0;
+		y++;
+	}	
+}
+
+void	find_mapholes(char **map, t_parser *parser, t_data *data)
+{
+	fill_map_spaces(map);
+	check_holes(map, parser, data);
 }

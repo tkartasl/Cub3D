@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:01:45 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/11 10:52:25 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/12 10:00:29 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,13 +91,13 @@ void	get_textures(t_data *data, t_parser *parser)
 	while (++ind < tex_info->len)
 	{
 		data->tex_index = ind;
-		if (*(int *)vec_get(tex_info, ind) == SO)
+		if (*(int *)vec_get(tex_info, ind) == NO)
 			load_textures(parser, data, ind, NO);
-		else if (*(int *)vec_get(tex_info, ind) == NO)
+		else if (*(int *)vec_get(tex_info, ind) == SO)
 			load_textures(parser, data, ind, SO);
-		else if (*(int *)vec_get(tex_info, ind) == WE)
-			load_textures(parser, data, ind, EA);
 		else if (*(int *)vec_get(tex_info, ind) == EA)
+			load_textures(parser, data, ind, EA);
+		else if (*(int *)vec_get(tex_info, ind) == WE)
 			load_textures(parser, data, ind, WE);
 	}
 }

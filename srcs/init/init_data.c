@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/07/10 16:32:03 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/12 10:52:23 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	init_mlx(t_data *data);
 void	get_textures(t_data *data, t_parser *parser);
 void	get_ceiling_color(t_parser *parser, t_data *data);
 void	get_floor_color(t_parser *parser, t_data *data);
-void	find_mapholes(char **map, t_parser *parser, int maph);
+void	find_mapholes(char **map, t_parser *parser, t_data *data);
 
 void	find_player(t_data *data, char **map, unsigned int y, char *playerdir)
 {
@@ -57,7 +57,7 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	}
 	map[y] = NULL;
 	data->map_height = y;
-	find_mapholes(map, parser, data->map_height);
+	find_mapholes(map, parser, data);
 	data->map = map;
 	return (playerdir);
 }
