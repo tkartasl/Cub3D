@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:11:50 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/12 13:55:15 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:22:28 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	check_surroundings(char **map, t_data *data, int x, int y)
 	}
 	if (y - 1 >= 0)
 	{
-		if (ft_isspace(map[y + 1][x]) == 1)
+		if (ft_isspace(map[y - 1][x]) == 1)
 			return (1);		
 	}
 	return (0);
@@ -50,7 +50,7 @@ void	check_mapholes(char **map, t_parser *parser, t_data *data)
 	{
 		while (map[y][x] != 0)
 		{
-			if (map[y][x] == '0')
+			if (ft_strchr("0NSWE", map[y][x]) != 0)
 				if (check_surroundings(map, data, x, y) == 1)
 					free_vecs(parser, YES, MAPHOLE, map);
 			x++;

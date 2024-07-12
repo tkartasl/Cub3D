@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:01:33 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/10 20:04:07 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:07:03 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ static char	ones_surround_spaces(t_parser *parser, char c, char prev_c,
 		int *ind)
 {
 	if (ft_isspace(c) && prev_c != '1')
-		free_vecs(parser, YES, YES, INVALMAP);
+		free_vecs(parser, YES, INVALMAP, NULL);
 	if (ft_isspace(c) && prev_c == '1')
 	{
 		skip_spaces(*parser->line, ind);
 		c = (*parser->line)[*ind];
 		if (c && c != '1')
-			free_vecs(parser, YES, YES, INVALMAP);
+			free_vecs(parser, YES, INVALMAP, NULL);
 	}
 	return (c);
 }
