@@ -33,24 +33,42 @@ static void	check_update_direction_info(t_parser *parser, char c)
 	parser->dir_info++;
 }
 
+static char	ones_surround_spaces(t_parser *parser, char c, char prev_c,
+		int *ind)
+{
+	if (ft_isspace(c) && prev_c != '1')
+		free_vecs(parser, YES, YES, INVALMAP);
+	if (ft_isspace(c) && prev_c == '1')
+	{
+		skip_spaces(*parser->line, ind);
+		c = (*parser->line)[*ind];
+		if (c && c != '1')
+			free_vecs(parser, YES, YES, INVALMAP);
+	}
+	return (c);
+}
+
 void	validate_middle(t_parser *parser, char *line)
 {
 	int		ind;
 	char	c;
+	char	prev_c;
 	int		len;
 
 	ind = 0;
 	len = ft_strlen(line);
-	check_wall_unit(parser, &ind, YES, FVWALL);
+	prev_c = check_wall_unit(parser, &ind, YES, FVWALL);
 	c = line[++ind];
 	while ((line)[ind + 1])
 	{
+		c = ones_surround_spaces(parser, c, prev_c, &ind);
 		if (c == '\0')
 			return ;
 		if (c == 'W' || c == 'N' || c == 'S' || c == 'E')
 			check_update_direction_info(parser, c);
 		else if (c != '1' && c != '0' && c != ' ' && c != '\t')
 			free_vecs(parser, YES, INVALCHAR, NULL);
+		prev_c = c;
 		c = (line)[++ind];
 		if (c == '\0')
 			return ;
