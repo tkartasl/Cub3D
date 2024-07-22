@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:11:50 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/22 10:19:20 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/22 10:56:17 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int	get_line_end(char *line)
 		i--;
 	return (i);
 }
-
 
 static void    check_middle_lines(char **map, int x, int y, t_parser *parser)
 {
@@ -88,4 +87,3 @@ void	check_mapholes(char **map, t_parser *parser, t_data *data)
 		y++;
 	}	
 }
-
