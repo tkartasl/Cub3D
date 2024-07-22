@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 # include "cub3D.h"
+#include <stdio.h>
 
 static char	check_wall_unit(t_parser *parser, int *ind, int first, char *msg)
 {
@@ -37,13 +38,13 @@ static char	ones_surround_spaces(t_parser *parser, char c, char prev_c,
 		int *ind)
 {
 	if (ft_isspace(c) && prev_c != '1')
-		free_vecs(parser, YES, YES, INVALMAP);
+		free_vecs(parser, YES, INVALMAP, NULL);
 	if (ft_isspace(c) && prev_c == '1')
 	{
 		skip_spaces(*parser->line, ind);
 		c = (*parser->line)[*ind];
 		if (c && c != '1')
-			free_vecs(parser, YES, YES, INVALMAP);
+			free_vecs(parser, YES, INVALMAP, NULL);
 	}
 	return (c);
 }
