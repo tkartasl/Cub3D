@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:11:50 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/12 14:22:28 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/22 10:19:20 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	check_surroundings(char **map, t_data *data, int x, int y)
 {
 	if (y + 1 < data->map_height)
 	{
-		if (ft_isspace(map[y - 1][x]) == 1)
+		if (ft_isspace(map[y + 1][x]) == 1)
 			return (1);		
 	}
 	if (y - 1 >= 0)
