@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cub3D.h"
+#include "cub3D.h"
 
 void	check_invalid_color(t_parser *parser, char *line, t_indices *inds,
 		char **rgb)

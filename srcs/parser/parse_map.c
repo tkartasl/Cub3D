@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cub3D.h"
+#include "cub3D.h"
 
 void	validate_horizontal(t_parser *parser, char *line, char *msg);
 void	validate_middle(t_parser *parser, char *line);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cub3D.h"
+#include "cub3D.h"
 
 static int	step_v(t_data *data, double *ray_y, double *ray_x, t_camera *cam)
 {
@@ -108,7 +108,6 @@ double	check_horizontal_hit(t_data *data, t_camera *cam)
 		if (check_overflow(data) == 0
 			&& data->map[data->rayinfo->map_y][data->rayinfo->map_x] == '1')
 		{
-			
 			dist = ray_length(data, 1);
 			break ;
 		}

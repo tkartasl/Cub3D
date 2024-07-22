@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cub3D.h"
+#include "cub3D.h"
 
 static int	open_file(t_parser *parser, char *map_path, int file)
 {
@@ -35,27 +35,36 @@ static int	open_file(t_parser *parser, char *map_path, int file)
 	return (fd);
 }
 
-int	open_validate_file(t_parser *parser, char *map_path, char *ext, int texture_path)
+static	void	check_hidder_file(t_parser *parser, char *path, int file)
+{
+	if (path[0] == '.')
+	{
+		if (file == MAP)
+			free_vecs(parser, YES, MWRPATH, NULL);
+		free_vecs(parser, YES, TWRPATH, NULL);
+	}
+}
+
+int	open_validate_file(t_parser *parser, char *map_path, char *ext,
+	int texture_path)
 {
 	size_t	path_len;
 	size_t	bfr_ext;
 	int		fd;
-	char	*msg;
-	int	file;
+	int		file;
 
-	msg = TWRPATH;
 	file = TEXTURE;
 	if (!ft_strncmp(ext, ".cub", 4))
-	{
 		file = MAP;
-		msg = MWRPATH;
-	}
-	if (map_path[0] == '.')
-		free_vecs(parser, YES, msg, NULL);
+	check_hidder_file(parser, map_path, file);
 	path_len = ft_strlen(map_path);
 	bfr_ext = path_len - 4;
 	if (ft_strncmp(ext, &map_path[bfr_ext], path_len - bfr_ext))
-		free_vecs(parser, YES, msg, NULL);
+	{
+		if (file == MAP)
+			free_vecs(parser, YES, MWRPATH, NULL);
+		free_vecs(parser, YES, MWRPATH, NULL);
+	}
 	fd = open_file(parser, map_path, file);
 	if (texture_path == YES)
 	{

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cub3D.h"
+#include "cub3D.h"
 
 int	get_player_dir(t_camera *cam)
 {
@@ -44,7 +44,6 @@ static void	drawstripe(t_data *data, int x, int cx, int cy)
 			&& mapy < data->map_height)
 		{
 			if (data->map[mapy][mapx] == '1')
-//				mlx_put_pixel(data->minimap, x, y, get_rgba(0, 0, 0, 255));
 				mlx_put_pixel(data->minimap, x, y, data->colors[W]);
 			else
 				mlx_put_pixel(data->minimap, x, y, data->colors[F]);

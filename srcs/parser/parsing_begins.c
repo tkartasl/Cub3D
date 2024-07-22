@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "cub3D.h"
+#include "cub3D.h"
 #include <stdio.h>
 
 void	parse_until_map(t_parser *parser, int fd);
