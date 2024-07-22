@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/12 11:02:14 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/22 11:02:10 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <math.h>
-# include <memory.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
