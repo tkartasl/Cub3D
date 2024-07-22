@@ -26,7 +26,7 @@ void	get_ceiling_color(t_parser *parser, t_data *data)
 	red = *(int *)vec_get(parser->ceiling, R);
 	green = *(int *)vec_get(parser->ceiling, G);
 	blue = *(int *)vec_get(parser->ceiling, B);
-	data->ceiling_color = get_rgba(red, green, blue, A);
+	data->colors[0] = get_rgba(red, green, blue, A);
 }
 
 void	get_floor_color(t_parser *parser, t_data *data)
@@ -38,5 +38,13 @@ void	get_floor_color(t_parser *parser, t_data *data)
 	red = *(int *)vec_get(parser->floor, R);
 	green = *(int *)vec_get(parser->floor, G);
 	blue = *(int *)vec_get(parser->floor, B);
-	data->floor_color = get_rgba(red, green, blue, A);
+	data->colors[1] = get_rgba(red, green, blue, A);
+}
+
+void	get_colors(t_parser *parser, t_data *data)
+{
+	get_ceiling_color(parser, data);
+	get_floor_color(parser, data);
+	data->colors[W] = get_rgba(0, 0, 0, A);
+	data->colors[O] = get_rgba(255, 255, 255, A);
 }

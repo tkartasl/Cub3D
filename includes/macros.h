@@ -32,6 +32,7 @@
 # define ROTATE_SPEED 0.03
 # define MOVE_SPEED 7.5
 # define FT 42
+# define COLORS 5
 
 // Define color codes
 # define RED "\033[1;31m"
@@ -42,6 +43,14 @@
 # define CYAN "\033[1;36m"
 # define WHITE "\033[1;37m"
 # define RESET "\033[0m"
+
+enum	e_colors
+{
+	C,
+	F,
+	W,
+	O,
+};
 
 enum	e_rgba
 {

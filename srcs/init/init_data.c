@@ -17,6 +17,7 @@ void	get_textures(t_data *data, t_parser *parser);
 void	get_ceiling_color(t_parser *parser, t_data *data);
 void	get_floor_color(t_parser *parser, t_data *data);
 void	find_mapholes(char **map, t_parser *parser, t_data *data);
+void	get_colors(t_parser *parser, t_data *data);
 
 void	find_player(t_data *data, char **map, unsigned int y, char *playerdir)
 {
@@ -98,8 +99,9 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->flag = CONTINUE;
 	data->rayinfo = init_rayinfo(parser, data);
 	init_texture(data, parser);
-	get_ceiling_color(parser, data);
-	get_floor_color(parser, data);
+	get_colors(parser, data);
+	// get_ceiling_color(parser, data);
+	// get_floor_color(parser, data);
 	if (playerdir == 'N')
 		data->player_angle = NORTH + PI;
 	else if (playerdir == 'W')

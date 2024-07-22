@@ -90,7 +90,7 @@ void	get_textures(t_data *data, t_parser *parser)
 	tex_info = parser->textures_info;
 	while (++ind < tex_info->len)
 	{
-		data->tex_index = ind;
+		data->tex_index = ind + 1;
 		if (*(int *)vec_get(tex_info, ind) == NO)
 			load_textures(parser, data, ind, NO);
 		else if (*(int *)vec_get(tex_info, ind) == SO)

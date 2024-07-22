@@ -102,8 +102,9 @@ typedef struct s_data
 	t_rayinfo		*rayinfo;
 	char			**map;
 	char			**grid;
-	int				floor_color;
-	int				ceiling_color;
+	int			colors[COLORS];
+	// int				floor_color;
+	// int				ceiling_color;
 	t_textures		*texture;
 	int				flag;
 	int				tex_index;
