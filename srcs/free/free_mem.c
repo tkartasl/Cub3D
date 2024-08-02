@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 17:05:43 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/11 10:52:16 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:21:04 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ void	free_vecs(t_parser *parser, int exit_fail, char *msg, char **map)
 	free(parser->ceiling);
 	vec_free(parser->map);
 	free(parser->map);
+	if (parser->line)
+		free(parser->line);
+	if (parser->next_line)
+		free(parser->next_line);
 	if (exit_fail == YES)
 		exit(EXIT_FAILURE);
 }
@@ -50,6 +54,7 @@ void	free_vecs(t_parser *parser, int exit_fail, char *msg, char **map)
 void	freeparser_exit(t_parser *parser)
 {
 	free(parser->textures_paths);
+	parser->textures_paths = NULL;
 	free(parser->textures_info);
 	free(parser->map);
 	free(parser->ceiling);
@@ -66,6 +71,7 @@ void	stop_game(t_data *data)
 	destroy_locks(data);
 }
 
+
 void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 		int premature)
 {
@@ -73,15 +79,19 @@ void	freedata_exit(t_data *data, int exit_status, int terminate_mlx,
 
 	if (premature == NA)
 		stop_game(data);
+	if (data->parser)
+		free_vecs(data->parser, NA, NULL, NULL);
 	if (terminate_mlx == YES)
 		mlx_terminate(data->mlx);
 	i = 0;
-	while (i < data->tex_index)
+	while ((int)i < data->tex_index)
 	{
 		if (data->texture->wall[i] != NULL)
 			mlx_delete_texture(data->texture->wall[i]);
 		i++;
 	}
+	vec_free(data->map_width);
+	free(data->map_width);
 	free_map(data->map);
 	free(data->texture);
 	free(data->rayinfo);

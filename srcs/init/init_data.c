@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:28:08 by username          #+#    #+#             */
-/*   Updated: 2024/07/22 10:16:57 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:18:41 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 void	init_mlx(t_data *data);
 void	get_textures(t_data *data, t_parser *parser);
-void	get_ceiling_color(t_parser *parser, t_data *data);
-void	get_floor_color(t_parser *parser, t_data *data);
 void	get_colors(t_parser *parser, t_data *data);
-void	check_mapholes(char **map, t_parser *parser, t_data *data);
+void	check_mapholes(t_parser *parser, t_data *data);
 
 void	find_player(t_data *data, char **map, unsigned int y, char *playerdir)
 {
@@ -35,8 +33,8 @@ void	find_player(t_data *data, char **map, unsigned int y, char *playerdir)
 		}
 		++x;
 	}
-	if (data->map_width < x)
-		data->map_width = x;
+	if (vec_push(data->map_width, &x) == 0)
+		freedata_exit(data, EXIT_FAILURE, NA, YES);
 }
 
 char	extract_map_arr(t_parser *parser, t_data *data)
@@ -46,7 +44,7 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	char			playerdir;
 
 	y = 0;
-	data->map_width = 0;
+	vec_new(data->map_width, 0, sizeof(int));
 	map = (char **)malloc(sizeof(char *) * (parser->map->len + 1));
 	if (map == NULL)
 		freedata_exit(data, EXIT_FAILURE, NA, YES);
@@ -58,18 +56,18 @@ char	extract_map_arr(t_parser *parser, t_data *data)
 	}
 	map[y] = NULL;
 	data->map_height = y;
-	check_mapholes(map, parser, data);
 	data->map = map;
+	check_mapholes(parser, data);
 	return (playerdir);
 }
 
-static	t_rayinfo	*init_rayinfo(t_parser *parser, t_data *data)
+static	t_rayinfo	*init_rayinfo(t_data *data)
 {
 	t_rayinfo	*rayinfo;
 
 	rayinfo = (t_rayinfo *)malloc(sizeof(t_rayinfo));
 	if (rayinfo == NULL)
-		free_vecs(parser, YES, NULL, data->map);
+		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	ft_memset(rayinfo, 0, sizeof(t_rayinfo));
 	return (rayinfo);
 }
@@ -80,10 +78,7 @@ static	void	init_texture(t_data *data, t_parser *parser)
 
 	texture = (t_textures *)malloc(sizeof(t_textures));
 	if (texture == NULL)
-	{
-		free(data->rayinfo);
-		free_vecs(parser, YES, NULL, data->map);
-	}
+		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	ft_memset(texture, 0, sizeof(t_textures));
 	data->texture = texture;
 	get_textures(data, parser);
@@ -93,15 +88,15 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 {
 	char	playerdir;
 
-	if (parser->line != NULL && *parser->line != NULL)
-		free(*parser->line);
+	data->parser = parser;
+	data->map_width = (t_vec *)malloc(sizeof(t_vec));
+	if (data->map_width == NULL)
+		freedata_exit(data, EXIT_FAILURE, NA, YES);
 	playerdir = extract_map_arr(parser, data);
 	data->flag = CONTINUE;
-	data->rayinfo = init_rayinfo(parser, data);
+	data->rayinfo = init_rayinfo(data);
 	init_texture(data, parser);
 	get_colors(parser, data);
-	// get_ceiling_color(parser, data);
-	// get_floor_color(parser, data);
 	if (playerdir == 'N')
 		data->player_angle = NORTH + PI;
 	else if (playerdir == 'W')
@@ -115,4 +110,5 @@ void	init_data_mlx(t_data *data, t_parser *parser)
 	data->playerdir_y = sin(data->player_angle) * MOVE_SPEED;
 	init_mlx(data);
 	free_vecs(parser, NA, NULL, NULL);
+	data->parser = NULL;
 }

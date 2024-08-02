@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 18:16:46 by uahmed            #+#    #+#             */
-/*   Updated: 2024/02/11 16:24:52 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/07/23 10:47:49 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define GET_NEXT_LINE_H
 
 # include "../libft/includes/libft.h"
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 16:11:50 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/22 11:08:35 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:49:44 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ int	get_line_end(char *line)
 	return (i);
 }
 
-static void	check_middle_lines(char **map, int x, int y, t_parser *parser)
+static void	check_middle_lines(t_data *data, int x, int y, t_parser *parser)
 {
 	int	len_top;
 	int	len_bot;
 
-	len_top = get_line_end(map[y - 1]);
-	len_bot = get_line_end(map[y + 1]);
+	len_top = get_line_end(data->map[y - 1]);
+	len_bot = get_line_end(data->map[y + 1]);
 	if (len_bot <= len_top)
 	{
 		if (x > len_bot)
@@ -41,47 +41,58 @@ static void	check_middle_lines(char **map, int x, int y, t_parser *parser)
 		if (x > len_top)
 			x = len_top + 1;
 	}
-	while (map[y][x] != 0)
+	while (data->map[y][x] != 0)
 	{
-		if (map[y][x] == '0')
-			free_vecs(parser, YES, MAPHOLE, map);
+		if (data->map[y][x] == '0')
+		{
+			vec_free(data->map_width);
+			free(data->map_width);
+			free_vecs(parser, YES, MAPHOLE, data->map);
+		}
 		x++;
 	}
 }
 
-int	check_surroundings(char **map, t_data *data, int x, int y)
+static	void	check_surroundings(t_data *data, t_parser *parser, int x, int y)
 {
+	int	fail;
+
+	fail = NA;
 	if (y + 1 < data->map_height)
 	{
-		if (ft_isspace(map[y + 1][x]) == 1)
-			return (1);
+		if (ft_isspace(data->map[y + 1][x]) == 1)
+			fail = YES;
 	}
 	if (y - 1 >= 0)
 	{
-		if (ft_isspace(map[y - 1][x]) == 1)
-			return (1);
+		if (ft_isspace(data->map[y - 1][x]) == 1)
+			fail = YES;
 	}
-	return (0);
+	if (fail == YES)
+	{
+		vec_free(data->map_width);
+		free(data->map_width);
+		free_vecs(parser, YES, MAPHOLE, data->map);
+	}
 }
 
-void	check_mapholes(char **map, t_parser *parser, t_data *data)
+void	check_mapholes(t_parser *parser, t_data *data)
 {
 	int	x;
 	int	y;
 
 	x = 0;
 	y = 0;
-	while (map[y] != 0)
+	while (data->map[y] != 0)
 	{
-		x = get_line_end(map[y]);
+		x = get_line_end(data->map[y]);
 		if (y > 0 && y < data->map_height - 1)
-			check_middle_lines(map, x, y, parser);
+			check_middle_lines(data, x, y, parser);
 		x = 0;
-		while (map[y][x] != 0)
+		while (data->map[y][x] != 0)
 		{
-			if (ft_strchr("0NSWE", map[y][x]) != 0)
-				if (check_surroundings(map, data, x, y) == 1)
-					free_vecs(parser, YES, MAPHOLE, map);
+			if (ft_strchr("0NSWE", data->map[y][x]) != 0)
+				check_surroundings(data, parser, x, y);
 			x++;
 		}
 		y++;

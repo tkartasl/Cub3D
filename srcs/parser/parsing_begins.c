@@ -6,12 +6,11 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 14:01:20 by uahmed            #+#    #+#             */
-/*   Updated: 2024/06/18 14:39:51 by username         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:19:17 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-#include <stdio.h>
 
 void	parse_until_map(t_parser *parser, int fd);
 void	parse_map(t_parser *parser, int fd);
@@ -44,12 +43,12 @@ void	skip_spaces(char *s, int *ind)
 
 void	eof_malloc_check(t_parser *parser, int malloc_flag, int map, int fd)
 {
-	if (*parser->line == NULL && malloc_flag == 1)
+	if (parser->line == NULL && malloc_flag == 1)
 	{
 		close(fd);
 		free_vecs(parser, YES, NULL, NULL);
 	}
-	if (*parser->line == NULL && malloc_flag == 0 && map == NA)
+	if (parser->line == NULL && malloc_flag == 0 && map == NA)
 	{
 		close(fd);
 		free_vecs(parser, YES, NOMAP, NULL);
@@ -58,12 +57,11 @@ void	eof_malloc_check(t_parser *parser, int malloc_flag, int map, int fd)
 
 void	parse_file(t_parser *parser, char *map_path)
 {
-	char	*line;
 	int		fd;
 
-	line = NULL;
+	parser->line = NULL;
+	parser->next_line = NULL;
 	parser->file = map_path;
-	parser->line = &line;
 	fd = open_validate_file(parser, map_path, ".cub", NA);
 	parse_until_map(parser, fd);
 	parse_map(parser, fd);

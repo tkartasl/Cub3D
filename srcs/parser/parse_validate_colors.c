@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cub3D.h"
+#include <stdio.h>
 
 void		check_invalid_color(t_parser *parser, char *line, t_indices *inds,
 				char **rgb);
@@ -48,17 +49,19 @@ static char	*next_rgb(t_parser *parser, char *line, t_indices *inds)
 	}
 	--inds->counter;
 	if (inds->counter == 0)
-		check_invalid_color(parser, *parser->line, inds, &rgb);
+		check_invalid_color(parser, parser->line, inds, &rgb);
 	return (rgb);
 }
 
-static void	skip_comma(t_parser *parser, char *line, t_indices *inds, int count)
+static void	skip_comma(t_parser *parser, char **rgb_s, t_indices *inds
+	, int count)
 {
+	free(*rgb_s);
 	if (count == 2)
 		return ;
 	inds->st = inds->end;
-	skip_spaces(line, &inds->st);
-	if (line[inds->st] != ',')
+	skip_spaces(parser->line, &inds->st);
+	if (parser->line[inds->st] != ',')
 		free_vecs(parser, YES, INVALCOLOR, NULL);
 	inds->st++;
 	inds->end = inds->st;
@@ -73,20 +76,21 @@ static void	parse_color(t_parser *parser, t_indices *inds, int type)
 	count = -1;
 	while (inds->counter && ++count < 3)
 	{
-		rgb_s = next_rgb(parser, *parser->line, inds);
+		rgb_s = next_rgb(parser, parser->line, inds);
 		rgb_n = ft_atoi(rgb_s);
-		free(rgb_s);
+		if (rgb_n > 255 || rgb_n < 0)
+			free_exit(parser, &rgb_s, INVALCOLOR);
 		if (type == FLOOR)
 		{
 			if (vec_push(parser->floor, &rgb_n) == 0)
-				free_exit(parser, &rgb_s, NULL);
+				free_exit(parser, &rgb_s, INVALCOLOR);
 		}
 		else if (type == CEILING)
 		{
 			if (vec_push(parser->ceiling, &rgb_n) == 0)
-				free_exit(parser, &rgb_s, NULL);
+				free_exit(parser, &rgb_s, INVALCOLOR);
 		}
-		skip_comma(parser, *parser->line, inds, count);
+		skip_comma(parser, &rgb_s, inds, count);
 	}
 	if (inds->counter)
 		free_vecs(parser, YES, INVALCOLOR, NULL);

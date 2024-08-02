@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_errors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: uahmed <uahmed@student.hive.fi>            +#+  +:+       +#+        */
+/*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 13:30:14 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/09 13:30:34 by uahmed           ###   ########.fr       */
+/*   Updated: 2024/07/22 13:45:40 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ void	file_error(char *path, int use_errno, char *msg)
 
 void	game_usage(void)
 {
-	printf("%s\n", USAGE);
+	ft_putendl_fd(USAGE, 2);
 }

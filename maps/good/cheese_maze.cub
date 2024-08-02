@@ -1,9 +1,9 @@
 NO textures/png/north_texture.png
 SO textures/png/south_texture.png
 WE textures/png/west_texture.png
-EA textures/png/east_texture.png
+EA textures/simonkraft/soul_sand.png
 
-F 99,160,80
+F 99,160,80000000000000000000000000000000000000000000
 C 53,120,255
 
 111111111111111111111  

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 14:54:58 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/22 11:02:10 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:21:57 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,10 @@
 # include "error_msgs.h"
 # include "get_next_line.h"
 # include "macros.h"
-# include "pthread.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <pthread.h>
 # include <math.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -46,7 +45,8 @@ typedef struct s_count
 typedef struct s_parser
 {
 	int				dir_info;
-	char			**line;
+	char			*line;
+	char			*next_line;
 	char			*file;
 	t_vec			*textures_paths;
 	t_vec			*textures_info;
@@ -97,13 +97,12 @@ typedef struct s_data
 	int				camera_x;
 	int				camera_y;
 	int				map_height;
-	int				map_width;
+	t_vec			*map_width;
 	t_rayinfo		*rayinfo;
+	t_parser		*parser;
 	char			**map;
 	char			**grid;
-	int			colors[COLORS];
-	// int				floor_color;
-	// int				ceiling_color;
+	int				colors[COLORS];
 	t_textures		*texture;
 	int				flag;
 	int				tex_index;
@@ -148,7 +147,7 @@ void				wall_collision(t_data *data, char key, int *new_x,
 void				wall_collision_strafe(t_data *data, char key, int *new_x,
 						int *new_y);
 void				mouse_hook(double xpos, double ypos, void *param);
-void				get_texture_index(t_data *data, int x_pos, int t_size);
+void				get_texture_index(t_data *data, int t_size);
 void				get_arrow_textures(t_data *data, int dir);
 void				*minimap(void *arg);
 int					game_continues(t_data *data);

@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:16:12 by uahmed            #+#    #+#             */
-/*   Updated: 2024/07/09 14:14:12 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:20:30 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static void	drawstripe(t_data *data, int x, int cx, int cy)
 	while (y < MINI_HEIGHT)
 	{
 		mapy = cy / UNITSIZE;
-		if (mapx >= 0 && mapx < data->map_width && mapy >= 0
-			&& mapy < data->map_height)
+		if (mapy >= 0 && mapy < data->map_height && mapx >= 0
+			&& mapx < *(int *)vec_get(data->map_width, mapy))
 		{
 			if (data->map[mapy][mapx] == '1')
 				mlx_put_pixel(data->minimap, x, y, data->colors[W]);
 			else
-				mlx_put_pixel(data->minimap, x, y, data->colors[F]);
+				mlx_put_pixel(data->minimap, x, y, data->colors[MF]);
 		}
 		else
 			mlx_put_pixel(data->minimap, x, y, data->colors[O]);
@@ -59,7 +59,6 @@ void	draw_minimap(t_data *data, t_camera *cam)
 {
 	int	x;
 	int	cx;
-	int	cy;
 
 	x = 0;
 	cx = cam->cx;

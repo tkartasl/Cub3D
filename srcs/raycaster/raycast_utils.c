@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 10:04:55 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/12 13:20:27 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/22 13:08:44 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,14 @@ int	check_overflow(t_data *data)
 {
 	int	x;
 	int	y;
+	int	map_width;
 
 	x = data->rayinfo->map_x;
 	y = data->rayinfo->map_y;
 	if (y < 0 || y >= data->map_height)
 		return (1);
-	if (x < 0 || x >= ft_strlen(data->map[y]))
+	map_width = *(int *)vec_get(data->map_width, y);
+	if (x < 0 || x >= map_width)
 		return (1);
 	return (0);
 }

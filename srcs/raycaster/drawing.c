@@ -6,7 +6,7 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 09:59:04 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/08 13:02:55 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:21:31 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	draw_line(int x, int y, t_data *data)
 	data->texture->y += data->texture->ty_step;
 }
 
-void	get_texture_index(t_data *data, int x_pos, int t_size)
+void	get_texture_index(t_data *data, int t_size)
 {
 	if (data->texture->axis == 'x')
 	{

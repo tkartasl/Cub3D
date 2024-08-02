@@ -22,8 +22,8 @@ static int	not_yes(t_parser *parser, char c)
 {
 	if (c == '\0')
 	{
-		free(*parser->line);
-		*parser->line = NULL;
+		free(parser->line);
+		parser->line = NULL;
 		return (EMP_LINE);
 	}
 	return (NA);
@@ -63,7 +63,7 @@ static int	type_identifier(t_parser *parser, t_indices *inds, t_count *count)
 
 	type_id_info = FT;
 	type_id = NULL;
-	type_id = ft_substr(*parser->line, inds->st, inds->end - inds->st);
+	type_id = ft_substr(parser->line, inds->st, inds->end - inds->st);
 	if (type_id == NULL)
 		free_vecs(parser, YES, NULL, NULL);
 	identifiers_type(parser, &type_id, &type_id_info, count);
@@ -84,23 +84,21 @@ static int	parse_push_lineinfo(t_parser *parser, int fd, t_count *count)
 	t_indices	inds;
 	char		c;
 	int			malloc_flag;
-	char		*line;
 
 	init_inds(&inds);
 	malloc_flag = 0;
-	*parser->line = get_next_line(fd, &malloc_flag);
-	line = *parser->line;
+	parser->line = get_next_line(fd, &malloc_flag);
 	eof_malloc_check(parser, malloc_flag, NA, fd);
-	skip_spaces(*parser->line, &inds.st);
-	c = line[inds.st];
+	skip_spaces(parser->line, &inds.st);
+	c = parser->line[inds.st];
 	if (c == '1' || c == '\0')
 		return (not_yes(parser, c));
 	inds.end = inds.st;
-	next_strings_end(*parser->line, &inds.end, 0);
+	next_strings_end(parser->line, &inds.end, 0);
 	if (type_identifier(parser, &inds, count) == TEXTURE)
 		parse_push_textures(parser, &inds);
-	free(*parser->line);
-	*parser->line = NULL;
+	free(parser->line);
+	parser->line = NULL;
 	return (YES);
 }
 

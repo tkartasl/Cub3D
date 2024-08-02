@@ -28,6 +28,6 @@ void	validate_type_identifier(t_parser *parser, char **type_id)
 	if (ft_strlen(*type_id) > 1)
 	{
 		free(*type_id);
-		free_vecs(parser, YES, INVALCOLOR, NULL);
+		free_vecs(parser, YES, TIDS, NULL);
 	}
 }

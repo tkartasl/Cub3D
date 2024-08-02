@@ -18,7 +18,7 @@ void	parse_push_textures(t_parser *parser, t_indices *inds)
 	char	*line;
 	int		end;
 
-	line = *parser->line;
+	line = parser->line;
 	inds->st = inds->end;
 	skip_spaces(line, &inds->st);
 	if (line[inds->st] == '\0')
@@ -29,13 +29,14 @@ void	parse_push_textures(t_parser *parser, t_indices *inds)
 	skip_spaces(line, &end);
 	if (end < (int)ft_strlen(line) && line[end] != '\0')
 		free_vecs(parser, YES, NOPATH, NULL);
-	path = ft_substr(*parser->line, inds->st, inds->end - inds->st);
+	path = ft_substr(parser->line, inds->st, inds->end - inds->st);
 	if (path == NULL)
 		free_vecs(parser, YES, NULL, NULL);
 	open_validate_file(parser, path, ".png", YES);
 	if (vec_push(parser->textures_paths, &path) == 0)
 	{
 		free(path);
+		path = NULL;
 		free_vecs(parser, YES, NULL, NULL);
 	}
 }
