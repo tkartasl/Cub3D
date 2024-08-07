@@ -6,13 +6,13 @@
 /*   By: tkartasl <tkartasl@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 09:33:51 by tkartasl          #+#    #+#             */
-/*   Updated: 2024/07/26 13:23:41 by tkartasl         ###   ########.fr       */
+/*   Updated: 2024/08/07 09:50:25 by tkartasl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void	rotate_player(t_data *data, char direction);
+void	rotate_player(t_data *data, char direction, t_camera *cam);
 
 void	key_hook(mlx_key_data_t keydata, void *param)
 {
@@ -26,13 +26,16 @@ void	key_hook(mlx_key_data_t keydata, void *param)
 void	mouse_hook(double xpos, double ypos, void *param)
 {
 	t_data		*data;
+	t_camera	cam;
 	static int	old_xpos;
 
 	(void)ypos;
 	data = param;
+	get_camera(data, &cam);
 	if (xpos <= old_xpos)
-		rotate_player(data, 'L');
+		rotate_player(data, 'L', &cam);
 	else if (xpos > old_xpos)
-		rotate_player(data, 'R');
+		rotate_player(data, 'R', &cam);
 	old_xpos = xpos;
+	set_camera(data, &cam);
 }
