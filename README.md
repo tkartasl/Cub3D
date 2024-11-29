@@ -18,4 +18,6 @@ The goal of cub3D is to create a basic 3D game engine that can render a simple m
 - Map parsing: Read and validate .cub map files.
 - Enforce proper formatting and boundaries.
 
+![cub3D screenshot](images/cub3D.png)
+
 This was a Hive group project done together with https://github.com/usmanUA
