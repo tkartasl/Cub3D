@@ -20,4 +20,4 @@ The goal of cub3D is to create a basic 3D game engine that can render a simple m
 
 ![cub3D gif](images/cub3D_trimmed-ezgif.com.gif)
 
-This was a Hive group project done together with https://github.com/usmanUA
+This was a Hive group project done together with [usmanUA](https://github.com/usmanUA)
